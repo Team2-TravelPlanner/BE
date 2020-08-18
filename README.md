@@ -4,7 +4,7 @@
 
 Add Swagger UI for API Documentation
 
-1. Running Application
+Running Application
 
 Send requst with Postman
 http://localhost:8080/v2/api-docs 
