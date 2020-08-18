@@ -30,6 +30,7 @@ RestHighLevelClient client = new RestHighLevelClient(
     .setDefaultHeaders(
         new Header[]{new BasicHeader("Authorization", "Bearer " + "<base64-encoded-APIKey>")});
 MainResponse response = client.info(RequestOptions.DEFAULT));
+```
 
 Basic authentication
 ```java
@@ -48,3 +49,4 @@ RestHighLevelClient client = new RestHighLevelClient(
         }
     }));
 MainResponse response = client.info(RequestOptions.DEFAULT);
+```
