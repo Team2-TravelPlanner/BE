@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.util.Date;
+import java.util.List;
 
 @Document(indexName = "travel")
 public class User {
@@ -20,6 +21,8 @@ public class User {
     private Date timeCreate;
 
     private Date timeUpdated;
+
+    private List<Plan> plans;
 
     @Transient
     private String token;
@@ -83,6 +86,14 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public List<Plan> getPlans() {
+        return plans;
+    }
+
+    public void setPlans(List<Plan> plans) {
+        this.plans = plans;
     }
 
     @Override

@@ -13,8 +13,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+import org.springframework.stereotype.Component;
 
 @Configuration
+@Component
 @EnableElasticsearchRepositories(basePackages = "com.laioffer.travelplanner.repositories")
 public class ElasticSearchConfig {
 //    @Value("${elasticCloud.username}")
