@@ -1,6 +1,6 @@
 package com.laioffer.travelplanner.entities;
 
-import com.laioffer.travelplanner.entities.BusinessHour.DayOfWeek;
+import com.laioffer.travelplanner.enumerate.DayOfWeek;
 
 public class BusinessHourId {
 	private Integer placeId;

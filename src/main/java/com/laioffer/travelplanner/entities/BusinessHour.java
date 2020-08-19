@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 
+import com.laioffer.travelplanner.enumerate.DayOfWeek;
+
 
 @Entity
 @Table (name = "businesshours")
@@ -18,15 +20,6 @@ public class BusinessHour {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer placeId;
 	
-	enum DayOfWeek{
-		SUNDAY,
-		MONDAY,
-		TUESDAY,
-		WEDNESDAY,
-		THURSDAY,
-		FRIDAY,
-		SATURDAY
-	}
 	@Id
 	private DayOfWeek dayOfWeek;
 	private Date startTime;
