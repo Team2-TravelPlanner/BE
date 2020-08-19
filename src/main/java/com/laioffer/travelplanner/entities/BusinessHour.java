@@ -3,6 +3,8 @@ package com.laioffer.travelplanner.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +22,7 @@ public class BusinessHour {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer placeId;
 	
-	@Id
+	@Enumerated(EnumType.STRING)
 	private DayOfWeek dayOfWeek;
 	private Date startTime;
 	private Date endTime;

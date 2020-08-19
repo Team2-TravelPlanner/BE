@@ -1,11 +1,17 @@
 package com.laioffer.travelplanner.entities;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import com.laioffer.travelplanner.enumerate.DayOfWeek;
 
 public class BusinessHourId {
 	private Integer placeId;
+	
+	@Enumerated(EnumType.STRING)
 	private DayOfWeek dayOfWeek;
 	
+
 	public BusinessHourId() {
 		
 	}
