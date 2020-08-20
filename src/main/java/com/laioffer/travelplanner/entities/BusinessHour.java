@@ -3,6 +3,10 @@ package com.laioffer.travelplanner.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -16,6 +20,7 @@ public class BusinessHour {
 	private Integer businessHourId;
 	
 	private Integer placeId;
+	@Enumerated(EnumType.STRING)
 	private DayOfWeek dayOfWeek;
 	private Date startTime;
 	private Date endTime;
