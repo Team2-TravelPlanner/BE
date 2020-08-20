@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -14,10 +12,10 @@ import javax.persistence.Table;
 @Entity //specify the class is an entity and is mapped to a database table
 @Table (name = "users") //specify the name of the database table to be used for mapping
 public class User {
+	@Id //represents the primary key
 	private Integer userId;
 	private String userName;
 	private String password; //password type
-	@Id //represents the primary key
 	private String email;
 	private String token;
 	private Date createTime; //date/time type ==> do we need these fields in the class?
@@ -29,19 +27,6 @@ public class User {
 		
 	}
 	
-	public User(Integer userId, String userName, String password, String email, String token, Date createTime,
-			Date updateTime, Date expireDate) {
-		super();
-		this.userId = userId;
-		this.userName = userName;
-		this.password = password;
-		this.email = email;
-		this.token = token;
-		this.createTime = createTime;
-		this.updateTime = updateTime;
-		this.expireDate = expireDate;
-	}
-
 	public Integer getId() {
 		return userId;
 	}

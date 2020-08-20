@@ -1,8 +1,8 @@
 package com.laioffer.travelplanner.entities;
 
+import java.util.List;
+
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -12,7 +12,6 @@ import javax.persistence.Table;
 
 public class Place {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer placeId;
 	private String placeName;
 	private String address;
@@ -23,24 +22,15 @@ public class Place {
 	private float averageTime;
 	private String intro;
 	private float popularity;
+	private List<BusinessHour> businesshours;
+	private List<Category> categories;
 	
+
+
 	public Place() {
 		
 	}
 	
-	private Place(PlaceBuilder builder) {
-		this.placeId = builder.placeId;
-		this.placeName = builder.placeName;
-		this.address = builder.address;
-		this.lat = builder.lat;
-		this.lon = builder.lon;
-		this.category = builder.category;
-		this.imageLink = builder.imageLink;
-		this.averageTime = builder.averageTime;
-		this.intro = builder.intro;
-		this.popularity = builder.popularity;
-		
-	}
 	public Integer getPlaceId() {
 		return placeId;
 	}
@@ -101,8 +91,20 @@ public class Place {
 	public void setPopularity(float popularity) {
 		this.popularity = popularity;
 	}
+	public List<BusinessHour> getBusinesshours() {
+		return businesshours;
+	}
+	public void setBusinesshours(List<BusinessHour> businesshours) {
+		this.businesshours = businesshours;
+	}
 	
-	
+	public List<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
 	@Override
 	public String toString() {
 		return "Place [placeId=" + placeId + ", placeName=" + placeName + ", address=" + address + ", lat=" + lat
@@ -110,63 +112,6 @@ public class Place {
 				+ averageTime + ", intro=" + intro + ", popularity=" + popularity + "]";
 	}
 
-
-	private static class PlaceBuilder{
-		private Integer placeId;
-		private String placeName;
-		private String address;
-		private float lat;
-		private float lon;
-		private String category;
-		private String imageLink;
-		private float averageTime;
-		private String intro;
-		private float popularity;
-		
-		
-		public void setPlaceId(Integer placeId) {
-			this.placeId = placeId;
-		}
-
-		public void setPlaceName(String placeName) {
-			this.placeName = placeName;
-		}
-
-		public void setAddress(String address) {
-			this.address = address;
-		}
-
-		public void setLat(float lat) {
-			this.lat = lat;
-		}
-
-		public void setLon(float lon) {
-			this.lon = lon;
-		}
-
-		public void setCategory(String category) {
-			this.category = category;
-		}
-
-		public void setImageLink(String imageLink) {
-			this.imageLink = imageLink;
-		}
-
-		public void setAverageTime(float averageTime) {
-			this.averageTime = averageTime;
-		}
-
-		public void setIntro(String intro) {
-			this.intro = intro;
-		}
-
-		public void setPopularity(float popularity) {
-			this.popularity = popularity;
-		}
-
-		public Place build() {
-			return new Place(this);
-		}
-	}
 	
+
 }

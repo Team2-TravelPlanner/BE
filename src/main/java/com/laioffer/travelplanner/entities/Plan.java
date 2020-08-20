@@ -1,10 +1,9 @@
 package com.laioffer.travelplanner.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -13,11 +12,11 @@ import javax.persistence.Table;
 
 public class Plan {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer planId;
 	
-	private String planOwner;
+	private Integer userId;
 
+	private List<DayOfPlan> days;
 	
 	private Date createTime;
 	private Date updateTime; //do we need these fields in the class?
@@ -25,19 +24,15 @@ public class Plan {
 	public Plan() {
 		
 	}
-	public Plan(Integer planId, String planOwner) {
-		this.planId = planId;
-		this.planOwner = planOwner;
-		
-	}
-	public String getPlanOwner() { //email
-		return planOwner;
-	}
-
-	public void setPlanOwner(String planOwner) {
-		this.planOwner = planOwner;
+	
+	public Integer getUserId() {
+		return userId;
 	}
 	
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
 	public Integer getPlanId() {
 		return planId;
 	}
@@ -61,11 +56,20 @@ public class Plan {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+	public List<DayOfPlan> getDays(){
+		return days;
+	}
+	public void setDays(List<DayOfPlan> days) {
+		this.days = days;
+	}
+	
 	@Override
 	public String toString() {
-		return "Plan [planId=" + planId + ", planOwner=" + planOwner + ", createTime=" + createTime + ", updateTime="
+		return "Plan [planId=" + planId + ", userId=" + userId + ", createTime=" + createTime + ", updateTime="
 				+ updateTime + "]";
 	}
+
+	
 	
 
 	

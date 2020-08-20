@@ -4,29 +4,34 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
 @Table (name = "placeOfPlan")
-@IdClass(PlaceOfPlanId.class)
 public class PlaceOfPlan {
 	@Id
+	private Integer placeOfPlanId;
+	private Integer dayOfPlanId;
 	private Integer placeId;
-	@Id
-	private Integer dayId;
 	private Date startTime;
 	private Date endTime;
 	
-	public PlaceOfPlan(Integer placeId, Integer dayId) {
-		this.placeId = placeId;
-		this.dayId = dayId;
+	public PlaceOfPlan() {
+		
+	}
+	
+
+	public Integer getPlaceOfPlanId() {
+		return placeOfPlanId;
+	}
+	
+	public void setPlaceOfPlanId(Integer placeOfPlanId) {
+		this.placeOfPlanId = placeOfPlanId;
 	}
 
-	public Integer getDayId() {
-		return dayId;
+	public Integer getDayOfPlanId() {
+		return dayOfPlanId;
 	}
-
 
 	public Date getStartTime() {
 		return startTime;
@@ -44,9 +49,11 @@ public class PlaceOfPlan {
 		this.endTime = endTime;
 	}
 
+
 	public Integer getPlaceId() {
 		return placeId;
 	}
+
 	
 	
 }

@@ -3,49 +3,39 @@ package com.laioffer.travelplanner.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.Table;
+
+import com.laioffer.travelplanner.enumerate.DayOfWeek;
 
 
 @Entity
 @Table (name = "businesshours")
-@IdClass(BusinessHourId.class)
 public class BusinessHour {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer placeId;
+	private Integer businessHourId;
 	
-	enum DayOfWeek{
-		SUNDAY,
-		MONDAY,
-		TUESDAY,
-		WEDNESDAY,
-		THURSDAY,
-		FRIDAY,
-		SATURDAY
-	}
-	@Id
+	private Integer placeId;
 	private DayOfWeek dayOfWeek;
 	private Date startTime;
 	private Date endTime;
 	
-	public BusinessHour(Integer placeId, DayOfWeek dayOfWeek, Date startTime, Date endTime) {
-		this.placeId = placeId;
-		this.dayOfWeek = dayOfWeek;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		
+	public BusinessHour() {
 		
 	}
 	public Integer getPlaceId() {
 		return placeId;
 	}
-	public void setPlaceId(Integer placeId) {
-		this.placeId = placeId;
+	public Integer getBusinessHourId() {
+		return businessHourId;
 	}
+	public void setBusinessHourId(Integer businessHourId) {
+		this.businessHourId = businessHourId;
+	}
+	public DayOfWeek getDayOfWeek() {
+		return dayOfWeek;
+	}
+	
 	public Date getStartTime() {
 		return startTime;
 	}
