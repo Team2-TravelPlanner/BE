@@ -37,10 +37,10 @@ class TravelPlannerApplicationTests {
 
 
 		Plan plan = new Plan();
-		plan.setPlanOwner("test1@gmail.com");
+		plan.setPlanId(1);
 
 		Plan plan1 = new Plan();
-		plan.setPlanOwner("test2@gmail.com");
+		plan.setPlanId(2);
 
 		repository.save(plan);
 		repository.save(plan1);
