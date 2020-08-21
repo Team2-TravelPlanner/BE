@@ -2,25 +2,18 @@ package com.laioffer.travelplanner.entities;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import com.laioffer.travelplanner.enumerate.DayOfWeek;
 
-@Entity
-@Table(name = "businesshour")
+@Document(indexName = "travel")
 public class BusinessHour {
 	@Id
 	private String businessHourId;
 
 	private String placeId;
 
-	@Enumerated(EnumType.STRING)
 	private DayOfWeek dayOfWeek;
 	private Date startTime;
 	private Date endTime;

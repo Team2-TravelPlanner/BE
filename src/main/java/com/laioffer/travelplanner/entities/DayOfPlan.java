@@ -3,13 +3,10 @@ package com.laioffer.travelplanner.entities;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 
-@Entity
-@Table(name = "dayofplan")
-
+@Document(indexName = "travel")
 public class DayOfPlan {
 	@Id
 	private String dayId;

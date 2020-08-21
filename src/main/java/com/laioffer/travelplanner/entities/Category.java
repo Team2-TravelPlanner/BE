@@ -2,12 +2,10 @@ package com.laioffer.travelplanner.entities;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 
-@Entity
-@Table(name = "category")
+@Document(indexName = "travel")
 public class Category {
 	@Id
 	private String categoryId;

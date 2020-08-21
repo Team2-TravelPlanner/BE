@@ -47,10 +47,11 @@ public class ElasticSearchConfig {
         final CredentialsProvider credentialsProvider =
                 new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY,
-                new UsernamePasswordCredentials("elastic", "uZrhKktrdFY7KmkWrmFn5N7J"));
+                new UsernamePasswordCredentials("elastic", "G5UXS6jJAIo9VeewNum39mUF"));
 
         RestHighLevelClient client = new RestHighLevelClient(
-                RestClient.builder("travelplanner:dXMtZWFzdC0xLmF3cy5mb3VuZC5pbyRkNmNmMWI0MjE3ODA0YmNhYmNmNDM0ZWIyNTY5MWMzZCQxMjliZTZkMzEwNTk0NTY4YjE2MDgxMjQ1NWUxYWYwZg==").setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder
+                RestClient.builder("travelplanner:dXMtZWFzdC0xLmF3cy5mb3VuZC5pbyQyMWJkY2UxMzJjZmQ0NWY1OGUwNzQyOTE0NTNjYjgxZCRjOWY2NmE4ODllMDY0OWMzOTQ5NzljM2Y2NTQ5YWQ4MA==" + 
+                		"").setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder
                         .setDefaultCredentialsProvider(credentialsProvider)));
 
         return client;

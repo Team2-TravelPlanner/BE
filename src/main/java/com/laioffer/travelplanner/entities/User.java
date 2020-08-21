@@ -3,12 +3,10 @@ package com.laioffer.travelplanner.entities;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 
-@Entity // specify the class is an entity and is mapped to a database table
-@Table(name = "user") // specify the name of the database table to be used for mapping
+@Document(indexName = "travel")
 public class User {
 	@Id // represents the primary key
 	private String userId;
