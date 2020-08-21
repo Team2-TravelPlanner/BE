@@ -7,33 +7,36 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table (name = "categories")
+@Table(name = "category")
 public class Category {
 	@Id
-	private Integer catId;
+	private String categoryId;
 
-	private String catName;
-	private List<Place> places;
-	public Category() {
-		
+	private String categoryName;
+	private List<String> placeIds;
+
+	public String getCategoryId() {
+		return categoryId;
 	}
-	public Integer getCatId() {
-		return catId;
+
+	public void setCategoryId(String categoryId) {
+		this.categoryId = categoryId;
 	}
-	public void setCatId(Integer catId) {
-		this.catId = catId;
+
+	public String getCategoryName() {
+		return categoryName;
 	}
-	public String getCatName() {
-		return catName;
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
-	public void setCatName(String catName) {
-		this.catName = catName;
+
+	public List<String> getPlaceIds() {
+		return placeIds;
 	}
-	public List<Place> getPlaces() {
-		return places;
+
+	public void setPlaceIds(List<String> placeIds) {
+		this.placeIds = placeIds;
 	}
-	public void setPlaces(List<Place> places) {
-		this.places = places;
-	}
-	
+
 }

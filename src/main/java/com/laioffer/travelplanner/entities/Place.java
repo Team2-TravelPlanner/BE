@@ -6,112 +6,142 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
-@Table (name = "places")
-
+@Table(name = "place")
 public class Place {
 	@Id
-	private Integer placeId;
+	private String placeId;
+
 	private String placeName;
 	private String address;
-	private float lat;
-	private float lon;
-	private String category;
+	private Float lat;
+	private Float lon;
+
 	private String imageLink;
-	private float averageTime;
+	private Float averageTime;
 	private String intro;
-	private float popularity;
-	private List<BusinessHour> businesshours;
-	private List<Category> categories;
-	
+	private Float popularity;
+	private String website;
+	private List<String> businesshourIds;
+	private List<String> categoryIds;
 
-
-	public Place() {
-		
-	}
-	
-	public Integer getPlaceId() {
+	public String getPlaceId() {
 		return placeId;
 	}
-	public void setPlaceId(Integer placeId) {
+
+	public void setPlaceId(String placeId) {
 		this.placeId = placeId;
 	}
+
 	public String getPlaceName() {
 		return placeName;
 	}
+
 	public void setPlaceName(String placeName) {
 		this.placeName = placeName;
 	}
+
 	public String getAddress() {
 		return address;
 	}
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
 	public float getLat() {
 		return lat;
 	}
+
 	public void setLat(float lat) {
 		this.lat = lat;
 	}
+
 	public float getLon() {
 		return lon;
 	}
+
 	public void setLon(float lon) {
 		this.lon = lon;
 	}
-	public String getCategory() {
-		return category;
-	}
-	public void setCategory(String category) {
-		this.category = category;
-	}
+
 	public String getImageLink() {
 		return imageLink;
 	}
+
 	public void setImageLink(String imageLink) {
 		this.imageLink = imageLink;
 	}
+
 	public float getAverageTime() {
 		return averageTime;
 	}
+
 	public void setAverageTime(float averageTime) {
 		this.averageTime = averageTime;
 	}
+
 	public String getIntro() {
 		return intro;
 	}
+
 	public void setIntro(String intro) {
 		this.intro = intro;
 	}
+
 	public float getPopularity() {
 		return popularity;
 	}
+
 	public void setPopularity(float popularity) {
 		this.popularity = popularity;
 	}
-	public List<BusinessHour> getBusinesshours() {
-		return businesshours;
-	}
-	public void setBusinesshours(List<BusinessHour> businesshours) {
-		this.businesshours = businesshours;
-	}
-	
-	public List<Category> getCategories() {
-		return categories;
+
+	public String getWebsite() {
+		return website;
 	}
 
-	public void setCategories(List<Category> categories) {
-		this.categories = categories;
+	public void setWebsite(String website) {
+		this.website = website;
 	}
+
+	public void setLat(Float lat) {
+		this.lat = lat;
+	}
+
+	public void setLon(Float lon) {
+		this.lon = lon;
+	}
+
+	public void setAverageTime(Float averageTime) {
+		this.averageTime = averageTime;
+	}
+
+	public void setPopularity(Float popularity) {
+		this.popularity = popularity;
+	}
+
+	public List<String> getBusinesshourIds() {
+		return businesshourIds;
+	}
+
+	public void setBusinesshourIds(List<String> businesshourIds) {
+		this.businesshourIds = businesshourIds;
+	}
+
+	public List<String> getCategoryIds() {
+		return categoryIds;
+	}
+
+	public void setCategoryIds(List<String> categoryIds) {
+		this.categoryIds = categoryIds;
+	}
+
 	@Override
 	public String toString() {
 		return "Place [placeId=" + placeId + ", placeName=" + placeName + ", address=" + address + ", lat=" + lat
-				+ ", lon=" + lon + ", category=" + category + ", imageLink=" + imageLink + ", averageTime="
-				+ averageTime + ", intro=" + intro + ", popularity=" + popularity + "]";
+				+ ", lon=" + lon + ", imageLink=" + imageLink + ", averageTime=" + averageTime + ", intro=" + intro
+				+ ", popularity=" + popularity + "]";
 	}
-
-	
 
 }

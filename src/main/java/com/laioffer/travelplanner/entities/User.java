@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 
 @Entity //specify the class is an entity and is mapped to a database table
-@Table (name = "users") //specify the name of the database table to be used for mapping
+@Table (name = "user") //specify the name of the database table to be used for mapping
 public class User {
 	@Id //represents the primary key
 	private Integer userId;

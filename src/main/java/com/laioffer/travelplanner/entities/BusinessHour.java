@@ -12,48 +12,57 @@ import javax.persistence.Table;
 
 import com.laioffer.travelplanner.enumerate.DayOfWeek;
 
-
 @Entity
-@Table (name = "businesshours")
+@Table(name = "businesshour")
 public class BusinessHour {
 	@Id
-	private Integer businessHourId;
-	
-	private Integer placeId;
+	private String businessHourId;
+
+	private String placeId;
+
 	@Enumerated(EnumType.STRING)
 	private DayOfWeek dayOfWeek;
 	private Date startTime;
 	private Date endTime;
-	
-	public BusinessHour() {
-		
-	}
-	public Integer getPlaceId() {
-		return placeId;
-	}
-	public Integer getBusinessHourId() {
-		return businessHourId;
-	}
-	public void setBusinessHourId(Integer businessHourId) {
-		this.businessHourId = businessHourId;
-	}
+
 	public DayOfWeek getDayOfWeek() {
 		return dayOfWeek;
 	}
-	
+
 	public Date getStartTime() {
 		return startTime;
 	}
+
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
+
 	public Date getEndTime() {
 		return endTime;
 	}
+
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
-	
-	
+
+	public String getBusinessHourId() {
+		return businessHourId;
+	}
+
+	public void setBusinessHourId(String businessHourId) {
+		this.businessHourId = businessHourId;
+	}
+
+	public String getPlaceId() {
+		return placeId;
+	}
+
+	public void setPlaceId(String placeId) {
+		this.placeId = placeId;
+	}
+
+	public void setDayOfWeek(DayOfWeek dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
+	}
 
 }
