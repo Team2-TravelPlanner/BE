@@ -1,5 +1,7 @@
 package com.laioffer.travelplanner.antAlg;
 
+import com.laioffer.travelplanner.entities.Place;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
