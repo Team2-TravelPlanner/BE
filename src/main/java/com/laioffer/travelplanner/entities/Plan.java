@@ -8,39 +8,21 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table (name = "plans")
-
+@Table(name = "plan")
 public class Plan {
 	@Id
-	private Integer planId;
-	
-	private Integer userId;
+	private String planId;
 
-	private List<DayOfPlan> days;
-	
+	private String userId;
+
+	private List<String> dayOfPlanIds;
+
 	private Date createTime;
-	private Date updateTime; //do we need these fields in the class?
-	
-	public Plan() {
-		
-	}
-	
-	public Integer getUserId() {
-		return userId;
-	}
-	
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
+	private Date updateTime; // do we need these fields in the class?
 
-	public Integer getPlanId() {
-		return planId;
-	}
-	public void setPlanId(Integer planId) {
-		this.planId = planId;
-	}
+	//...
 	
-	
+	//....
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -56,25 +38,29 @@ public class Plan {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-	public List<DayOfPlan> getDays(){
-		return days;
-	}
-	public void setDays(List<DayOfPlan> days) {
-		this.days = days;
-	}
-	
-	@Override
-	public String toString() {
-		return "Plan [planId=" + planId + ", userId=" + userId + ", createTime=" + createTime + ", updateTime="
-				+ updateTime + "]";
+
+	public String getPlanId() {
+		return planId;
 	}
 
-	
-	
+	public void setPlanId(String planId) {
+		this.planId = planId;
+	}
 
-	
-	
-	
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public List<String> getDayOfPlanIds() {
+		return dayOfPlanIds;
+	}
+
+	public void setDayOfPlanIds(List<String> dayOfPlanIds) {
+		this.dayOfPlanIds = dayOfPlanIds;
+	}
 
 }
-

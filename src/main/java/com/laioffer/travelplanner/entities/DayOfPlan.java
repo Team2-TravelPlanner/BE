@@ -8,40 +8,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table (name = "dayofplans")
+@Table(name = "dayofplan")
 
 public class DayOfPlan {
 	@Id
-	private Integer dayId;
-	
-	private List<PlaceOfPlan> placeOfPlan;
-	
+	private String dayId;
 
-	
+	private List<String> placeOfPlanIds;
+
 	private Date createTime;
 	private Date updateTime;
 
-	public DayOfPlan() {
-		
-	}
-	
-	public Integer getDayId() {
-		return dayId;
-	}
-
-
-	public void setDayId(Integer dayId) {
-		this.dayId = dayId;
-	}
-	
-	public void setPlaceOfPlan(List<PlaceOfPlan> placeOfPlan) {
-		this.placeOfPlan = placeOfPlan;
-	}
-
-	
-	public List<PlaceOfPlan> getPlaceOfPlan() {
-		return placeOfPlan;
-	}
+	// ...
 
 	public Date getCreateTime() {
 		return createTime;
@@ -58,7 +36,21 @@ public class DayOfPlan {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-	
+
+	public String getDayId() {
+		return dayId;
+	}
+
+	public void setDayId(String dayId) {
+		this.dayId = dayId;
+	}
+
+	public List<String> getPlaceOfPlanIds() {
+		return placeOfPlanIds;
+	}
+
+	public void setPlaceOfPlanIds(List<String> placeOfPlanIds) {
+		this.placeOfPlanIds = placeOfPlanIds;
+	}
 
 }
-
