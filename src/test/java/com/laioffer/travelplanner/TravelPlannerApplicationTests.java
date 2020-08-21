@@ -33,7 +33,7 @@ class TravelPlannerApplicationTests {
 		user.setEmail("test1@gmail.com");
 		user.setPassword("123456");
 		user.setUsername("test");
-		
+
 
 		userService.saveUser(user);
 	}

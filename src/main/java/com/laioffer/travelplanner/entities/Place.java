@@ -23,7 +23,7 @@ public class Place {
     private List<String> businesshourIds;
     private List<String> categoryIds;
 
-    public Place(String placeId, String placeName, String address, double lat, double lon) {
+    public Place(String placeId, String placeName, String address,  double lon, double lat) {
         this.placeId = placeId;
         this.placeName = placeName;
         this.address = address;
