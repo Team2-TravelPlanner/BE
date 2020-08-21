@@ -33,24 +33,7 @@ class TravelPlannerApplicationTests {
 		user.setEmail("test1@gmail.com");
 		user.setPassword("123456");
 		user.setUsername("test");
-
-
-
-		Plan plan = new Plan();
-		plan.setPlanOwner("test1@gmail.com");
-
-		Plan plan1 = new Plan();
-		plan.setPlanOwner("test2@gmail.com");
-
-		repository.save(plan);
-		repository.save(plan1);
-
-		List<Plan> list = new ArrayList<>();
-		list.add(plan);
-		list.add(plan1);
-
-		user.setPlans(list);
-
+		
 
 		userService.saveUser(user);
 	}

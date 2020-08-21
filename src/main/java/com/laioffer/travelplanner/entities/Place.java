@@ -1,41 +1,50 @@
 package com.laioffer.travelplanner.entities;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+import java.util.List;
+
+@Document(indexName = "travel")
 public class Place {
-    private Integer id;
+    @Id
+    private String placeId;
 
-    private String name;
-
+    private String placeName;
     private String address;
-
+    private double lat;
     private double lon;
 
-    private double lat;
+    private String imageLink;
+    private Float averageTime;
+    private String intro;
+    private Float popularity;
+    private String website;
+    private List<String> businesshourIds;
+    private List<String> categoryIds;
 
-    public Place() {
-    }
-
-    public Place(Integer id, String name, String address, double lon, double lat) {
-        this.id = id;
-        this.name = name;
+    public Place(String placeId, String placeName, String address, double lat, double lon) {
+        this.placeId = placeId;
+        this.placeName = placeName;
         this.address = address;
-        this.lon = lon;
         this.lat = lat;
+        this.lon = lon;
     }
 
-    public Integer getId() {
-        return id;
+    public String getPlaceId() {
+        return placeId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
     }
 
-    public String getName() {
-        return name;
+    public String getPlaceName() {
+        return placeName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
     }
 
     public String getAddress() {
@@ -46,6 +55,14 @@ public class Place {
         this.address = address;
     }
 
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
     public double getLon() {
         return lon;
     }
@@ -54,11 +71,83 @@ public class Place {
         this.lon = lon;
     }
 
-    public double getLat() {
-        return lat;
+    public String getImageLink() {
+        return imageLink;
     }
 
-    public void setLat(double lat) {
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
+    }
+
+    public float getAverageTime() {
+        return averageTime;
+    }
+
+    public void setAverageTime(float averageTime) {
+        this.averageTime = averageTime;
+    }
+
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
+
+    public float getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(float popularity) {
+        this.popularity = popularity;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public void setLat(Float lat) {
         this.lat = lat;
     }
+
+    public void setLon(Float lon) {
+        this.lon = lon;
+    }
+
+    public void setAverageTime(Float averageTime) {
+        this.averageTime = averageTime;
+    }
+
+    public void setPopularity(Float popularity) {
+        this.popularity = popularity;
+    }
+
+    public List<String> getBusinesshourIds() {
+        return businesshourIds;
+    }
+
+    public void setBusinesshourIds(List<String> businesshourIds) {
+        this.businesshourIds = businesshourIds;
+    }
+
+    public List<String> getCategoryIds() {
+        return categoryIds;
+    }
+
+    public void setCategoryIds(List<String> categoryIds) {
+        this.categoryIds = categoryIds;
+    }
+
+    @Override
+    public String toString() {
+        return "Place [placeId=" + placeId + ", placeName=" + placeName + ", address=" + address + ", lat=" + lat
+                + ", lon=" + lon + ", imageLink=" + imageLink + ", averageTime=" + averageTime + ", intro=" + intro
+                + ", popularity=" + popularity + "]";
+    }
+
 }
