@@ -9,6 +9,7 @@ import java.util.List;
 public class ACO {
     private CityGraph weight_distance;
     private List<Place> places;
+    private Place[] order;
 //    private int citynum = places.size();
     private int p = 1000;//迭代次数
     private double bestLength;
@@ -86,7 +87,7 @@ public class ACO {
     /**
      * 迭代结束
      */
-    private void iterator() {
+    public void iterator() {
         Init_Distance();
         Init_paras();
         startTime = System.currentTimeMillis();
@@ -98,6 +99,10 @@ public class ACO {
             endTime = System.currentTimeMillis();
             updatePheromone();
         }
+    }
+
+    public String getBestTour() {
+        return bestTour;
     }
 
     public static void main(String[] args) {

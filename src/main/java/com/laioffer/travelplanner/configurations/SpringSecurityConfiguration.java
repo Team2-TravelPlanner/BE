@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -27,7 +26,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private MyUserDetailService myUserDetailService;
 
     @Bean
-    public PasswordEncoder passwordEncoder (){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -42,7 +41,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
                 .authorizeRequests()
-                .antMatchers("/users/**", "/v2/**", "/swagger-ui.html").permitAll()
+                .antMatchers("/users/**", "/v2/**", "/swagger-ui.html", "/plan/**").permitAll()
 //                .antMatchers("/users/admin/**").hasRole("Admin")
                 .anyRequest().fullyAuthenticated()
                 .and()
@@ -51,7 +50,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.addFilter(new JwtAuthorizationFilter(authenticationManager(),tokenProvider));
+        http.addFilter(new JwtAuthorizationFilter(authenticationManager(), tokenProvider));
     }
 
     @Bean
