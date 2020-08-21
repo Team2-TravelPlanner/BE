@@ -1,110 +1,99 @@
 package com.laioffer.travelplanner.entities;
 
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.elasticsearch.annotations.Document;
-
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+
 @Document(indexName = "travel")
 public class User {
+	@Id // represents the primary key
+	private String userId;
+	private String userName;
+	private String password; // password type
+	private String email;
+	private String token;
+	private Date createTime; // date/time type ==> do we need these fields in the class?
+	private Date updateTime; // date/time type
+	// private Date expireDate; //date/time type
+	private List<String> planIds;
 
-    @Id
-    private String email;
+	public String getUsername() {
+		return userName;
+	}
 
-    private String username;
+	public void setUsername(String userName) {
+		this.userName = userName;
+	}
 
-    private String password;
+	public String getPassword() {
+		return password;
+	}
 
-    private Date timeCreate;
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    private Date timeUpdated;
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    private List<Plan> plans;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    @Transient
-    private String token;
+	public Date getUpdateTime() {
+		return updateTime;
+	}
 
-    public User() {
-    }
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
 
+	public String getEmail() {
+		return email;
+	}
 
-    public User(String email, String username, String password, Date timeCreate, Date timeUpdated, String token) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.timeCreate = timeCreate;
-        this.timeUpdated = timeUpdated;
-        this.token = token;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getToken() {
+		return token;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setToken(String token) {
+		this.token = token;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public String getUserId() {
+		return userId;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getUserName() {
+		return userName;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
-    public Date getTimeCreate() {
-        return timeCreate;
-    }
+	public List<String> getPlanIds() {
+		return planIds;
+	}
 
-    public void setTimeCreate(Date timeCreate) {
-        this.timeCreate = timeCreate;
-    }
+	public void setPlanIds(List<String> planIds) {
+		this.planIds = planIds;
+	}
 
-    public Date getTimeUpdated() {
-        return timeUpdated;
-    }
-
-    public void setTimeUpdated(Date timeUpdated) {
-        this.timeUpdated = timeUpdated;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public List<Plan> getPlans() {
-        return plans;
-    }
-
-    public void setPlans(List<Plan> plans) {
-        this.plans = plans;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "email='" + email + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", timeCreate=" + timeCreate +
-                ", timeUpdated=" + timeUpdated +
-                ", token='" + token + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "User{" + "email='" + email + '\'' + ", username='" + userName + '\'' + ", password='" + password + '\''
+				+ ", timeCreate=" + createTime + ", timeUpdated=" + updateTime + ", token='" + token + '\'' + '}';
+	}
 }

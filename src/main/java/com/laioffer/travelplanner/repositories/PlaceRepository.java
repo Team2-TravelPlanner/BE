@@ -1,8 +1,8 @@
 package com.laioffer.travelplanner.repositories;
 
-import com.laioffer.travelplanner.entities.Plan;
+import com.laioffer.travelplanner.entities.Place;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
+public interface PlaceRepository extends ElasticsearchRepository<Place, String> {
 
-public interface PlanRepository extends ElasticsearchRepository<Plan, String> {
 }
