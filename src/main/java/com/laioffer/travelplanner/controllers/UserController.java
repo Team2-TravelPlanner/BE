@@ -3,43 +3,63 @@ package com.laioffer.travelplanner.controllers;
 
 import com.laioffer.travelplanner.entities.User;
 import com.laioffer.travelplanner.jwtUtils.JwtTokenProvider;
+import com.laioffer.travelplanner.model.common.AuthenticationRequest;
+import com.laioffer.travelplanner.model.common.AuthenticationResponse;
+import com.laioffer.travelplanner.model.common.MessageResponse;
 import com.laioffer.travelplanner.services.UserService;
+import com.laioffer.travelplanner.services.implementation.MyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
+    private final String wrongEmailPasswordError = "Incorrect email or password";
+
+    private final String userExistError = "User already exists";
+
+    private final String success = "ok";
+
     @Autowired
     private UserService userService;
 
     @Autowired
+    private MyUserDetailService userDetailService;
+
+    @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         if (userService.findByEmail(user.getEmail()) != null) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, userExistError, new Exception());
         }
-        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
+        userService.saveUser(user);
+        return ResponseEntity.ok(new MessageResponse(success));
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<?> login(Principal principal){
-        if(principal == null){
-            //This should be ok http status because this will be used for logout path.
-            return ResponseEntity.ok(principal);
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+        try{
+            authenticationManager.authenticate(authenticationToken);
+        } catch( BadCredentialsException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, wrongEmailPasswordError, new Exception());
         }
-        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) principal;
-        User user = userService.findByEmail(authenticationToken.getName());
-        user.setToken(jwtTokenProvider.generateToken(authenticationToken));
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        String jwt = jwtTokenProvider.generateToken(authenticationToken);
+
+        return ResponseEntity.ok(new AuthenticationResponse(success, authenticationRequest.getEmail(), jwt));
     }
 }
