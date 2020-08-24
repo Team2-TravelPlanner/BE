@@ -8,6 +8,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.laioffer.travelplanner.antAlg.ACO;
 import com.laioffer.travelplanner.entities.Place;
+import com.laioffer.travelplanner.vo.CustomizedPlan;
+import com.laioffer.travelplanner.vo.Origin;
+import com.laioffer.travelplanner.vo.PlaceDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +39,17 @@ public class PlanController {
         JSONArray res = JSONArray.parseArray(JSON.toJSONString(aco.getOrder(), SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter));
 
 
-        return new ResponseEntity<>(res, HttpStatus.OK);
+        CustomizedPlan customizedPlan = new CustomizedPlan();
+        Origin origin = new Origin();
+        customizedPlan.setStartDate(startDate);
+        customizedPlan.setEndDate(endDate);
+        customizedPlan.setPlaceDetails(aco.getPlaceDetails());
+        customizedPlan.setOrigin(origin);
+
+        String response = JSON.toJSONString(customizedPlan, SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
+
+
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
