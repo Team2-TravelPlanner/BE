@@ -9,7 +9,7 @@ import java.util.List;
 public class ACO {
     private CityGraph weight_distance;
     private List<Place> places;
-    private Place[] order;
+    private List<Place> order;
 //    private int citynum = places.size();
     private int p = 1000;//迭代次数
     private double bestLength;
@@ -31,6 +31,7 @@ public class ACO {
     //初始化城市信息，假设为非对称TSP问题
     private void Init_Distance() {
         weight_distance = new CityGraph(places);
+        order = new ArrayList<>();
     }
 
     //参数初始化
@@ -99,10 +100,21 @@ public class ACO {
             endTime = System.currentTimeMillis();
             updatePheromone();
         }
+        for (int i = 0; i < bestTour.length(); i = i + 2) {
+            for(int j = 0; j < places.size(); j++) {
+                if (Character.getNumericValue(bestTour.charAt(i)) == Integer.valueOf(places.get(j).getPlaceId())) {
+                    order.add(places.get(j));
+                }
+            }
+        }
     }
 
     public String getBestTour() {
         return bestTour;
+    }
+
+    public List<Place> getOrder() {
+        return order;
     }
 
     public static void main(String[] args) {
