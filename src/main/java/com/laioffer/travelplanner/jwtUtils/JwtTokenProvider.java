@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
-    private static final String jwtSecret = "RandomSecretKey";
 
+    private static String jwtSecret = "RandomSecretKey";
 
     private static final String jwtTokenPrefix = "Bearer";
 
@@ -28,8 +28,6 @@ public class JwtTokenProvider {
 
 
     private static final Integer jwtExpirationInMs = 86400000;
-
-
 
     @Override
     public String toString() {
@@ -44,8 +42,10 @@ public class JwtTokenProvider {
     public String generateToken(Authentication authentication){
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining());
 
-        return Jwts.builder().setSubject(authentication.getName())
+        return Jwts.builder()
                 .claim("roles", authorities)
+                .setSubject(authentication.getName())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
     }
@@ -55,13 +55,19 @@ public class JwtTokenProvider {
         if(token == null){
             return null;
         }
-        Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+
+        Claims claims;
+        try{
+            claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+        } catch(Exception e) {
+            return null;
+        }
+
         String username = claims.getSubject();
         List<GrantedAuthority> authorities = Arrays.stream(claims.get("roles").toString().split(","))
                 .map(role -> role.startsWith("ROLE_")? role:"ROLE_"+role)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-        System.out.println("resolved token already");
         return username!=null ? new UsernamePasswordAuthenticationToken(username, null, authorities):null;
     }
 
@@ -80,7 +86,6 @@ public class JwtTokenProvider {
     private String resolveToken(HttpServletRequest request){
         String bearerToken = request.getHeader(jwtHeaderString);
         if(bearerToken!=null && bearerToken.startsWith(jwtTokenPrefix)){
-            System.out.println("this"+bearerToken.substring(7));
             return bearerToken.substring(7, bearerToken.length()).equals("") ? null : bearerToken.substring(7, bearerToken.length());
         }
         return null;
