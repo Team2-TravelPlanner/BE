@@ -2,14 +2,18 @@ package com.laioffer.travelplanner.antAlg;
 
 import com.laioffer.travelplanner.entities.Place;
 import com.laioffer.travelplanner.planModel.PlaceDetail;
+import io.swagger.models.auth.In;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ACO {
     private CityGraph weight_distance;
     private List<Place> places;
     private List<Place> order;
+    private Map<Integer, Place> map;
     private List<PlaceDetail> placeDetails;
 //    private int citynum = places.size();
     private int p = 1000;//迭代次数
@@ -31,7 +35,8 @@ public class ACO {
 
     //初始化城市信息，假设为非对称TSP问题
     private void Init_Distance() {
-        weight_distance = new CityGraph(places);
+        map = new HashMap<>();
+        weight_distance = new CityGraph(places, map);
         order = new ArrayList<>();
         placeDetails = new ArrayList<>();
     }
@@ -103,14 +108,17 @@ public class ACO {
             updatePheromone();
         }
         for (int i = 0; i < bestTour.length(); i = i + 2) {
-            for(int j = 0; j < places.size(); j++) {
-                if (Character.getNumericValue(bestTour.charAt(i)) == Integer.valueOf(places.get(j).getPlaceId())) {
-                    order.add(places.get(j));
-                    PlaceDetail p = new PlaceDetail();
-                    p.setPlace(places.get(j));
-                    placeDetails.add(p);
-                }
-            }
+//            for(int j = 0; j < places.size(); j++) {
+//                if (Character.getNumericValue(bestTour.charAt(i)) == Integer.valueOf(places.get(j).getPlaceId())) {
+//                    order.add(places.get(j));
+//                    PlaceDetail p = new PlaceDetail();
+//                    p.setPlace(places.get(j));
+//                    placeDetails.add(p);
+//                }
+//            }
+            PlaceDetail p = new PlaceDetail();
+            p.setPlace(map.get(Character.getNumericValue(bestTour.charAt(i))));
+            placeDetails.add(p);
         }
     }
 

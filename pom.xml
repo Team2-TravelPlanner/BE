@@ -63,6 +63,12 @@
 			<version>1.2.73</version>
 		</dependency>
 
+		<dependency>
+			<groupId>se.walkercrou</groupId>
+			<artifactId>google-places-api-java</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+
 
 
 		<dependency>

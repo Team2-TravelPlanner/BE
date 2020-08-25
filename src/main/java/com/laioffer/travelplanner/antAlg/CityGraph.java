@@ -4,6 +4,7 @@ import com.laioffer.travelplanner.Utils.DistanceUtil;
 import com.laioffer.travelplanner.entities.Place;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class CityGraph {
@@ -21,18 +22,19 @@ public class CityGraph {
         initPheronome();
     }
 
-    public CityGraph(List<Place> places) {
+    public CityGraph(List<Place> places, Map<Integer, Place> map) {
         this.num = places.size();
 
-        MyInitDistance(true, places);
+        MyInitDistance(true, places, map);
         initPheronome();
 
     }
 
-    private void MyInitDistance(boolean ifSymmetric, List<Place> places) {
+    private void MyInitDistance(boolean ifSymmetric, List<Place> places, Map<Integer, Place> map) {
         distance = new double[num][num];
         for (int i = 0; i < num; i++) {
             if (ifSymmetric) {
+                map.put(i, places.get(i));
                 for (int j = 0; j < num; j++) {
                     if (i == j) {
                         distance[i][j] = 0;
