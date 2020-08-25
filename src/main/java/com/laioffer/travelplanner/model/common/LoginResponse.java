@@ -1,6 +1,6 @@
 package com.laioffer.travelplanner.model.common;
 
-public class AuthenticationResponse {
+public class LoginResponse {
 
 	private OperationResponse operationResponse;
 

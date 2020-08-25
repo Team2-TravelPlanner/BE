@@ -3,8 +3,8 @@ package com.laioffer.travelplanner.controllers;
 
 import com.laioffer.travelplanner.entities.User;
 import com.laioffer.travelplanner.jwtUtils.JwtTokenProvider;
-import com.laioffer.travelplanner.model.common.AuthenticationRequest;
-import com.laioffer.travelplanner.model.common.AuthenticationResponse;
+import com.laioffer.travelplanner.model.common.LoginRequestModel;
+import com.laioffer.travelplanner.model.common.LoginResponse;
 import com.laioffer.travelplanner.model.common.MessageResponse;
 import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.model.user.UserInfoModel;
@@ -52,11 +52,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequestModel authenticationRequest) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword());
         
-        AuthenticationResponse ans = new AuthenticationResponse();
+        LoginResponse ans = new LoginResponse();
         
         
         try{

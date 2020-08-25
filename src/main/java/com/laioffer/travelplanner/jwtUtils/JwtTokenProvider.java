@@ -90,4 +90,19 @@ public class JwtTokenProvider {
         }
         return null;
     }
+    
+    public Boolean authenToken(String token) {
+    	String temp = null;
+        if(token!=null && token.startsWith(jwtTokenPrefix)){
+        	temp =  token.substring(7, token.length()).equals("") ? null : token.substring(7, token.length());
+        }
+        if(token == null){
+            return false;
+        }
+        Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+        if(claims.getExpiration().before(new Date())){
+            return false;
+        }
+        return true;
+    }
 }

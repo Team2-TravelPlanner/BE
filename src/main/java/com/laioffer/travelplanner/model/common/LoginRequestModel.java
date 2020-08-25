@@ -1,14 +1,14 @@
 package com.laioffer.travelplanner.model.common;
 
-public class AuthenticationRequest {
+public class LoginRequestModel {
 
     private String email;
     private String password;
 
-    public AuthenticationRequest() {
+    public LoginRequestModel() {
     }
 
-    public AuthenticationRequest(String email, String password) {
+    public LoginRequestModel(String email, String password) {
         this.email = email;
         this.password = password;
     }
