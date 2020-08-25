@@ -8,14 +8,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.laioffer.travelplanner.antAlg.ACO;
 import com.laioffer.travelplanner.entities.Place;
-import com.laioffer.travelplanner.vo.CustomizedPlan;
-import com.laioffer.travelplanner.vo.Origin;
-import com.laioffer.travelplanner.vo.PlaceDetail;
+import com.laioffer.travelplanner.planModel.CustomizedPlan;
+import com.laioffer.travelplanner.planModel.Origin;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

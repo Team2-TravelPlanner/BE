@@ -1,4 +1,4 @@
-package com.laioffer.travelplanner.vo;
+package com.laioffer.travelplanner.planModel;
 
 public class Origin {
     private double lat;

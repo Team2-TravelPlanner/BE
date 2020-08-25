@@ -1,8 +1,7 @@
 package com.laioffer.travelplanner.antAlg;
 
 import com.laioffer.travelplanner.entities.Place;
-import com.laioffer.travelplanner.vo.PlaceDetail;
-import org.springframework.security.core.parameters.P;
+import com.laioffer.travelplanner.planModel.PlaceDetail;
 
 import java.util.ArrayList;
 import java.util.List;

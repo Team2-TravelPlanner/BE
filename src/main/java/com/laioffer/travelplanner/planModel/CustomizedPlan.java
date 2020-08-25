@@ -1,9 +1,6 @@
-package com.laioffer.travelplanner.vo;
+package com.laioffer.travelplanner.planModel;
 
 
-import com.laioffer.travelplanner.entities.Place;
-
-import java.util.Date;
 import java.util.List;
 
 public class CustomizedPlan {

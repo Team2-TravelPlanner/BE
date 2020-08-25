@@ -1,9 +1,6 @@
-package com.laioffer.travelplanner.vo;
+package com.laioffer.travelplanner.planModel;
 
 import com.laioffer.travelplanner.entities.Place;
-import io.swagger.models.auth.In;
-
-import java.util.Date;
 
 public class PlaceDetail {
     private Integer start;

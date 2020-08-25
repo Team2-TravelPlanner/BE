@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Service
-public class MyPlanGeneratorImp {
+public class PlanServiceImp {
     @Autowired
     private PlaceRepository placeRepository;
 
