@@ -2,39 +2,37 @@ package com.laioffer.travelplanner.model.common;
 
 public class AuthenticationResponse {
 
-    private String message;
+	private OperationResponse operationResponse;
 
-    private String email;
+    private String id;
 
-    private String jwt;
+    private String token;
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public OperationResponse getOperationResponse() {
+		return operationResponse;
+	}
 
-    public String getJwt() {
-        return jwt;
-    }
+	public void setOperationResponse(OperationResponse operationResponse) {
+		this.operationResponse = operationResponse;
+	}
 
-    public void setJwt(String jwt) {
-        this.jwt = jwt;
-    }
+	public String getToken() {
+		return token;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public void setToken(String token) {
+		this.token = token;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public AuthenticationResponse(String message, String email, String jwt) {
-        this.message = message;
-        this.email = email;
-        this.jwt = jwt;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	
+
 }

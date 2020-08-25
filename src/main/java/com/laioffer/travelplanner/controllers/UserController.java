@@ -6,6 +6,8 @@ import com.laioffer.travelplanner.jwtUtils.JwtTokenProvider;
 import com.laioffer.travelplanner.model.common.AuthenticationRequest;
 import com.laioffer.travelplanner.model.common.AuthenticationResponse;
 import com.laioffer.travelplanner.model.common.MessageResponse;
+import com.laioffer.travelplanner.model.common.OperationResponse;
+import com.laioffer.travelplanner.model.user.UserInfoModel;
 import com.laioffer.travelplanner.services.UserService;
 import com.laioffer.travelplanner.services.implementation.MyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,16 +52,23 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+        
+        AuthenticationResponse ans = new AuthenticationResponse();
+        
+        
         try{
             authenticationManager.authenticate(authenticationToken);
         } catch( BadCredentialsException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, wrongEmailPasswordError, new Exception());
         }
-        String jwt = jwtTokenProvider.generateToken(authenticationToken);
-
-        return ResponseEntity.ok(new AuthenticationResponse(success, authenticationRequest.getEmail(), jwt));
+        String token = jwtTokenProvider.generateToken(authenticationToken);
+        UserInfoModel model = userService.findByEmail(authenticationRequest.getEmail());
+        ans.setToken(token);
+        ans.setId(model.getId());
+        ans.setOperationResponse(OperationResponse.getSuccessResponse());
+        return ResponseEntity.ok(ans);
     }
 }
