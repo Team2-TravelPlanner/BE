@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import com.laioffer.travelplanner.enumerate.TypeOfPlan;
+
 @Document(indexName = "travel")
 public class Plan {
 	@Id
@@ -25,6 +27,9 @@ public class Plan {
 	private Date startDate;
 	private Date endDate;
 	//....
+	
+	private TypeOfPlan typeOfPlan;
+	
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -95,6 +100,14 @@ public class Plan {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	public TypeOfPlan getTypeOfPlan() {
+		return typeOfPlan;
+	}
+
+	public void setTypeOfPlan(TypeOfPlan typeOfPlan) {
+		this.typeOfPlan = typeOfPlan;
 	}
 
 }

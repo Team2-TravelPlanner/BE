@@ -10,6 +10,7 @@ import com.laioffer.travelplanner.entities.DayOfPlan;
 import com.laioffer.travelplanner.entities.PlaceOfPlan;
 import com.laioffer.travelplanner.entities.Plan;
 import com.laioffer.travelplanner.entities.User;
+import com.laioffer.travelplanner.enumerate.TypeOfPlan;
 import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.model.plan.DayOfPlanSaveModel;
 import com.laioffer.travelplanner.model.plan.PlaceOfPlanSaveModel;
@@ -48,6 +49,7 @@ public class PlanServiceImpl implements PlanService{
 		plan.setStartDate(model.getStartDate());
 		plan.setEndDate(model.getEndDate());
 		plan.setUserId(user.getUserId());
+		plan.setTypeOfPlan(model.getTypeOfPlan());
 		
 		List<String> dayOfPlanIds = new ArrayList<>();
 		
