@@ -29,7 +29,7 @@ public class PlaceController {
 
         Place place = placeService.searchPlacesByKeyword(keyword);
 
-//        Place place = placeService.searchPlacesByGeolocation(upperLeftLat, upperLeftLon, );
+//        Place place = placeService.searchPlacesByGeolocation(upperLeftLat, upperLeftLon, lowerRightLat, lowerRightLon);
 
         return new ResponseEntity<>(place, HttpStatus.OK);
     }
