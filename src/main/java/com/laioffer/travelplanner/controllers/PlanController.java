@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.laioffer.travelplanner.jwtUtils.JwtTokenProvider;
 import com.laioffer.travelplanner.model.common.OperationResponse;
+import com.laioffer.travelplanner.model.plan.PlanGetAllModel;
+import com.laioffer.travelplanner.model.plan.PlanGetModel;
 import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
 import com.laioffer.travelplanner.services.PlanService;
 
@@ -47,6 +49,42 @@ public class PlanController {
 		
 		try {
 			res = planService.savePlan(planSaveRequestModel);
+			return new ResponseEntity<>(res, HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.info(e.getMessage());
+			return new ResponseEntity<>(OperationResponse.getFailedResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "getPlan", method = RequestMethod.GET)
+	public ResponseEntity<OperationResponse> getPlan(@RequestBody PlanGetModel planGetModel) {
+		
+		if(!jwtTokenProvider.authenToken(planGetModel.getAuthModel().getToken())){
+			return new ResponseEntity<>(OperationResponse.getFailedResponse("No such user Or token is wrong"), HttpStatus.OK);
+		}
+		
+		OperationResponse res = new OperationResponse();
+		
+		try {
+			res = planService.getPlan(planGetModel);
+			return new ResponseEntity<>(res, HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.info(e.getMessage());
+			return new ResponseEntity<>(OperationResponse.getFailedResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "getAllPlan", method = RequestMethod.GET)
+	public ResponseEntity<OperationResponse> getAllPlan(@RequestBody PlanGetAllModel planGetAllModel) {
+		
+		if(!jwtTokenProvider.authenToken(planGetAllModel.getAuthModel().getToken())){
+			return new ResponseEntity<>(OperationResponse.getFailedResponse("No such user Or token is wrong"), HttpStatus.OK);
+		}
+		
+		OperationResponse res = new OperationResponse();
+		
+		try {
+			res = planService.getAllPlan(planGetAllModel);
 			return new ResponseEntity<>(res, HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.info(e.getMessage());
