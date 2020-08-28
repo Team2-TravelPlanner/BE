@@ -9,21 +9,17 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @Document(indexName = "travel")
 public class User {
 	@Id // represents the primary key
-	private String userId;
+	private String email;
+	
 	private String userName;
 	private String password; // password type
-	private String email;
+	
 	private String token;
 	private Date createTime; // date/time type ==> do we need these fields in the class?
 	private Date updateTime; // date/time type
 	// private Date expireDate; //date/time type
 	private List<String> planIds;
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+
 	public String getUserName() {
 		return userName;
 	}
