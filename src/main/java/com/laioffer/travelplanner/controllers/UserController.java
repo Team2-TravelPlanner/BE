@@ -67,7 +67,7 @@ public class UserController {
         String token = jwtTokenProvider.generateToken(authenticationToken);
         UserInfoModel model = userService.findByEmail(authenticationRequest.getEmail());
         ans.setToken(token);
-        ans.setId(model.getId());
+        ans.setId(model.getEmail());
         ans.setOperationResponse(OperationResponse.getSuccessResponse());
         return ResponseEntity.ok(ans);
     }
