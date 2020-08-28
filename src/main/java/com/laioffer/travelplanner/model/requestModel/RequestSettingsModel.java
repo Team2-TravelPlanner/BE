@@ -1,4 +1,4 @@
-package com.laioffer.travelplanner.requestModel;
+package com.laioffer.travelplanner.model.requestModel;
 
 import io.swagger.models.auth.In;
 

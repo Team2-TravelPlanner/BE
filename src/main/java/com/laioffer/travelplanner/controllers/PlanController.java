@@ -2,8 +2,10 @@ package com.laioffer.travelplanner.controllers;
 
 import com.laioffer.travelplanner.entities.Place;
 import com.laioffer.travelplanner.mapsearch.GoogleSearch;
-import com.laioffer.travelplanner.requestModel.RequestSettingsModel;
 import com.laioffer.travelplanner.services.PlanService;
+
+import java.util.List;
+
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -23,9 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.laioffer.travelplanner.jwtUtils.JwtTokenProvider;
 import com.laioffer.travelplanner.model.common.AuthModel;
 import com.laioffer.travelplanner.model.common.OperationResponse;
+import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
 import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
 import com.laioffer.travelplanner.model.plan.PlanGetModel;
 import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
+import com.laioffer.travelplanner.model.requestModel.RequestRecommendedPlan;
+import com.laioffer.travelplanner.model.requestModel.RequestSettingsModel;
 
 @RestController
 @RequestMapping("plan")
@@ -38,6 +43,9 @@ public class PlanController {
 
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
+	
+	@Autowired
+	private GoogleSearch googleSearch;
 
 	/**
 	 * Descriptive: save user basic plan to database
@@ -104,39 +112,37 @@ public class PlanController {
 	}
 
 	@PostMapping("/recommended")
-	public ResponseEntity<?> generateRecommendedPlan(@RequestBody RequestRecommendedPlan RecommendedPlan) {
+	public ResponseEntity<PlanDisplayModel> generateRecommendedPlan(@RequestBody RequestRecommendedPlan recommendedPlan) {
 
 //		SearchRequest searchRequest = new SearchRequest();
 //		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 //		searchSourceBuilder.query(QueryBuilders.matchAllQuery());
 //		searchRequest.source(searchSourceBuilder);
 //		RequestSettingsModel settings = RecommendedPlan.getSettings();
+		PlanDisplayModel res = new PlanDisplayModel();
+		try {
+			res = planService.generateRecommendedPlan(recommendedPlan);
+		} catch (Exception e) {
+			LOGGER.info(e.getMessage());
+			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
-		SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-
-		sourceBuilder.sort(new ScoreSortBuilder("popularity").order(SortOrder.DESC));
-
-		RecommendedPlan res = planService.generateRecommendedPlan(RecommendedPlan.getPlaces(),
-				RecommendedPlan.getCategories(), RecommendedPlan.getSettings());
-		String response = JSON.toJSONString(res, SerializerFeature.WriteNullStringAsEmpty,
-				SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
-
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
-	@GetMapping("/searchPlace")
-	public ResponseEntity<?> getPlaceInfo(@RequestParam(name = "placeName") String placeName) {
-		List<Place> places = googleSearch.getInfo(placeName);
-
-		com.laioffer.travelplanner.entities.Place place = new com.laioffer.travelplanner.entities.Place();
-//        place.setPlaceName(places.get(0).getName());
-//        place.setAddress(places.get(0).getAddress());
-//        place.setLat(places.get(0).getLatitude());
-//        place.setLon(places.get(0).getLongitude());
-//        place.setPopularity((float) places.get(0).getRating());
-//        place.setImageLink(places.get(0).getIconUrl());
-//        place.setWebsite(places.get(0).getWebsite());
-
-		return new ResponseEntity<>(place.toString(), HttpStatus.OK);
-	}
+//	@GetMapping("/searchPlace")
+//	public ResponseEntity<?> getPlaceInfo(@RequestParam(name = "placeName") String placeName) {
+//		List<Place> places = googleSearch.getInfo(placeName);
+//
+//		com.laioffer.travelplanner.entities.Place place = new com.laioffer.travelplanner.entities.Place();
+////        place.setPlaceName(places.get(0).getName());
+////        place.setAddress(places.get(0).getAddress());
+////        place.setLat(places.get(0).getLatitude());
+////        place.setLon(places.get(0).getLongitude());
+////        place.setPopularity((float) places.get(0).getRating());
+////        place.setImageLink(places.get(0).getIconUrl());
+////        place.setWebsite(places.get(0).getWebsite());
+//
+//		return new ResponseEntity<>(place.toString(), HttpStatus.OK);
+//	}
 }

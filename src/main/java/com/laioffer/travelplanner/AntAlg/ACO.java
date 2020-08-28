@@ -136,8 +136,8 @@ public class ACO {
 
     public static void main(String[] args) {
         List<Place> places = new ArrayList<>();
-        places.add
-        ACO aco = new ACO(places);
-        aco.iterator();
+//        places.add
+//        ACO aco = new ACO(places);
+//        aco.iterator();
     }
 }

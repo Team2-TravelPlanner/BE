@@ -3,9 +3,13 @@ package com.laioffer.travelplanner.services.implementation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.ScoreSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.laioffer.travelplanner.controllers.RecommendedPlan;
 import com.laioffer.travelplanner.entities.DayOfPlan;
 import com.laioffer.travelplanner.entities.PlaceOfPlan;
 import com.laioffer.travelplanner.entities.Plan;
@@ -15,9 +19,11 @@ import com.laioffer.travelplanner.model.common.AuthModel;
 import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.model.plan.DayOfPlanSaveModel;
 import com.laioffer.travelplanner.model.plan.PlaceOfPlanSaveModel;
+import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
 import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
 import com.laioffer.travelplanner.model.plan.PlanGetModel;
 import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
+import com.laioffer.travelplanner.model.requestModel.RequestRecommendedPlan;
 import com.laioffer.travelplanner.repositories.DayOfPlanRepository;
 import com.laioffer.travelplanner.repositories.PlaceOfPlanRepository;
 import com.laioffer.travelplanner.repositories.PlanRepository;
@@ -115,6 +121,28 @@ public class PlanServiceImpl implements PlanService{
 	}
 
 
+
+
 	// package function
 	//private 
+	
+	@Override
+	public PlanDisplayModel generateRecommendedPlan(RequestRecommendedPlan model) {
+		
+		//xian shan hou pai
+		
+		
+		//distance throuding
+		SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+
+		sourceBuilder.sort(new ScoreSortBuilder("popularity").order(SortOrder.DESC));
+
+		RecommendedPlan res = planService.generateRecommendedPlan(RecommendedPlan.getPlaces(),
+				RecommendedPlan.getCategories(), RecommendedPlan.getSettings());
+		String response = JSON.toJSONString(res, SerializerFeature.WriteNullStringAsEmpty,
+				SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
+		
+		//increment Index, length is empty
+		return null;
+	}
 }
