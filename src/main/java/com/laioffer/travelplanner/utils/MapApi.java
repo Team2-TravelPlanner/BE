@@ -20,6 +20,7 @@ public class MapApi {
 		PlaceDetailsRequest request = PlacesApi.placeDetails(context, "ChIJi6C1MxquEmsR9-c-3O48ykI");
 		//request.fields(FieldMask.)
 		PlaceDetails details = request.await();
+
 		
 //		for(Photo ph : details.photos) {
 //			System.out.println(ph.photoReference);

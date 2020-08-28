@@ -3,22 +3,19 @@ package com.laioffer.travelplanner.services.implementation;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.laioffer.travelplanner.antcolonyalgorithm.ACO;
+import com.laioffer.travelplanner.entities.*;
+import com.laioffer.travelplanner.mapsearch.GoogleSearch;
+import com.laioffer.travelplanner.model.common.SettingsRequestModel;
+import com.laioffer.travelplanner.model.plan.*;
+import com.laioffer.travelplanner.repositories.*;
+
+import com.laioffer.travelplanner.services.PlaceSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.laioffer.travelplanner.entities.DayOfPlan;
-import com.laioffer.travelplanner.entities.PlaceOfPlan;
-import com.laioffer.travelplanner.entities.Plan;
-import com.laioffer.travelplanner.entities.User;
-import com.laioffer.travelplanner.enumerate.TypeOfPlan;
+
 import com.laioffer.travelplanner.model.common.OperationResponse;
-import com.laioffer.travelplanner.model.plan.DayOfPlanSaveModel;
-import com.laioffer.travelplanner.model.plan.PlaceOfPlanSaveModel;
-import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
-import com.laioffer.travelplanner.repositories.DayOfPlanRepository;
-import com.laioffer.travelplanner.repositories.PlaceOfPlanRepository;
-import com.laioffer.travelplanner.repositories.PlanRepository;
-import com.laioffer.travelplanner.repositories.UserRepository;
 import com.laioffer.travelplanner.services.PlanService;
 
 @Service
@@ -35,6 +32,15 @@ public class PlanServiceImpl implements PlanService{
     
     @Autowired
     private PlaceOfPlanRepository placeOfPlanRepository;
+
+    @Autowired
+	private GoogleSearch googleSearch;
+
+	@Autowired
+	private PlaceSearchService placeSearchService;
+
+	@Autowired
+	private PlaceRepository placeRepository;
 	
 	@Override
 	public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception {
@@ -86,6 +92,36 @@ public class PlanServiceImpl implements PlanService{
 		
 		userRepository.save(user);
 		return OperationResponse.getSuccessResponse();
+	}
+
+
+	@Override
+	public CustomizedPlanModel generateCustomizedPlan(List<String> names, List<String> categories, SettingsRequestModel settings) {
+		List<Place> placeList = new ArrayList<>();
+		for (String name : names) {
+//            Place place;
+//            placeList.add(placeRepository.findByPlaceName(name).orElse
+//                    (place = placeSearchService.searchPlaceIfNotExist(googleSearch.getInfo(name))));
+//            placeRepository.save(place);
+			Place place = placeRepository.findByPlaceName(name).orElse(null);
+			if (place == null) {
+				place = placeSearchService.searchPlaceIfNotExist(googleSearch.getInfo(name));
+				placeRepository.save(place);
+			}
+			placeList.add(place);
+		}
+		ACO aco = new ACO(placeList);
+		aco.iterator();
+
+		CustomizedPlanModel customizedPlanModel = new CustomizedPlanModel();
+		OriginPlanModel originPlanModel = new OriginPlanModel();
+		originPlanModel.setLat(settings.getLat());
+		originPlanModel.setLon(settings.getLon());
+		customizedPlanModel.setStartDate(settings.getStartDate());
+		customizedPlanModel.setEndDate(settings.getEndDate());
+		customizedPlanModel.setPlaceDetailModels(aco.getPlaceDetailModels());
+		customizedPlanModel.setOriginPlanModel(originPlanModel);
+		return customizedPlanModel;
 	}
 
 }
