@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import com.laioffer.travelplanner.enumerate.TypeOfPlan;
+
 @Document(indexName = "travel")
 public class Plan {
 	@Id
@@ -19,8 +21,15 @@ public class Plan {
 	private Date updateTime; // do we need these fields in the class?
 
 	//...
+	private Float startLatitude;
+	private Float startLongitude;
 	
+	private Date startDate;
+	private Date endDate;
 	//....
+	
+	private TypeOfPlan typeOfPlan;
+	
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -59,6 +68,46 @@ public class Plan {
 
 	public void setDayOfPlanIds(List<String> dayOfPlanIds) {
 		this.dayOfPlanIds = dayOfPlanIds;
+	}
+
+	public Float getStartLatitude() {
+		return startLatitude;
+	}
+
+	public void setStartLatitude(Float startLatitude) {
+		this.startLatitude = startLatitude;
+	}
+
+	public Float getStartLongitude() {
+		return startLongitude;
+	}
+
+	public void setStartLongitude(Float startLongitude) {
+		this.startLongitude = startLongitude;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public TypeOfPlan getTypeOfPlan() {
+		return typeOfPlan;
+	}
+
+	public void setTypeOfPlan(TypeOfPlan typeOfPlan) {
+		this.typeOfPlan = typeOfPlan;
 	}
 
 }
