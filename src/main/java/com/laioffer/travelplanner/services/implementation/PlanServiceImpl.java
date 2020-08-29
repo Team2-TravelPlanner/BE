@@ -15,6 +15,7 @@ import com.laioffer.travelplanner.model.common.AuthModel;
 import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.model.plan.DayOfPlanSaveModel;
 import com.laioffer.travelplanner.model.plan.PlaceOfPlanSaveModel;
+import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
 import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
 import com.laioffer.travelplanner.model.plan.PlanGetModel;
 import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
@@ -98,23 +99,44 @@ public class PlanServiceImpl implements PlanService{
 		if(user == null) {
 			res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
 			return res;
-			
 		}
 		
-		//planId
+		Plan plan= planRepository.findById(model.getPlanId()).orElse(null);
+		if(plan == null) {
+			res.setOperationResponse(OperationResponse.getFailedResponse("No such plan"));
+			return res;
+		}
 		
-		// user
 		
-		return null;
+		
+		return res;
 	}
 
 	@Override
 	public PlanDisplayResponseModel getAllPlan(AuthModel model) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
+		User user = userRepository.findByEmail(model.getUserEmail()).orElse(null);
+		if(user == null) {
+			res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
+		}
+		
+
+		return res;
 	}
 
 
 	// package function
 	//private 
+	private PlanDisplayModel display(Plan plan) {
+		PlanDisplayModel model = new PlanDisplayModel();
+		
+		
+		model.setStartDate(plan.getStartDate());
+		model.setEndDate(plan.getEndDate());
+		model.setStartLatitude(plan.getStartLatitude());
+		model.setStartLongitude(plan.getStartLongitude());
+		
+		return model;
+	}
+	
 }
