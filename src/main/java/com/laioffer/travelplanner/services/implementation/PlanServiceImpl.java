@@ -18,6 +18,20 @@ import org.springframework.stereotype.Service;
 
 
 import com.laioffer.travelplanner.model.common.OperationResponse;
+import com.laioffer.travelplanner.entities.DayOfPlan;
+import com.laioffer.travelplanner.entities.PlaceOfPlan;
+import com.laioffer.travelplanner.entities.Plan;
+import com.laioffer.travelplanner.entities.User;
+import com.laioffer.travelplanner.model.common.AuthModel;
+import com.laioffer.travelplanner.model.plan.DayOfPlanSaveModel;
+import com.laioffer.travelplanner.model.plan.PlaceOfPlanSaveModel;
+import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
+import com.laioffer.travelplanner.model.plan.PlanGetModel;
+import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
+import com.laioffer.travelplanner.repositories.DayOfPlanRepository;
+import com.laioffer.travelplanner.repositories.PlaceOfPlanRepository;
+import com.laioffer.travelplanner.repositories.PlanRepository;
+import com.laioffer.travelplanner.repositories.UserRepository;
 import com.laioffer.travelplanner.services.PlanService;
 
 @Service
@@ -46,7 +60,7 @@ public class PlanServiceImpl implements PlanService{
 	
 	@Override
 	public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception {
-		User user = userRepository.findById(model.getAuthModel().getUserId()).orElse(null);
+		User user = userRepository.findByEmail(model.getAuthModel().getUserEmail()).orElse(null);
 		if(user == null) {
 			return OperationResponse.getFailedResponse("No such user.");
 			
@@ -56,7 +70,7 @@ public class PlanServiceImpl implements PlanService{
 		plan.setStartLongitude(model.getStartLongitude());
 		plan.setStartDate(model.getStartDate());
 		plan.setEndDate(model.getEndDate());
-		plan.setUserId(user.getUserId());
+		plan.setUserId(user.getEmail());
 		plan.setTypeOfPlan(model.getTypeOfPlan());
 		
 		List<String> dayOfPlanIds = new ArrayList<>();
@@ -131,4 +145,30 @@ public class PlanServiceImpl implements PlanService{
 		return customizedPlanModel;
 	}
 
+	@Override
+	public PlanDisplayResponseModel getPlan(PlanGetModel model) throws Exception {
+		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
+		User user = userRepository.findByEmail(model.getAuthModel().getUserEmail()).orElse(null);
+		if(user == null) {
+			res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
+			return res;
+			
+		}
+		
+		//planId
+		
+		// user
+		
+		return null;
+	}
+
+	@Override
+	public PlanDisplayResponseModel getAllPlan(AuthModel model) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	// package function
+	//private 
 }

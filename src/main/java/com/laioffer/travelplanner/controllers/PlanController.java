@@ -14,7 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.laioffer.travelplanner.jwtUtils.JwtTokenProvider;
+import com.laioffer.travelplanner.model.common.AuthModel;
 import com.laioffer.travelplanner.model.common.OperationResponse;
+import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
+import com.laioffer.travelplanner.model.plan.PlanGetModel;
 import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
 import com.laioffer.travelplanner.services.PlanService;
 
@@ -93,4 +96,45 @@ public class PlanController {
 	}
 
 
+	
+	@RequestMapping(value = "getPlan", method = RequestMethod.POST)
+	public ResponseEntity<PlanDisplayResponseModel> getPlan(@RequestBody PlanGetModel planGetModel) {
+		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
+		if(!jwtTokenProvider.authenToken(planGetModel.getAuthModel().getToken())){
+			res.setOperationResponse(OperationResponse.getFailedResponse("No such user Or token is wrong"));
+			return new ResponseEntity<>(res, HttpStatus.OK);
+		}
+		
+
+		
+		try {
+			res = planService.getPlan(planGetModel);
+			return new ResponseEntity<>(res, HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.info(e.getMessage());
+			res.setOperationResponse(OperationResponse.getFailedResponse(e.getMessage()));
+			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "getAllPlan", method = RequestMethod.GET)
+	public ResponseEntity<PlanDisplayResponseModel> getAllPlan(@RequestBody AuthModel authModel) {
+		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
+		
+		if(!jwtTokenProvider.authenToken(authModel.getToken())){
+			res.setOperationResponse(OperationResponse.getFailedResponse("No such user Or token is wrong"));
+			return new ResponseEntity<>(res, HttpStatus.OK);
+		}
+		
+		
+		
+		try {
+			res = planService.getAllPlan(authModel);
+			return new ResponseEntity<>(res, HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.info(e.getMessage());
+			res.setOperationResponse(OperationResponse.getFailedResponse(e.getMessage()));
+			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
