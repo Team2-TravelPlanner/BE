@@ -14,27 +14,27 @@ public class BusinessHour {
 
 	private String placeId;
 
-	private DayOfWeek dayOfWeek;
-	private Date startTime;
-	private Date endTime;
+	private String dayOfWeek;
+	private String startTime;
+	private String endTime;
 
-	public DayOfWeek getDayOfWeek() {
+	public String getDayOfWeek() {
 		return dayOfWeek;
 	}
 
-	public Date getStartTime() {
+	public String getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Date startTime) {
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
 
-	public Date getEndTime() {
+	public String  getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(Date endTime) {
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 
@@ -54,7 +54,7 @@ public class BusinessHour {
 		this.placeId = placeId;
 	}
 
-	public void setDayOfWeek(DayOfWeek dayOfWeek) {
+	public void setDayOfWeek(String dayOfWeek) {
 		this.dayOfWeek = dayOfWeek;
 	}
 

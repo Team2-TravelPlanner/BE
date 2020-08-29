@@ -2,6 +2,7 @@ package com.laioffer.travelplanner.controllers;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.google.maps.errors.ApiException;
 import com.laioffer.travelplanner.model.common.CustomizedPlanRequestModel;
 import com.laioffer.travelplanner.model.common.SettingsRequestModel;
 import com.laioffer.travelplanner.model.plan.CustomizedPlanModel;
@@ -16,6 +17,8 @@ import com.laioffer.travelplanner.jwtUtils.JwtTokenProvider;
 import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
 import com.laioffer.travelplanner.services.PlanService;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("plan")
@@ -57,7 +60,7 @@ public class PlanController {
 	}
 
 	@PostMapping("/customized")
-	public ResponseEntity<?> generateCustomizedPlan(@RequestBody CustomizedPlanRequestModel customizedPlan) {
+	public ResponseEntity<?> generateCustomizedPlan(@RequestBody CustomizedPlanRequestModel customizedPlan) throws InterruptedException, ApiException, IOException {
 //        JSONArray places = jsonObject.getJSONArray("place");
 //        List<Place> placeList = JSONObject.parseArray(places.toJSONString(), Place.class);
 //        ACO aco = new ACO(placeList);
