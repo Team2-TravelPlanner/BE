@@ -9,6 +9,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.laioffer.travelplanner.antAlg.ACO;
 import com.laioffer.travelplanner.entities.Place;
 import com.laioffer.travelplanner.mapsearch.GoogleSearch;
+import com.laioffer.travelplanner.planModel.RecommendedPlan;
 import com.laioffer.travelplanner.requestModel.RequestCustomizedPlan;
 import com.laioffer.travelplanner.requestModel.RequestSettingsModel;
 import com.laioffer.travelplanner.services.PlanService;
@@ -48,7 +49,7 @@ public class PlanController {
 
 		sourceBuilder.sort(new ScoreSortBuilder("popularity").order(SortOrder.DESC));
 
-		RecommendedPlan res = planService.generateRecommendedPlan(RecommendedPlan.getPlaces(), RecommendedPlan.getCategories(), RecommendedPlan.getSettings());
+		com.laioffer.travelplanner.planModel.RecommendedPlan res = planService.generateRecommendedPlan(RecommendedPlan.getPlaces(), RecommendedPlan.getCategories(), RecommendedPlan.getSettings());
 		String response = JSON.toJSONString(res, SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
 
 		return new ResponseEntity<>(response,HttpStatus.OK);
