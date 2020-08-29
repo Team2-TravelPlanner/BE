@@ -1,23 +1,38 @@
 package com.laioffer.travelplanner.model.search;
 
+import com.laioffer.travelplanner.model.common.AuthModel;
+
 public class SearchRequestModel {
 
-	//"" search all 
+	private AuthModel authModel;
+
+	// when the value is "", then search all with the geolocation
 	private String query;
-	
-	
-	//"" ALL  search all
+
+	// when the value is "", then search all with the geolocation
 	private String category;
-	
+
 	private Double upperLeftLat;
-	
+
 	private Double upperLeftLon;
-	
+
 	private Double lowerRightLat;
-	
+
 	private Double lowerRightLon;
-	
+
+	// 10 by default
+	private Integer displayItemLimit;
+
+	// starting from page 0 by default
 	private Integer currentPageNumber;
+
+	public AuthModel getAuthModel() {
+		return authModel;
+	}
+
+	public void setAuthModel(AuthModel authModel) {
+		this.authModel = authModel;
+	}
 
 	public String getQuery() {
 		return query;
@@ -71,8 +86,16 @@ public class SearchRequestModel {
 		return currentPageNumber;
 	}
 
+	public Integer getDisplayItemLimit() {
+		return displayItemLimit;
+	}
+
+	public void setDisplayItemLimit(Integer displayItemLimit) {
+		this.displayItemLimit = displayItemLimit;
+	}
+
 	public void setCurrentPageNumber(Integer currentPageNumber) {
 		this.currentPageNumber = currentPageNumber;
 	}
-	
+
 }

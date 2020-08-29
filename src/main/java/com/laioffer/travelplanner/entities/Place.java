@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
 @Document(indexName = "travel")
 public class Place {
@@ -12,8 +13,7 @@ public class Place {
 
 	private String placeName;
 	private String address;
-	private Float lat;
-	private Float lon;
+	private GeoPoint location;
 
 	private String imageLink;
 	private Float averageTime;
@@ -47,20 +47,12 @@ public class Place {
 		this.address = address;
 	}
 
-	public float getLat() {
-		return lat;
+	public GeoPoint getLocation() {
+		return location;
 	}
 
-	public void setLat(float lat) {
-		this.lat = lat;
-	}
-
-	public float getLon() {
-		return lon;
-	}
-
-	public void setLon(float lon) {
-		this.lon = lon;
+	public void setLocation(GeoPoint location) {
+		this.location = location;
 	}
 
 	public String getImageLink() {
@@ -103,14 +95,6 @@ public class Place {
 		this.website = website;
 	}
 
-	public void setLat(Float lat) {
-		this.lat = lat;
-	}
-
-	public void setLon(Float lon) {
-		this.lon = lon;
-	}
-
 	public void setAverageTime(Float averageTime) {
 		this.averageTime = averageTime;
 	}
@@ -137,8 +121,8 @@ public class Place {
 
 	@Override
 	public String toString() {
-		return "Place [placeId=" + placeId + ", placeName=" + placeName + ", address=" + address + ", lat=" + lat
-				+ ", lon=" + lon + ", imageLink=" + imageLink + ", averageTime=" + averageTime + ", intro=" + intro
+		return "Place [placeId=" + placeId + ", placeName=" + placeName + ", address=" + address + ", lat=" + location.getLat()
+				+ ", lon=" + location.getLon() + ", imageLink=" + imageLink + ", averageTime=" + averageTime + ", intro=" + intro
 				+ ", popularity=" + popularity + "]";
 	}
 
