@@ -112,6 +112,11 @@ public class PlanServiceImpl implements PlanService{
 			}
 			placeList.add(place);
 		}
+		Place origin = new Place();
+		origin.setPlaceName("startPoint");
+		origin.setLon(settings.getLon());
+		origin.setLat(settings.getLat());
+		placeList.add(origin);
 		ACO aco = new ACO(placeList);
 		aco.iterator();
 

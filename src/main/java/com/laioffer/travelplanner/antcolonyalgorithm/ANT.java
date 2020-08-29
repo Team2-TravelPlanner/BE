@@ -32,7 +32,7 @@ public class ANT {
     }
 
     private void InitCurrentCity() {
-        currentCity = random.nextInt(citynum);
+        currentCity = citynum - 1;
         Tabu.add(Allowed.get(currentCity));
         Allowed.removeAll(Tabu);
 
