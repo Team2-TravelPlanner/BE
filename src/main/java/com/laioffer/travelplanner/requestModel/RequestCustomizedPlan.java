@@ -1,10 +1,6 @@
 package com.laioffer.travelplanner.requestModel;
 
-
-import sun.dc.pr.PRError;
-
 import java.util.List;
-import java.util.Map;
 
 public class RequestCustomizedPlan {
     private List<String> places;

@@ -2,6 +2,7 @@ package com.laioffer.travelplanner.antAlg;
 
 import com.laioffer.travelplanner.entities.Place;
 import com.laioffer.travelplanner.planModel.PlaceDetail;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import io.swagger.models.auth.In;
 
 import java.util.ArrayList;
@@ -136,15 +137,15 @@ public class ACO {
 
     public static void main(String[] args) {
         List<Place> places = new ArrayList<>();
-        Place place1 = new Place("1", "Empire State Building", "20 W 34th St, New York, NY 10001", -73.985428, 40.748817);
-        Place place2 = new Place("2", "Times Square", "20 W 34th St, New York, NY 10001", -73.985130, 40.758896);
-        Place place3 = new Place("3", "Memorial & Museum", "20 W 34th St, New York, NY 10001", -74.013611, 40.711694);
-        Place place4 = new Place("4","Charging Bull", "20 W 34th St, New York, NY 10001", -74.0134, 40.7056);
-        Place place5 = new Place("5", "United Nations Headquarters", "20 W 34th St, New York, NY 10001", -73.9679163, 40.7495461);
-        Place place6 = new Place("6", "Museum of the City of New York", "20 W 34th St, New York, NY 10001", -73.962311, 40.778965);
-        Place place7 = new Place("7", "Statue of Liberty National Monument", "20 W 34th St, New York, NY 10001", -74.044502, 40.689247);
-        Place place8 = new Place("8", "Brooklyn Bridge", "20 W 34th St, New York, NY 10001", -73.997002, 40.706001);
-        Place place9 = new Place("9", "General Grant National Memorial", "20 W 34th St, New York, NY 10001", -73.9578, 40.8081);
+        Place place1 = new Place("1", "Empire State Building", "20 W 34th St, New York, NY 10001", new Place.MyGeoPoint(-73.985428, 40.748817));
+        Place place2 = new Place("2", "Times Square", "20 W 34th St, New York, NY 10001", new Place.MyGeoPoint(-73.985130, 40.758896));
+        Place place3 = new Place("3", "Memorial & Museum", "20 W 34th St, New York, NY 10001", new Place.MyGeoPoint(-74.013611, 40.711694));
+        Place place4 = new Place("4","Charging Bull", "20 W 34th St, New York, NY 10001", new Place.MyGeoPoint(-74.0134, 40.7056));
+        Place place5 = new Place("5", "United Nations Headquarters", "20 W 34th St, New York, NY 10001", new Place.MyGeoPoint(-73.9679163, 40.7495461));
+        Place place6 = new Place("6", "Museum of the City of New York", "20 W 34th St, New York, NY 10001", new Place.MyGeoPoint(-73.962311, 40.778965));
+        Place place7 = new Place("7", "Statue of Liberty National Monument", "20 W 34th St, New York, NY 10001", new Place.MyGeoPoint(-74.044502, 40.689247));
+        Place place8 = new Place("8", "Brooklyn Bridge", "20 W 34th St, New York, NY 10001", new Place.MyGeoPoint(-73.997002, 40.706001));
+        Place place9 = new Place("9", "General Grant National Memorial", "20 W 34th St, New York, NY 10001", new Place.MyGeoPoint(-73.9578, 40.8081));
         places.add(place1);
         places.add(place2);
         places.add(place3);

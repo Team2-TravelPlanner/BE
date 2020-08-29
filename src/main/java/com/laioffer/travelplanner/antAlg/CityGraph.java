@@ -42,8 +42,8 @@ public class CityGraph {
                     else {
 //                        System.out.println(places.get(j).getLat());
 //                        System.out.println(places.get(j).getLon());;
-                        distance[j][i] = DistanceUtil.getDistance( places.get(i).getLon(), places.get(i).getLat(), places.get(j).getLon(), places.get(j).getLat());
-                        distance[i][j] = DistanceUtil.getDistance( places.get(i).getLon(), places.get(i).getLat(), places.get(j).getLon(), places.get(j).getLat());
+                        distance[j][i] = DistanceUtil.getDistance( places.get(i).getLocation().getLon(), places.get(i).getLocation().getLat(), places.get(j).getLocation().getLon(), places.get(j).getLocation().getLat());
+                        distance[i][j] = DistanceUtil.getDistance( places.get(i).getLocation().getLon(), places.get(i).getLocation().getLat(), places.get(j).getLocation().getLon(), places.get(j).getLocation().getLat());
                     }
                 }
             }

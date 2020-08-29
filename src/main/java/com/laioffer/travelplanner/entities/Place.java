@@ -1,9 +1,11 @@
 package com.laioffer.travelplanner.entities;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
-
-import java.util.List;
+import org.springframework.data.elasticsearch.annotations.GeoPointField;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
 @Document(indexName = "travel")
 public class Place {
@@ -12,8 +14,9 @@ public class Place {
 
     private String placeName;
     private String address;
-    private double lat;
-    private double lon;
+//    private GeoPoint location;
+    @GeoPointField
+    private MyGeoPoint location;
 
     private String imageLink;
     private Float averageTime;
@@ -26,12 +29,11 @@ public class Place {
     public Place() {
     }
 
-    public Place(String placeId, String placeName, String address, double lon, double lat) {
+    public Place(String placeId, String placeName, String address, MyGeoPoint location) {
         this.placeId = placeId;
         this.placeName = placeName;
         this.address = address;
-        this.lat = lat;
-        this.lon = lon;
+        this.location = location;
     }
 
     public String getPlaceId() {
@@ -58,20 +60,12 @@ public class Place {
         this.address = address;
     }
 
-    public double getLat() {
-        return lat;
+    public MyGeoPoint getLocation() {
+        return location;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public double getLon() {
-        return lon;
-    }
-
-    public void setLon(double lon) {
-        this.lon = lon;
+    public void setLocation(MyGeoPoint location) {
+        this.location = location;
     }
 
     public String getImageLink() {
@@ -114,14 +108,6 @@ public class Place {
         this.website = website;
     }
 
-    public void setLat(Float lat) {
-        this.lat = lat;
-    }
-
-    public void setLon(Float lon) {
-        this.lon = lon;
-    }
-
     public void setAverageTime(Float averageTime) {
         this.averageTime = averageTime;
     }
@@ -148,9 +134,47 @@ public class Place {
 
     @Override
     public String toString() {
-        return "Place [placeId=" + placeId + ", placeName=" + placeName + ", address=" + address + ", lat=" + lat
-                + ", lon=" + lon + ", imageLink=" + imageLink + ", averageTime=" + averageTime + ", intro=" + intro
+        return "Place [placeId=" + placeId + ", placeName=" + placeName + ", address=" + address + ", lat=" + location.getLat()
+                + ", lon=" + location.getLon() + ", imageLink=" + imageLink + ", averageTime=" + averageTime + ", intro=" + intro
                 + ", popularity=" + popularity + "]";
+    }
+
+    public static class MyGeoPoint {
+        private double lat;
+        private double lon;
+
+        public MyGeoPoint(double lat, double lon) {
+            this.lat = lat;
+            this.lon = lon;
+        }
+
+        public MyGeoPoint() {
+        }
+
+        public double getLat() {
+            return lat;
+        }
+
+
+        public void setLat(double lat) {
+            this.lat = lat;
+        }
+
+
+        public double getLon() {
+            return lon;
+        }
+
+
+        public void setLon(double lon) {
+            this.lon = lon;
+        }
+
+
+        @Override
+        public String toString() {
+            return "MyGeoPoint{" + "lat=" + lat + ", lon=" + lon + '}';
+        }
     }
 
 }
