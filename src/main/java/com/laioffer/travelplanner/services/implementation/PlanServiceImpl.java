@@ -1,12 +1,11 @@
 package com.laioffer.travelplanner.services.implementation;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import com.laioffer.travelplanner.model.requestModel.RequestSettingsModel;
+import com.laioffer.travelplanner.planModel.Origin;
+import com.laioffer.travelplanner.utils.DistanceUtil;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -161,7 +160,9 @@ public class PlanServiceImpl implements PlanService{
 
 
 	@Override
-	public PlanDisplayModel generateRecommendedPlan(RequestRecommendedPlan model) throws Exception {
+	public PlanDisplayModel generateRecommendedPlan(RequestRecommendedPlan model, SettingsRequestModel settings) throws Exception {
+		Double startLatitude = settings.getLat();
+		Double startLongitude = settings.getLon();
 		int NumberOfPlace = 0;
 		if (TypeOfPlan.valueOf(model.getSettings().getTravelStyle()).equals(TypeOfPlan.Loose)) {
 			NumberOfPlace = 2;
@@ -178,34 +179,47 @@ public class PlanServiceImpl implements PlanService{
 			Category category = categoryRepository.findByCategoryName(categoryStr).orElse(null);
 			
 			//....
-			for(String placeId :category.getPlaceIds()) {
-				
-				//distance limit 
-				//popularity limit
-				
-				
-				placeRepository.
-				placeListFit.add(place);
-				placeIds.add()
+			for(String placeId : category.getPlaceIds()) {
+				//起始位置坐标
+
+
+				//get place by placeId ???
+				Place place = placeRepository.findByPlaceId(placeId);
+
+				Double distance = DistanceUtil.getDistance( startLatitude, startLongitude, place.getLon(), place.getLat());
+				if (distance < 10.0) {
+					placeIds.add(placeId);
+					placeListFit.add(place);
+				}
 			}
-			
-			
-			
 		}
-		//如果符合category的景点少于今天要浏览的景点总数
-		NumberOfPlace * (endDate - startDate+!)
-		if (placeListFit.size() < NumberOfPlace) {
-			Place place = (PlaceRepository.findAll());
-			//distance limit 
-			//popularity limit
-			//quchong
-			placeListFit.add(place);
+		//如果符合category的景点少于要浏览的景点总数
+
+		//get start and end date
+		Date startDate = model.getSettings().getStartDate();
+		Date endDate = model.getSettings().getEndDate();
+		long diff = Math.abs(endDate.getTime() - startDate.getTime());
+		long diffDays = diff / (24 * 60 * 60 * 1000);
+		NumberOfPlace *= diffDays + 1;
+
+		int index = 0;
+		while (placeListFit.size() < NumberOfPlace) {
+			List<Place> pool = (List<Place>) placeRepository.findAll();
+			Place place = pool.get(index);
+			Double distance = DistanceUtil.getDistance( startLatitude, startLongitude, place.getLon(), place.getLat());
+			//距离小于10mile & 去重
+			if (placeIds.add(place.getPlaceId()) && distance < 10.0) {
+				placeListFit.add(pool.get(index));
+				index++;
+			}
+
 		}
+//
 		//按popularity降序排列
 		Collections.sort(placeListFit, new Comparator<Place>() {
 			@Override
 			public int compare(Place p1, Place p2) {
-				return p2.getPopularity() - p1.getPopularity() < 0 ? -1 : 1;
+				return p1.getPopularity() - p2.getPopularity() < 0 ? 1 : -1;
 			}
 		});
 
@@ -225,11 +239,28 @@ public class PlanServiceImpl implements PlanService{
 		origin.setLon(settings.getLon());
 		recommendedPlan.setStartDate(settings.getStartDate());
 		recommendedPlan.setEndDate(settings.getEndDate());
-		recommendedPlan.setPlaceDetails(aco.getPlaceDetails());
+		recommendedPlan.setPlaceDetails(aco.getPlaceDetailModels());
 		recommendedPlan.setOrigin(origin);
 		return null;
 	}
 
+
+	@Override
+	public PlanDisplayResponseModel getPlan(PlanGetModel model) throws Exception {
+		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
+		User user = userRepository.findByEmail(model.getAuthModel().getUserEmail()).orElse(null);
+		if(user == null) {
+			res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
+			return res;
+
+		}
+
+		//planId
+
+		// user
+
+		return null;
+	}
 
 	@Override
 	public PlanDisplayResponseModel getAllPlan(AuthModel model) throws Exception {

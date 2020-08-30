@@ -9,4 +9,6 @@ public interface PlaceRepository extends ElasticsearchRepository<Place, String> 
 	Iterable<Place> findAll();
 
 	Optional<Place> findByPlaceName(String name);
+	Optional<Place> findByPlaceId(String placeId);
+
 }
