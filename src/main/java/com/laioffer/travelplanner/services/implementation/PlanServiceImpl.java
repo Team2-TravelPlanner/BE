@@ -107,8 +107,8 @@ public class PlanServiceImpl implements PlanService{
 			return res;
 		}
 		
-		
-		
+		res.setPlanDisplayModel(planDisplayModel);
+		res.setOperationResponse(OperationResponse.getSuccessResponse());
 		return res;
 	}
 
@@ -120,7 +120,7 @@ public class PlanServiceImpl implements PlanService{
 			res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
 		}
 		
-
+		res.setPlanDisplayModel(planDisplayModel);
 		return res;
 	}
 
