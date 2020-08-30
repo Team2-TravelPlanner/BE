@@ -2,8 +2,11 @@ package com.laioffer.travelplanner.services.implementation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import com.laioffer.travelplanner.model.requestModel.RequestSettingsModel;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -173,6 +176,70 @@ public class PlanServiceImpl implements PlanService{
 		return null;
 	}
 
+	@Override
+	public PlanDisplayResponseModel getAllPlan(AuthModel model) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+
+	// package function
+	//private
+
+	@Override
+	public PlanDisplayModel generateRecommendedPlan(List<String> categories, RequestSettingsModel settings) {
+
+
+		int NumberOfPlace = 0;
+		if (findbyTypeofPlan(typeOfPlan) == "Loose ArrangeMent") {
+			NumberOfPlace = 2;
+		} else if (findbyTypeofPlan(typeOfPlan) == "Moderate ArrangeMent") {
+			NumberOfPlace = 4;
+		} else {
+			NumberOfPlace = 6;
+		}
+
+		//拿符合category的place
+		List<Place> placeListFit = new ArrayList<>();
+		for (String category : categories) {
+			Place place = CategoryRepository.findByPlaceCategory(category).orElse(null);
+			placeListFit.add(place);
+		}
+		//如果符合category的景点少于今天要浏览的景点总数
+		if (placeListFit.size() < NumberOfPlace) {
+			Place place = (PlaceRepository.findAll());
+			placeListFit.add(place);
+		}
+		//按popularity降序排列
+		Collections.sort(placeListFit, new Comparator<Place>() {
+			@Override
+			public float compare(Place p1, Place p2) {
+				return p2.getPopularity() - p1.getPopularity();
+			}
+		});
+
+
+		List<Place> placeList = new ArrayList<>();
+		int count = 0;
+		while (count < NumberOfPlace) {
+			placeList.add(placeListFit.get(count));
+			count++;
+		}
+		ACO aco = new ACO(placeList);
+		aco.iterator();
+
+		RecommendedPlan recommendedPlan = new RecommendedPlan();
+		Origin origin = new Origin();
+		origin.setLat(settings.getLat());
+		origin.setLon(settings.getLon());
+		recommendedPlan.setStartDate(settings.getStartDate());
+		recommendedPlan.setEndDate(settings.getEndDate());
+		recommendedPlan.setPlaceDetails(aco.getPlaceDetails());
+		recommendedPlan.setOrigin(origin);
+		return recommendedPlan;
+	}
 
 
 
