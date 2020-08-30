@@ -1,6 +1,5 @@
 package com.laioffer.travelplanner.controllers;
 
-import com.laioffer.travelplanner.jwtUtils.JwtTokenProvider;
 import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.model.search.SearchRequestModel;
 import com.laioffer.travelplanner.model.search.SearchResponseModel;
@@ -21,8 +20,6 @@ public class SearchController {
 	@Autowired
 	private SearchService searchService;
 
-	@Autowired
-	private JwtTokenProvider jwtTokenProvider;
 
 	/**
 	 * Get the health status of elastic search cluster
