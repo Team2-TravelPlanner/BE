@@ -1,13 +1,14 @@
 package com.laioffer.travelplanner.planModel;
 
+import java.util.Date;
 import java.util.List;
 
 public class RecommendedPlan {
     private Origin origin;
 
-    private Integer StartDate;
+    private Date StartDate;
 
-    private Integer EndDate;
+    private Date EndDate;
 
     private List<PlaceDetail> placeDetails;
 
@@ -18,14 +19,6 @@ public class RecommendedPlan {
         this.origin = origin;
     }
 
-    public void setStartDate(Integer startDate) {
-        StartDate = startDate;
-    }
-
-    public void setEndDate(Integer endDate) {
-        EndDate = endDate;
-    }
-
     public void setPlaceDetails(List<PlaceDetail> placeDetails) {
         this.placeDetails = placeDetails;
     }
@@ -34,15 +27,23 @@ public class RecommendedPlan {
         return origin;
     }
 
-    public Integer getStartDate() {
-        return StartDate;
-    }
+    public Date getStartDate() {
+		return StartDate;
+	}
 
-    public Integer getEndDate() {
-        return EndDate;
-    }
+	public void setStartDate(Date startDate) {
+		StartDate = startDate;
+	}
 
-    public List<PlaceDetail> getPlaceDetails() {
+	public Date getEndDate() {
+		return EndDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		EndDate = endDate;
+	}
+
+	public List<PlaceDetail> getPlaceDetails() {
         return placeDetails;
     }
 }

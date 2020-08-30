@@ -1,12 +1,14 @@
 package com.laioffer.travelplanner.model.requestModel;
 
+import java.util.Date;
+
 import io.swagger.models.auth.In;
 
 public class RequestSettingsModel {
     private double lon;
     private double lat;
-    private Integer startDate;
-    private Integer endDate;
+    private Date startDate;
+    private Date endDate;
     private String travelStyle;
 
     public RequestSettingsModel() {
@@ -28,23 +30,24 @@ public class RequestSettingsModel {
         this.lat = lat;
     }
 
-    public Integer getStartDate() {
-        return startDate;
-    }
 
-    public void setStartDate(Integer startDate) {
-        this.startDate = startDate;
-    }
+    public Date getStartDate() {
+		return startDate;
+	}
 
-    public Integer getEndDate() {
-        return endDate;
-    }
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
 
-    public void setEndDate(Integer endDate) {
-        this.endDate = endDate;
-    }
+	public Date getEndDate() {
+		return endDate;
+	}
 
-    public String getTravelStyle() {
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getTravelStyle() {
         return travelStyle;
     }
 
