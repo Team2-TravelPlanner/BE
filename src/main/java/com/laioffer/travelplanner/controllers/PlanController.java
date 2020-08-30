@@ -55,7 +55,6 @@ public class PlanController {
 	@Autowired
 	private PlanService planService;
 
-
 	@Autowired
 	private GoogleSearch googleSearch;
 	private UserService userService;
@@ -147,10 +146,10 @@ public class PlanController {
 	}
 
 	@PostMapping("/recommended")
-	public ResponseEntity<RecommendedPlan> generateRecommendedPlan(
+	public ResponseEntity<PlanDisplayModel> generateRecommendedPlan(
 			@RequestBody RequestRecommendedPlan recommendedPlan) {
 
-		RecommendedPlan res = new RecommendedPlan();
+		PlanDisplayModel res = new PlanDisplayModel();
 		try {
 			res = planService.generateRecommendedPlan(recommendedPlan);
 		} catch (Exception e) {

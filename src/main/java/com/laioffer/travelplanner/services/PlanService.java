@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public interface PlanService {
 
-	public RecommendedPlan generateRecommendedPlan(RequestRecommendedPlan model)throws Exception;
+	public PlanDisplayModel generateRecommendedPlan(RequestRecommendedPlan model)throws Exception;
 
 	public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception;
 

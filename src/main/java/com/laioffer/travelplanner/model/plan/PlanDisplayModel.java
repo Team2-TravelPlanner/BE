@@ -8,7 +8,7 @@ import com.laioffer.travelplanner.model.common.AuthModel;
 
 public class PlanDisplayModel {
 
-private Date startDate;
+	private Date startDate;
 	
 	private Date endDate;
 	
@@ -18,20 +18,10 @@ private Date startDate;
 	
 	private TypeOfPlan typeOfPlan;
 	
-	private AuthModel authModel;
-	
 	private String planId;
 	
 	private List<DayOfPlanSaveModel> dayOfPlanSaveModels;
-	
-	
-	public AuthModel getAuthModel() {
-		return authModel;
-	}
 
-	public void setAuthModel(AuthModel authModel) {
-		this.authModel = authModel;
-	}
 
 	public String getPlanId() {
 		return planId;

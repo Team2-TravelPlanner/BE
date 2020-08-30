@@ -158,7 +158,7 @@ public class PlanServiceImpl implements PlanService {
 
 
     @Override
-    public RecommendedPlan generateRecommendedPlan(RequestRecommendedPlan model) throws Exception {
+    public PlanDisplayModel generateRecommendedPlan(RequestRecommendedPlan model) throws Exception {
         Double startLatitude = model.getSettings().getLat();
         Double startLongitude = model.getSettings().getLon();
         int NumberOfPlace = 0;
