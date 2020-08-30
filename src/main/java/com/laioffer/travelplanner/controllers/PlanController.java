@@ -97,4 +97,9 @@ public class PlanController {
 			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@RequestMapping(value = "hello", method = RequestMethod.GET)
+	public ResponseEntity<String> hello(){
+		return new ResponseEntity<>("hello", HttpStatus.OK);
+	}
 }
