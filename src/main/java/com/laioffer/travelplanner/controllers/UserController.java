@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -34,9 +33,6 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private MyUserDetailService userDetailService;
-
-    @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
@@ -44,30 +40,30 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
-        if (userService.findByEmail(user.getEmail()) != null) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, userExistError, new Exception());
+        if (userService.findByEmail(user.getEmail()).getEmail() != null) {
+            return new ResponseEntity<>(OperationResponse.getFailedResponse(userExistError), HttpStatus.CONFLICT);
         }
         userService.saveUser(user);
-        return ResponseEntity.ok(new MessageResponse(success));
+        return ResponseEntity.ok(OperationResponse.getSuccessResponse());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequestModel authenticationRequest) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequestModel loginRequestModel) {
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword());
-        
+                new UsernamePasswordAuthenticationToken(loginRequestModel.getEmail(), loginRequestModel.getPassword());
+
         LoginResponse ans = new LoginResponse();
-        
-        
+
         try{
             authenticationManager.authenticate(authenticationToken);
         } catch( BadCredentialsException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, wrongEmailPasswordError, new Exception());
+            ans.setOperationResponse(OperationResponse.getFailedResponse(wrongEmailPasswordError));
+            return new ResponseEntity<>(ans, HttpStatus.UNAUTHORIZED);
         }
         String token = jwtTokenProvider.generateToken(authenticationToken);
-        UserInfoModel model = userService.findByEmail(authenticationRequest.getEmail());
+        UserInfoModel model = userService.findByEmail(loginRequestModel.getEmail());
         ans.setToken(token);
-        ans.setId(model.getId());
+        ans.setId(model.getEmail());
         ans.setOperationResponse(OperationResponse.getSuccessResponse());
         return ResponseEntity.ok(ans);
     }

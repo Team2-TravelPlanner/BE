@@ -11,9 +11,13 @@ import com.laioffer.travelplanner.entities.PlaceOfPlan;
 import com.laioffer.travelplanner.entities.Plan;
 import com.laioffer.travelplanner.entities.User;
 import com.laioffer.travelplanner.enumerate.TypeOfPlan;
+import com.laioffer.travelplanner.model.common.AuthModel;
 import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.model.plan.DayOfPlanSaveModel;
 import com.laioffer.travelplanner.model.plan.PlaceOfPlanSaveModel;
+import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
+import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
+import com.laioffer.travelplanner.model.plan.PlanGetModel;
 import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
 import com.laioffer.travelplanner.repositories.DayOfPlanRepository;
 import com.laioffer.travelplanner.repositories.PlaceOfPlanRepository;
@@ -38,7 +42,7 @@ public class PlanServiceImpl implements PlanService{
 	
 	@Override
 	public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception {
-		User user = userRepository.findById(model.getAuthModel().getUserId()).orElse(null);
+		User user = userRepository.findByEmail(model.getAuthModel().getUserEmail()).orElse(null);
 		if(user == null) {
 			return OperationResponse.getFailedResponse("No such user.");
 			
@@ -48,7 +52,7 @@ public class PlanServiceImpl implements PlanService{
 		plan.setStartLongitude(model.getStartLongitude());
 		plan.setStartDate(model.getStartDate());
 		plan.setEndDate(model.getEndDate());
-		plan.setUserId(user.getUserId());
+		plan.setUserId(user.getEmail());
 		plan.setTypeOfPlan(model.getTypeOfPlan());
 		
 		List<String> dayOfPlanIds = new ArrayList<>();
@@ -88,4 +92,75 @@ public class PlanServiceImpl implements PlanService{
 		return OperationResponse.getSuccessResponse();
 	}
 
+	@Override
+	public PlanDisplayResponseModel getPlan(PlanGetModel model) throws Exception {
+		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
+		User user = userRepository.findByEmail(model.getAuthModel().getUserEmail()).orElse(null);
+		if(user == null) {
+			res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
+			return res;
+		}
+		
+		Plan plan= planRepository.findById(model.getPlanId()).orElse(null);
+		if(plan == null) {
+			res.setOperationResponse(OperationResponse.getFailedResponse("No such plan"));
+			return res;
+		}
+		
+		
+		
+		return res;
+	}
+
+	@Override
+	public PlanDisplayResponseModel getAllPlan(AuthModel model) throws Exception {
+		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
+		User user = userRepository.findByEmail(model.getUserEmail()).orElse(null);
+		if(user == null) {
+			res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
+		}
+		
+
+		return res;
+	}
+
+
+	// package function
+	//private 
+	private PlanDisplayModel display(Plan plan) {
+		PlanDisplayModel model = new PlanDisplayModel();
+		
+		
+		model.setStartDate(plan.getStartDate());
+		model.setEndDate(plan.getEndDate());
+		model.setStartLatitude(plan.getStartLatitude());
+		model.setStartLongitude(plan.getStartLongitude());
+		
+		List<DayOfPlanSaveModel> dayOfPlanSaveModels = new ArrayList<>();
+		for(String dayodPlanId : plan.getDayOfPlanIds()) {
+			DayOfPlan dayOfPlan  = dayOfPlanRepository.findByDayId(dayodPlanId).orElse(null);
+			DayOfPlanSaveModel dayOfPlanSaveModel = new DayOfPlanSaveModel();
+			
+			//....
+			if(dayOfPlan == null) {
+				continue;
+			}
+			List<PlaceOfPlanSaveModel> placeOfPlanSaveModel = new ArrayList<>();
+			for(String placeOfPlanId : dayOfPlan.getPlaceOfPlanIds()) {
+				PlaceOfPlan placeOfPlan = placeOfPlanRepository.findByPlaceOfPlanId(placeOfPlanId).orElse(null);
+			
+				//....
+				
+				//
+				//placeOfPlanSaveModel.add(e);
+			}
+			
+			dayOfPlanSaveModels.add(dayOfPlanSaveModel);
+		}
+		
+		model.setDayOfPlanSaveModels(dayOfPlanSaveModels);
+		
+		return model;
+	}
+	
 }

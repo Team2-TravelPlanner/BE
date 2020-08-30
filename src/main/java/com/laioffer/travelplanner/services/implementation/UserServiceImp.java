@@ -35,7 +35,6 @@ public class UserServiceImp implements UserService {
         user.setUpdateTime(currTime);
         UserInfoModel  model = new UserInfoModel();
     	model.setEmail(user.getEmail());
-    	model.setId(user.getUserId());
     	model.setName(user.getUserName());
     	model.setOperationResponse(OperationResponse.getSuccessResponse());
     	userRepository.save(user);
@@ -54,7 +53,6 @@ public class UserServiceImp implements UserService {
     	}
     	model.setOperationResponse(res.getSuccessResponse());
     	model.setEmail(user.getEmail());
-    	model.setId(user.getUserId());
     	model.setName(user.getUserName());
         return model;
     }
@@ -64,7 +62,6 @@ public class UserServiceImp implements UserService {
     	UserInfoModel model = new UserInfoModel();
     	
     	model.setEmail(user.getEmail());
-    	model.setId(user.getUserId());
     	model.setName(user.getPassword());
     	return model;
     }

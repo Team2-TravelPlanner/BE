@@ -6,8 +6,6 @@ public class UserInfoModel {
 	
 	private OperationResponse operationResponse;
 
-	private String id;
-
 	private String email;
 
 	private String name;
@@ -18,14 +16,6 @@ public class UserInfoModel {
 
 	public void setOperationResponse(OperationResponse operationResponse) {
 		this.operationResponse = operationResponse;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getEmail() {
