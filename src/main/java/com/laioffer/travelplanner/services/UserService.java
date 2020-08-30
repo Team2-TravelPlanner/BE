@@ -1,12 +1,18 @@
 package com.laioffer.travelplanner.services;
 
 
-import com.laioffer.travelplanner.entities.User;
-import com.laioffer.travelplanner.model.user.UserInfoModel;
+import com.laioffer.travelplanner.model.common.AuthModel;
+import com.laioffer.travelplanner.model.common.LoginRequestModel;
+import com.laioffer.travelplanner.model.common.LoginResponse;
+import com.laioffer.travelplanner.model.common.OperationResponse;
+import com.laioffer.travelplanner.model.user.RegisterRequestModel;
 
 public interface UserService {
-	UserInfoModel saveUser(User user);
-
-    UserInfoModel findByEmail(String email);
+    
+    OperationResponse registerUser(RegisterRequestModel model) throws Exception;
+    
+    LoginResponse login(LoginRequestModel model) throws Exception;
+    
+    OperationResponse auth(AuthModel model) throws Exception;
 
 }

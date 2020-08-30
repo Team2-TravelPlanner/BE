@@ -9,15 +9,15 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @Document(indexName = "travel")
 public class User {
 	@Id // represents the primary key
-	private String email;
-	
+	private String userId;
+	private String email;	
 	private String userName;
 	private String password; // password type
 	
 	private String token;
 	private Date createTime; // date/time type ==> do we need these fields in the class?
 	private Date updateTime; // date/time type
-	// private Date expireDate; //date/time type
+	private Date expireDate; //date/time type
 	private List<String> planIds;
 
 	public String getUserName() {
@@ -61,6 +61,12 @@ public class User {
 	}
 	public void setPlanIds(List<String> planIds) {
 		this.planIds = planIds;
+	}
+	public Date getExpireDate() {
+		return expireDate;
+	}
+	public void setExpireDate(Date expireDate) {
+		this.expireDate = expireDate;
 	}
 
 	
