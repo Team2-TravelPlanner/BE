@@ -27,6 +27,7 @@ import com.laioffer.travelplanner.entities.DayOfPlan;
 import com.laioffer.travelplanner.entities.PlaceOfPlan;
 import com.laioffer.travelplanner.entities.Plan;
 import com.laioffer.travelplanner.entities.User;
+import com.laioffer.travelplanner.enumerate.TypeOfPlan;
 import com.laioffer.travelplanner.model.common.AuthModel;
 import com.laioffer.travelplanner.model.plan.DayOfPlanSaveModel;
 import com.laioffer.travelplanner.model.plan.PlaceOfPlanSaveModel;
@@ -65,6 +66,9 @@ public class PlanServiceImpl implements PlanService{
 
 	@Autowired
 	private PlaceRepository placeRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 	
 	@Override
 	public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception {
@@ -153,49 +157,15 @@ public class PlanServiceImpl implements PlanService{
 		return customizedPlanModel;
 	}
 
-	@Override
-	public PlanDisplayResponseModel getPlan(PlanGetModel model) throws Exception {
-		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
-		User user = userRepository.findByEmail(model.getAuthModel().getUserEmail()).orElse(null);
-		if(user == null) {
-			res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
-			return res;
-			
-		}
-		
-		//planId
-		
-		// user
-		
-		return null;
-	}
+
+
 
 	@Override
-	public PlanDisplayResponseModel getAllPlan(AuthModel model) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PlanDisplayResponseModel getAllPlan(AuthModel model) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-
-	// package function
-	//private
-
-	@Override
-	public PlanDisplayModel generateRecommendedPlan(List<String> categories, RequestSettingsModel settings) {
-
-
+	public PlanDisplayModel generateRecommendedPlan(RequestRecommendedPlan model) throws Exception {
 		int NumberOfPlace = 0;
-		if (findbyTypeofPlan(typeOfPlan) == "Loose ArrangeMent") {
+		if (TypeOfPlan.valueOf(model.getSettings().getTravelStyle()).equals(TypeOfPlan.Loose)) {
 			NumberOfPlace = 2;
-		} else if (findbyTypeofPlan(typeOfPlan) == "Moderate ArrangeMent") {
+		} else if (TypeOfPlan.valueOf(model.getSettings().getTravelStyle()).equals(TypeOfPlan.Moderate)) {
 			NumberOfPlace = 4;
 		} else {
 			NumberOfPlace = 6;
@@ -203,20 +173,39 @@ public class PlanServiceImpl implements PlanService{
 
 		//拿符合category的place
 		List<Place> placeListFit = new ArrayList<>();
-		for (String category : categories) {
-			Place place = CategoryRepository.findByPlaceCategory(category).orElse(null);
-			placeListFit.add(place);
+		Set<String> placeIds = new HashSet<>();
+		for (String categoryStr : model.getCategories()) {
+			Category category = categoryRepository.findByCategoryName(categoryStr).orElse(null);
+			
+			//....
+			for(String placeId :category.getPlaceIds()) {
+				
+				//distance limit 
+				//popularity limit
+				
+				
+				placeRepository.
+				placeListFit.add(place);
+				placeIds.add()
+			}
+			
+			
+			
 		}
 		//如果符合category的景点少于今天要浏览的景点总数
+		NumberOfPlace * (endDate - startDate+!)
 		if (placeListFit.size() < NumberOfPlace) {
 			Place place = (PlaceRepository.findAll());
+			//distance limit 
+			//popularity limit
+			//quchong
 			placeListFit.add(place);
 		}
 		//按popularity降序排列
 		Collections.sort(placeListFit, new Comparator<Place>() {
 			@Override
-			public float compare(Place p1, Place p2) {
-				return p2.getPopularity() - p1.getPopularity();
+			public int compare(Place p1, Place p2) {
+				return p2.getPopularity() - p1.getPopularity() < 0 ? -1 : 1;
 			}
 		});
 
@@ -238,7 +227,14 @@ public class PlanServiceImpl implements PlanService{
 		recommendedPlan.setEndDate(settings.getEndDate());
 		recommendedPlan.setPlaceDetails(aco.getPlaceDetails());
 		recommendedPlan.setOrigin(origin);
-		return recommendedPlan;
+		return null;
+	}
+
+
+	@Override
+	public PlanDisplayResponseModel getAllPlan(AuthModel model) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

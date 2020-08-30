@@ -1,6 +1,6 @@
 package com.laioffer.travelplanner.controllers;
 
-import com.laioffer.travelplanner.entities.Place;
+import se.walkercrou.places.Place;
 import com.laioffer.travelplanner.mapsearch.GoogleSearch;
 import com.laioffer.travelplanner.services.PlanService;
 
@@ -83,41 +83,22 @@ public class PlanController {
 	}
 
 	@PostMapping("/customized")
-	public ResponseEntity<CustomizedPlanModel> generateCustomizedPlan(@RequestBody CustomizedPlanRequestModel customizedPlan) throws InterruptedException, ApiException, IOException {
-//        JSONArray places = jsonObject.getJSONArray("place");
-//        List<Place> placeList = JSONObject.parseArray(places.toJSONString(), Place.class);
-//        ACO aco = new ACO(placeList);
-//        aco.iterator();
-//        System.out.println(aco.getOrder());
-//
-//        Integer startDate = jsonObject.getJSONObject("settings").getInteger("startDate");
-//        Integer endDate = jsonObject.getJSONObject("settings").getInteger("endDate");
-//
-//        Integer duration = (endDate - startDate) / (60 * 60 * 24);
-//        System.out.println(duration);
-//
-//        JSONArray res = JSONArray.parseArray(JSON.toJSONString(aco.getOrder(), SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter));
-//
-//
-//        CustomizedPlan customizedPlan = new CustomizedPlan();
-//        Origin origin = new Origin();
-//        customizedPlan.setStartDate(startDate);
-//        customizedPlan.setEndDate(endDate);
-//        customizedPlan.setPlaceDetails(aco.getPlaceDetails());
-//        customizedPlan.setOrigin(origin);
-//
-//        String response = JSON.toJSONString(customizedPlan, SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
+	public ResponseEntity<CustomizedPlanModel> generateCustomizedPlan(
+			@RequestBody CustomizedPlanRequestModel customizedPlan)
+			throws InterruptedException, ApiException, IOException {
 		SettingsRequestModel settings = customizedPlan.getSettings();
 
-		CustomizedPlanModel res = planService.generateCustomizedPlan(customizedPlan.getPlaceIds(), customizedPlan.getCategories(), customizedPlan.getSettings());
-		
-		//String response = JSON.toJSONString(res, SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
+		CustomizedPlanModel res = planService.generateCustomizedPlan(customizedPlan.getPlaces(),
+				customizedPlan.getCategories(), customizedPlan.getSettings());
 
-		return new ResponseEntity<>(res,HttpStatus.OK);
+		// String response = JSON.toJSONString(res,
+		// SerializerFeature.WriteNullStringAsEmpty,
+		// SerializerFeature.WriteNullNumberAsZero,
+		// SerializerFeature.IgnoreErrorGetter);
+
+		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
-
-	
 	@RequestMapping(value = "getPlan", method = RequestMethod.POST)
 	public ResponseEntity<PlanDisplayResponseModel> getPlan(@RequestBody PlanGetModel planGetModel) {
 		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
@@ -156,33 +137,24 @@ public class PlanController {
 	}
 
 	@PostMapping("/recommended")
-	public ResponseEntity<PlanDisplayModel> generateRecommendedPlan(@RequestBody RequestRecommendedPlan recommendedPlan) {
+	public ResponseEntity<PlanDisplayModel> generateRecommendedPlan(
+			@RequestBody RequestRecommendedPlan recommendedPlan) {
 
-//		SearchRequest searchRequest = new SearchRequest();
-//		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-//		searchSourceBuilder.query(QueryBuilders.matchAllQuery());
-//		searchRequest.source(searchSourceBuilder);
-//		RequestSettingsModel settings = RecommendedPlan.getSettings();
+		PlanDisplayModel res = new PlanDisplayModel();
+		try {
+			res = planService.generateRecommendedPlan(recommendedPlan);
+		} catch (Exception e) {
+			LOGGER.info(e.getMessage());
+			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
-PlanDisplayModel res = new PlanDisplayModel();
-try {
-	res = planService.generateRecommendedPlan(recommendedPlan);
-} catch (Exception e) {
-	LOGGER.info(e.getMessage());
-	return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
-}
-
-return new ResponseEntity<>(res, HttpStatus.OK);
-
-
-
+		return new ResponseEntity<>(res, HttpStatus.OK);
 
 	}
 
-
 	@GetMapping("/searchPlace")
 	public ResponseEntity<?> getPlaceInfo(@RequestParam(name = "placeName") String placeName) {
-		List<Place> places =  googleSearch.getInfo(placeName);
+		List<Place> places = googleSearch.getInfo(placeName);
 
 		com.laioffer.travelplanner.entities.Place place = new com.laioffer.travelplanner.entities.Place();
 //        place.setPlaceName(places.get(0).getName());
@@ -192,9 +164,6 @@ return new ResponseEntity<>(res, HttpStatus.OK);
 //        place.setPopularity((float) places.get(0).getRating());
 //        place.setImageLink(places.get(0).getIconUrl());
 //        place.setWebsite(places.get(0).getWebsite());
-
-
-
 
 		return new ResponseEntity<>(place.toString(), HttpStatus.OK);
 	}
