@@ -47,5 +47,34 @@ public class GoogleSearch {
             System.out.println("Reviews: " + empireStateBuilding.getReviews().size());
             System.out.println("Hours:\n " + empireStateBuilding.getHours());
         }
+
+        System.out.println(places.get(0).getPlaceId());
+        System.out.println(places.toString());
+
+//        Place place = client.getPlaceById(places.get(0).getPlaceId());
+//        System.out.println(place.toString());
+//        Place empireStateBuilding = null;
+//        for (Place place : places) {
+//            if (place.getName().equals("Empire State Building")) {
+//                empireStateBuilding = place;
+//                break;
+//            }
+//        }
+//
+//        if (empireStateBuilding != null) { ; // sends a GET request for more details
+//            // Just an example of the amount of information at your disposal:
+//            Place detailedEmpireStateBuilding = empireStateBuilding.getDetails();
+//            System.out.println("Name: " + empireStateBuilding.getName());
+//            System.out.println("Phone: " + empireStateBuilding.getPhoneNumber());
+//            System.out.println("International Phone: " + empireStateBuilding.getInternationalPhoneNumber());
+//            System.out.println("Website: " + empireStateBuilding.getWebsite());
+//            System.out.println("Status: " + empireStateBuilding.getStatus());
+//            System.out.println("Google Place URL: " + empireStateBuilding.getGoogleUrl());
+//            System.out.println("Price: " + empireStateBuilding.getPrice());
+//            System.out.println("Address: " + empireStateBuilding.getAddress());
+//            System.out.println("Vicinity: " + empireStateBuilding.getVicinity());
+//            System.out.println("Reviews: " + empireStateBuilding.getReviews().size());
+//            System.out.println("Hours:\n " + empireStateBuilding.getHours());
+//        }
     }
 }

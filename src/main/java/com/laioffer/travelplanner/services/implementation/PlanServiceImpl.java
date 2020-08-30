@@ -1,5 +1,6 @@
 package com.laioffer.travelplanner.services.implementation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,14 +10,21 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.laioffer.travelplanner.controllers.RecommendedPlan;
+import com.google.maps.errors.ApiException;
+import com.laioffer.travelplanner.antcolonyalgorithm.ACO;
+import com.laioffer.travelplanner.entities.*;
+import com.laioffer.travelplanner.mapsearch.GoogleSearch;
+import com.laioffer.travelplanner.model.common.SettingsRequestModel;
+import com.laioffer.travelplanner.model.plan.*;
+import com.laioffer.travelplanner.repositories.*;
+
+import com.laioffer.travelplanner.services.PlaceSearchService;
+import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.entities.DayOfPlan;
 import com.laioffer.travelplanner.entities.PlaceOfPlan;
 import com.laioffer.travelplanner.entities.Plan;
 import com.laioffer.travelplanner.entities.User;
-import com.laioffer.travelplanner.enumerate.TypeOfPlan;
 import com.laioffer.travelplanner.model.common.AuthModel;
-import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.model.plan.DayOfPlanSaveModel;
 import com.laioffer.travelplanner.model.plan.PlaceOfPlanSaveModel;
 import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
@@ -24,6 +32,7 @@ import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
 import com.laioffer.travelplanner.model.plan.PlanGetModel;
 import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
 import com.laioffer.travelplanner.model.requestModel.RequestRecommendedPlan;
+import com.laioffer.travelplanner.planModel.RecommendedPlan;
 import com.laioffer.travelplanner.repositories.DayOfPlanRepository;
 import com.laioffer.travelplanner.repositories.PlaceOfPlanRepository;
 import com.laioffer.travelplanner.repositories.PlanRepository;
@@ -44,6 +53,15 @@ public class PlanServiceImpl implements PlanService{
     
     @Autowired
     private PlaceOfPlanRepository placeOfPlanRepository;
+
+    @Autowired
+	private GoogleSearch googleSearch;
+
+	@Autowired
+	private PlaceSearchService placeSearchService;
+
+	@Autowired
+	private PlaceRepository placeRepository;
 	
 	@Override
 	public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception {
@@ -97,6 +115,41 @@ public class PlanServiceImpl implements PlanService{
 		return OperationResponse.getSuccessResponse();
 	}
 
+
+	@Override
+	public CustomizedPlanModel generateCustomizedPlan(List<String> names, List<String> categories, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException {
+		List<Place> placeList = new ArrayList<>();
+		for (String name : names) {
+//            Place place;
+//            placeList.add(placeRepository.findByPlaceName(name).orElse
+//                    (place = placeSearchService.searchPlaceIfNotExist(googleSearch.getInfo(name))));
+//            placeRepository.save(place);
+			Place place = placeRepository.findByPlaceName(name).orElse(null);
+			if (place == null) {
+				place = placeSearchService.searchPlaceIfNotExist(googleSearch.getInfo(name));
+				placeRepository.save(place);
+			}
+			placeList.add(place);
+		}
+		Place origin = new Place();
+		origin.setPlaceName("startPoint");
+		origin.setLon(settings.getLon());
+		origin.setLat(settings.getLat());
+		placeList.add(origin);
+		ACO aco = new ACO(placeList);
+		aco.iterator();
+
+		CustomizedPlanModel customizedPlanModel = new CustomizedPlanModel();
+		OriginPlanModel originPlanModel = new OriginPlanModel();
+		originPlanModel.setLat(settings.getLat());
+		originPlanModel.setLon(settings.getLon());
+		customizedPlanModel.setStartDate(settings.getStartDate());
+		customizedPlanModel.setEndDate(settings.getEndDate());
+		customizedPlanModel.setPlaceDetailModels(aco.getPlaceDetailModels());
+		customizedPlanModel.setOriginPlanModel(originPlanModel);
+		return customizedPlanModel;
+	}
+
 	@Override
 	public PlanDisplayResponseModel getPlan(PlanGetModel model) throws Exception {
 		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
@@ -123,26 +176,4 @@ public class PlanServiceImpl implements PlanService{
 
 
 
-	// package function
-	//private 
-	
-	@Override
-	public PlanDisplayModel generateRecommendedPlan(RequestRecommendedPlan model) {
-		
-		//xian shan hou pai
-		
-		
-		//distance throuding
-		SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-
-		sourceBuilder.sort(new ScoreSortBuilder("popularity").order(SortOrder.DESC));
-
-		RecommendedPlan res = planService.generateRecommendedPlan(RecommendedPlan.getPlaces(),
-				RecommendedPlan.getCategories(), RecommendedPlan.getSettings());
-		String response = JSON.toJSONString(res, SerializerFeature.WriteNullStringAsEmpty,
-				SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
-		
-		//increment Index, length is empty
-		return null;
-	}
 }
