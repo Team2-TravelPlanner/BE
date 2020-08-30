@@ -2,14 +2,10 @@ package com.laioffer.travelplanner.utils;
 
 import java.security.Key;
 import java.security.MessageDigest;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+//import java.util.Base64;
 
 public class Encryption {
 
@@ -45,24 +41,18 @@ public class Encryption {
 		return hash.toString();
 	}
 
-	public static String encrypt(String Data) throws Exception {
-		Key key = generateKey();
-		Cipher c = Cipher.getInstance(ALGO);
-		c.init(Cipher.ENCRYPT_MODE, key);
-		byte[] encVal = c.doFinal(Data.getBytes());
-		String encryptedValue = new BASE64Encoder().encode(encVal);
-		return encryptedValue;
-	}
-
-	public static String decrypt(String encryptedData) throws Exception {
-		Key key = generateKey();
-		Cipher c = Cipher.getInstance(ALGO);
-		c.init(Cipher.DECRYPT_MODE, key);
-		byte[] decordedValue = new BASE64Decoder().decodeBuffer(encryptedData);
-		byte[] decValue = c.doFinal(decordedValue);
-		String decryptedValue = new String(decValue);
-		return decryptedValue;
-	}
+//	public static String encrypt(String Data) throws Exception {
+//		String encryptedValue = Base64.getEncoder().encodeToString(
+//	            Data.getBytes("utf-8"));
+//		return encryptedValue;
+//	}
+//
+//	public static String decrypt(String encryptedData) throws Exception {
+//        byte[] base64decodedBytes = Base64.getDecoder().decode(encryptedData);
+//		
+//        System.out.println("Original String: " + new String(base64decodedBytes, "utf-8"));
+//		return new String(base64decodedBytes, "utf-8");
+//	}
 
 	private static Key generateKey() throws Exception {
 		Key key = new SecretKeySpec(keyValue, ALGO);
@@ -71,7 +61,5 @@ public class Encryption {
 
 	public static void main(String[] args) throws Exception {
 		String password = "mypassword";
-		String passwordEnc = encrypt(password);
-		String passwordDec = decrypt(passwordEnc);
 	}
 }
