@@ -140,18 +140,20 @@ public class PlanServiceImpl implements PlanService{
 		for(String dayodPlanId : plan.getDayOfPlanIds()) {
 			DayOfPlan dayOfPlan  = dayOfPlanRepository.findByDayId(dayodPlanId).orElse(null);
 			DayOfPlanSaveModel dayOfPlanSaveModel = new DayOfPlanSaveModel();
+			dayOfPlanSaveModel.setIndex(dayOfPlan.getIndex());
 			
 			//....
 			if(dayOfPlan == null) {
 				continue;
 			}
-			List<PlaceOfPlanSaveModel> placeOfPlanSaveModel = new ArrayList<>();
+			List<PlaceOfPlanSaveModel> placeOfPlanSaveModels = new ArrayList<>();
 			for(String placeOfPlanId : dayOfPlan.getPlaceOfPlanIds()) {
 				PlaceOfPlan placeOfPlan = placeOfPlanRepository.findByPlaceOfPlanId(placeOfPlanId).orElse(null);
-			
-				//....
-				
-				//
+				PlaceOfPlanSaveModel placeOfPlanSaveModel = new PlaceOfPlanSaveModel(); 
+				placeOfPlanSaveModel.setPlaceId(placeOfPlan.getPlaceId());
+				placeOfPlanSaveModel.setStartDate(placeOfPlan.getStartTime());
+				placeOfPlanSaveModel.setEndDate(placeOfPlan.getEndTime());
+				placeOfPlanSaveModels.add(placeOfPlanSaveModel);
 				//placeOfPlanSaveModel.add(e);
 			}
 			
