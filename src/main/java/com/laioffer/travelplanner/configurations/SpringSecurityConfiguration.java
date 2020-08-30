@@ -42,7 +42,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
                 .authorizeRequests()
-                .antMatchers("/users/**", "/v2/**", "/swagger-ui.html", "/plan/**").permitAll()
+                .antMatchers("/users/**", "/v2/**", "/swagger-ui.html", "/plan/**", "/search/**").permitAll()
 //                .antMatchers("/users/admin/**").hasRole("Admin")
                 .anyRequest().fullyAuthenticated()
                 .and()
