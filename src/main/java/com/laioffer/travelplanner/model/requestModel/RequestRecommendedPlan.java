@@ -1,4 +1,4 @@
-package com.laioffer.travelplanner.requestModel;
+package com.laioffer.travelplanner.model.requestModel;
 
 import sun.dc.pr.PRError;
 
@@ -6,20 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public class RequestRecommendedPlan {
-    private List<String> places;
     private List<String> categories;
     private RequestSettingsModel settings;
-
-    public RequestRecommendedPlan() {
-    }
-
-    public List<String> getPlaces() {
-        return places;
-    }
-
-    public void setPlaces(List<String> places) {
-        this.places = places;
-    }
 
     public List<String> getCategories() {
         return categories;

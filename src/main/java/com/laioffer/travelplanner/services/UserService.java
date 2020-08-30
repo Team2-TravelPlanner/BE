@@ -2,10 +2,11 @@ package com.laioffer.travelplanner.services;
 
 
 import com.laioffer.travelplanner.entities.User;
+import com.laioffer.travelplanner.model.user.UserInfoModel;
 
 public interface UserService {
-    User saveUser(User user);
+	UserInfoModel saveUser(User user);
 
-    User findByEmail(String email);
+    UserInfoModel findByEmail(String email);
 
 }

@@ -13,10 +13,14 @@ public class DayOfPlan {
 
 	private List<String> placeOfPlanIds;
 
+	private String planId;
+	
 	private Date createTime;
 	private Date updateTime;
 
 	// ...
+	
+	private Integer Index;
 
 	public Date getCreateTime() {
 		return createTime;
@@ -48,6 +52,22 @@ public class DayOfPlan {
 
 	public void setPlaceOfPlanIds(List<String> placeOfPlanIds) {
 		this.placeOfPlanIds = placeOfPlanIds;
+	}
+
+	public Integer getIndex() {
+		return Index;
+	}
+
+	public void setIndex(Integer index) {
+		Index = index;
+	}
+
+	public String getPlanId() {
+		return planId;
+	}
+
+	public void setPlanId(String planId) {
+		this.planId = planId;
 	}
 
 }
