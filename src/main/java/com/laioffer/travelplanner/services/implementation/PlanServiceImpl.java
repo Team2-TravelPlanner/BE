@@ -106,8 +106,11 @@ public class PlanServiceImpl implements PlanService{
 			res.setOperationResponse(OperationResponse.getFailedResponse("No such plan"));
 			return res;
 		}
+	
 		
-		res.setPlanDisplayModel(planDisplayModel);
+		List<PlanDisplayModel> planDisplayModels = new ArrayList<>();
+		planDisplayModels.add(display(plan));
+		res.setPlanDisplayModel(planDisplayModels);
 		res.setOperationResponse(OperationResponse.getSuccessResponse());
 		return res;
 	}
@@ -120,7 +123,16 @@ public class PlanServiceImpl implements PlanService{
 			res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
 		}
 		
-		res.setPlanDisplayModel(planDisplayModel);
+		List<PlanDisplayModel> planDisplayModels = new ArrayList<>();
+		for(String planId : user.getPlanIds()) {
+			Plan plan = planRepository.findById(planId).orElse(null);
+			if(plan == null) {
+				continue;
+			}
+			planDisplayModels.add(display(plan));
+		}
+		res.setPlanDisplayModel(planDisplayModels);
+		
 		return res;
 	}
 
