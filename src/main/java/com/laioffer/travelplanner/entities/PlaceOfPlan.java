@@ -14,6 +14,7 @@ public class PlaceOfPlan {
 	private Date startTime;
 	private Date endTime;
 
+
 	// .. info
 
 	public Date getStartTime() {
@@ -55,5 +56,6 @@ public class PlaceOfPlan {
 	public void setPlaceId(String placeId) {
 		this.placeId = placeId;
 	}
+	
 
 }

@@ -88,6 +88,7 @@ public class PlanServiceImpl implements PlanService{
 				placeOfPlan.setDayOfPlanId(dayOfPlan.getDayId());
 				placeOfPlan.setStartTime(pModel.getStartDate());
 				placeOfPlan.setEndTime(pModel.getEndDate());
+				
 				placeOfPlanIds.add(placeOfPlan.getDayOfPlanId());
 				
 				placeOfPlanRepository.save(placeOfPlan);
@@ -202,31 +203,34 @@ public class PlanServiceImpl implements PlanService{
 		model.setStartLatitude(plan.getStartLatitude());
 		model.setStartLongitude(plan.getStartLongitude());
 		
-		List<DayOfPlanSaveModel> dayOfPlanSaveModels = new ArrayList<>();
+		List<DayOfPlanDisplayModel> dayOfPlanDisplayModels = new ArrayList<>();
 		for(String dayodPlanId : plan.getDayOfPlanIds()) {
 			DayOfPlan dayOfPlan  = dayOfPlanRepository.findByDayId(dayodPlanId).orElse(null);
-			DayOfPlanSaveModel dayOfPlanSaveModel = new DayOfPlanSaveModel();
-			dayOfPlanSaveModel.setIndex(dayOfPlan.getIndex());
+			DayOfPlanDisplayModel dayOfPlanDisplayModel = new DayOfPlanDisplayModel();
+			dayOfPlanDisplayModel.setIndex(dayOfPlan.getIndex());
 			
 			//....
 			if(dayOfPlan == null) {
 				continue;
 			}
-			List<PlaceOfPlanSaveModel> placeOfPlanSaveModels = new ArrayList<>();
+			List<PlaceOfPlanDetailModel> placeOfPlanDetailModels = new ArrayList<>();
 			for(String placeOfPlanId : dayOfPlan.getPlaceOfPlanIds()) {
 				PlaceOfPlan placeOfPlan = placeOfPlanRepository.findByPlaceOfPlanId(placeOfPlanId).orElse(null);
-				PlaceOfPlanSaveModel placeOfPlanSaveModel = new PlaceOfPlanSaveModel(); 
-				placeOfPlanSaveModel.setPlaceId(placeOfPlan.getPlaceId());
-				placeOfPlanSaveModel.setStartDate(placeOfPlan.getStartTime());
-				placeOfPlanSaveModel.setEndDate(placeOfPlan.getEndTime());
-				placeOfPlanSaveModels.add(placeOfPlanSaveModel);
-				//placeOfPlanSaveModel.add(e);
+				PlaceOfPlanDetailModel placeOfPlanDetailModel = new PlaceOfPlanDetailModel(); 
+				
+				Place place = placeRepository.findByPlaceId(placeOfPlan.getPlaceId()).orElse(null);
+				placeOfPlanDetailModel.setAddress(place.getAddress());
+				placeOfPlanDetailModel.setImageLink(place.getImageLink());
+				placeOfPlanDetailModel.setPlaceId(place.getPlaceId());
+				placeOfPlanDetailModel.setPlaceName(place.getPlaceName());
+				placeOfPlanDetailModel.setWeblink(place.getWebsite());
+				placeOfPlanDetailModels.add(placeOfPlanDetailModel);
 			}
 			
-			dayOfPlanSaveModels.add(dayOfPlanSaveModel);
+			dayOfPlanDisplayModels.add(dayOfPlanDisplayModel);
 		}
 		
-		model.setDayOfPlanSaveModels(dayOfPlanSaveModels);
+		model.setDayOfPlanDisplayModels(dayOfPlanDisplayModels);
 		
 		return model;
 	}

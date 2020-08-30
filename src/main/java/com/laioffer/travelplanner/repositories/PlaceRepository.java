@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface PlaceRepository extends ElasticsearchRepository<Place, String> {
     Optional<Place> findByPlaceName(String name);
+    
+    Optional<Place> findByPlaceId(String placeId);
 }
