@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("users")
 public class UserController {
 
     private final String wrongEmailPasswordError = "Incorrect email or password";
@@ -38,8 +38,8 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
+	@RequestMapping(value = "register", method = RequestMethod.POST)
+    public ResponseEntity<OperationResponse> register(@RequestBody User user) {
         if (userService.findByEmail(user.getEmail()).getEmail() != null) {
             return new ResponseEntity<>(OperationResponse.getFailedResponse(userExistError), HttpStatus.CONFLICT);
         }
@@ -47,7 +47,7 @@ public class UserController {
         return ResponseEntity.ok(OperationResponse.getSuccessResponse());
     }
 
-    @PostMapping("/login")
+	@RequestMapping(value = "login", method = RequestMethod.POST)
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequestModel loginRequestModel) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequestModel.getEmail(), loginRequestModel.getPassword());
@@ -66,5 +66,11 @@ public class UserController {
         ans.setId(model.getEmail());
         ans.setOperationResponse(OperationResponse.getSuccessResponse());
         return ResponseEntity.ok(ans);
+    }
+	
+	@RequestMapping(value = "hello", method = RequestMethod.GET)
+    public ResponseEntity<String> hello() {
+
+        return ResponseEntity.ok("test");
     }
 }
