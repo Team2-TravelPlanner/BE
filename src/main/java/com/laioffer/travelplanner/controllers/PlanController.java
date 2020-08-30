@@ -63,7 +63,7 @@ public class PlanController {
 	}
 
 	@PostMapping("/customized")
-	public ResponseEntity<?> generateCustomizedPlan(@RequestBody CustomizedPlanRequestModel customizedPlan) throws InterruptedException, ApiException, IOException {
+	public ResponseEntity<CustomizedPlanModel> generateCustomizedPlan(@RequestBody CustomizedPlanRequestModel customizedPlan) throws InterruptedException, ApiException, IOException {
 //        JSONArray places = jsonObject.getJSONArray("place");
 //        List<Place> placeList = JSONObject.parseArray(places.toJSONString(), Place.class);
 //        ACO aco = new ACO(placeList);
@@ -89,10 +89,11 @@ public class PlanController {
 //        String response = JSON.toJSONString(customizedPlan, SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
 		SettingsRequestModel settings = customizedPlan.getSettings();
 
-		CustomizedPlanModel res = planService.generateCustomizedPlan(customizedPlan.getPlaces(), customizedPlan.getCategories(), customizedPlan.getSettings());
-		String response = JSON.toJSONString(res, SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
+		CustomizedPlanModel res = planService.generateCustomizedPlan(customizedPlan.getPlaceIds(), customizedPlan.getCategories(), customizedPlan.getSettings());
+		
+		//String response = JSON.toJSONString(res, SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
 
-		return new ResponseEntity<>(response,HttpStatus.OK);
+		return new ResponseEntity<>(res,HttpStatus.OK);
 	}
 
 
