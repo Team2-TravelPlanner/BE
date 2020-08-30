@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.laioffer.travelplanner.jwtUtils.JwtTokenProvider;
 import com.laioffer.travelplanner.model.common.AuthModel;
 import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
@@ -38,6 +37,13 @@ import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
 import com.laioffer.travelplanner.model.requestModel.RequestRecommendedPlan;
 import com.laioffer.travelplanner.model.requestModel.RequestSettingsModel;
 import com.laioffer.travelplanner.planModel.RecommendedPlan;
+import com.laioffer.travelplanner.model.common.Result;
+import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
+import com.laioffer.travelplanner.model.plan.PlanGetModel;
+import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
+import com.laioffer.travelplanner.services.PlanService;
+import com.laioffer.travelplanner.services.UserService;
+
 import java.io.IOException;
 
 @RestController
@@ -49,28 +55,27 @@ public class PlanController {
 	@Autowired
 	private PlanService planService;
 
-	@Autowired
-	private JwtTokenProvider jwtTokenProvider;
 
 	@Autowired
 	private GoogleSearch googleSearch;
+	private UserService userService;
 
 	/**
 	 * Descriptive: save user basic plan to database
 	 *
 	 * @author Rocky
+	 * @throws Exception
 	 * @since 2020-08-25
 	 *
 	 */
 	@RequestMapping(value = "save", method = RequestMethod.POST)
-	public ResponseEntity<OperationResponse> savePlan(@RequestBody PlanSaveRequestModel planSaveRequestModel) {
-
-		if (!jwtTokenProvider.authenToken(planSaveRequestModel.getAuthModel().getToken())) {
-			return new ResponseEntity<>(OperationResponse.getFailedResponse("No such user Or token is wrong"),
-					HttpStatus.OK);
-		}
-
+	public ResponseEntity<OperationResponse> savePlan(@RequestBody PlanSaveRequestModel planSaveRequestModel)
+			throws Exception {
 		OperationResponse res = new OperationResponse();
+		res = userService.auth(planSaveRequestModel.getAuthModel());
+		if (res.getResult().equals(Result.UNSUCCESSFUL)) {
+			return new ResponseEntity<>(res, HttpStatus.OK);
+		}
 
 		try {
 			res = planService.savePlan(planSaveRequestModel);
@@ -100,47 +105,52 @@ public class PlanController {
 	}
 
 	@RequestMapping(value = "getPlan", method = RequestMethod.POST)
-	public ResponseEntity<PlanDisplayResponseModel> getPlan(@RequestBody PlanGetModel planGetModel) {
-		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
-		if (!jwtTokenProvider.authenToken(planGetModel.getAuthModel().getToken())) {
-			res.setOperationResponse(OperationResponse.getFailedResponse("No such user Or token is wrong"));
-			return new ResponseEntity<>(res, HttpStatus.OK);
+	public ResponseEntity<PlanDisplayResponseModel> getPlan(@RequestBody PlanGetModel planGetModel) throws Exception {
+		PlanDisplayResponseModel ans = new PlanDisplayResponseModel();
+
+		OperationResponse res = new OperationResponse();
+		res = userService.auth(planGetModel.getAuthModel());
+		if (res.getResult().equals(Result.UNSUCCESSFUL)) {
+			ans.setOperationResponse(res);
+			return new ResponseEntity<>(ans, HttpStatus.OK);
 		}
 
 		try {
-			res = planService.getPlan(planGetModel);
-			return new ResponseEntity<>(res, HttpStatus.OK);
+			ans = planService.getPlan(planGetModel);
+			return new ResponseEntity<>(ans, HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.info(e.getMessage());
-			res.setOperationResponse(OperationResponse.getFailedResponse(e.getMessage()));
-			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+			ans.setOperationResponse(OperationResponse.getFailedResponse(e.getMessage()));
+			return new ResponseEntity<>(ans, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	@RequestMapping(value = "getAllPlan", method = RequestMethod.GET)
-	public ResponseEntity<PlanDisplayResponseModel> getAllPlan(@RequestBody AuthModel authModel) {
-		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
+	@RequestMapping(value = "getAllPlan", method = RequestMethod.POST)
+	public ResponseEntity<PlanDisplayResponseModel> getAllPlan(@RequestBody AuthModel authModel) throws Exception {
+		PlanDisplayResponseModel ans = new PlanDisplayResponseModel();
 
-		if (!jwtTokenProvider.authenToken(authModel.getToken())) {
-			res.setOperationResponse(OperationResponse.getFailedResponse("No such user Or token is wrong"));
-			return new ResponseEntity<>(res, HttpStatus.OK);
+		OperationResponse res = new OperationResponse();
+		res = userService.auth(authModel);
+		if (res.getResult().equals(Result.UNSUCCESSFUL)) {
+			ans.setOperationResponse(res);
+			return new ResponseEntity<>(ans, HttpStatus.OK);
 		}
 
 		try {
-			res = planService.getAllPlan(authModel);
-			return new ResponseEntity<>(res, HttpStatus.OK);
+			ans = planService.getAllPlan(authModel);
+			return new ResponseEntity<>(ans, HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.info(e.getMessage());
-			res.setOperationResponse(OperationResponse.getFailedResponse(e.getMessage()));
-			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+			ans.setOperationResponse(OperationResponse.getFailedResponse(e.getMessage()));
+			return new ResponseEntity<>(ans, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@PostMapping("/recommended")
-	public ResponseEntity<PlanDisplayModel> generateRecommendedPlan(
+	public ResponseEntity<RecommendedPlan> generateRecommendedPlan(
 			@RequestBody RequestRecommendedPlan recommendedPlan) {
 
-		PlanDisplayModel res = new PlanDisplayModel();
+		RecommendedPlan res = new RecommendedPlan();
 		try {
 			res = planService.generateRecommendedPlan(recommendedPlan);
 		} catch (Exception e) {
@@ -183,4 +193,8 @@ public class PlanController {
 //
 //		return new ResponseEntity<>(place.toString(), HttpStatus.OK);
 //	}
+	@RequestMapping(value = "hello", method = RequestMethod.GET)
+	public ResponseEntity<String> hello() {
+		return new ResponseEntity<>("hello", HttpStatus.OK);
+	}
 }

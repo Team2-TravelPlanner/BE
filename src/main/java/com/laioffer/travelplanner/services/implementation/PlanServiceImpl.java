@@ -158,9 +158,9 @@ public class PlanServiceImpl implements PlanService {
 
 
     @Override
-    public PlanDisplayModel generateRecommendedPlan(RequestRecommendedPlan model, SettingsRequestModel settings) throws Exception {
-        Double startLatitude = settings.getLat();
-        Double startLongitude = settings.getLon();
+    public RecommendedPlan generateRecommendedPlan(RequestRecommendedPlan model) throws Exception {
+        Double startLatitude = model.getSettings().getLat();
+        Double startLongitude = model.getSettings().getLon();
         int NumberOfPlace = 0;
         if (TypeOfPlan.valueOf(model.getSettings().getTravelStyle()).equals(TypeOfPlan.Loose)) {
             NumberOfPlace = 2;
@@ -181,7 +181,7 @@ public class PlanServiceImpl implements PlanService {
                 //起始位置坐标
                 //get place by placeId ???
                 //Optional<Place> place = placeRepository.findByPlaceId(placeId);
-                Place place = placeRepository.findByPlaceId(placeId);
+                Place place = placeRepository.findByPlaceId(placeId).orElse(null);
 
                 Double distance = DistanceUtil.getDistance(startLatitude, startLongitude, place.getLon(), place.getLat());
                 if (distance < 10.0  &&  placeIds.add(placeId)) {
@@ -216,6 +216,9 @@ public class PlanServiceImpl implements PlanService {
         //按popularity降序排列
         Collections.sort(placeListFit, (p1, p2) -> p1.getPopularity() - p2.getPopularity() < 0 ? 1 : -1);
 
+        //...
+        //cut days
+        
         List<Place> placeList = new ArrayList<>();
         int count = 0;
         while (count < NumberOfPlace) {
@@ -227,38 +230,100 @@ public class PlanServiceImpl implements PlanService {
 
         RecommendedPlan recommendedPlan = new RecommendedPlan();
         Origin origin = new Origin();
-        origin.setLat(settings.getLat());
-        origin.setLon(settings.getLon());
-        recommendedPlan.setStartDate(settings.getStartDate());
-        recommendedPlan.setEndDate(settings.getEndDate());
+        origin.setLat(model.getSettings().getLat());
+        origin.setLon(model.getSettings().getLon());
+        recommendedPlan.setStartDate(model.getSettings().getStartDate());
+        recommendedPlan.setEndDate(model.getSettings().getEndDate());
         recommendedPlan.setPlaceDetails(aco.getPlaceDetailModels());
         recommendedPlan.setOrigin(origin);
-        return null;
+        return recommendedPlan;
     }
 
 
-    @Override
-    public PlanDisplayResponseModel getPlan(PlanGetModel model) throws Exception {
-        PlanDisplayResponseModel res = new PlanDisplayResponseModel();
-        User user = userRepository.findByEmail(model.getAuthModel().getUserEmail()).orElse(null);
-        if (user == null) {
-            res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
-            return res;
+	@Override
+	public PlanDisplayResponseModel getPlan(PlanGetModel model) throws Exception {
+		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
+		User user = userRepository.findByEmail(model.getAuthModel().getUserEmail()).orElse(null);
+		if(user == null) {
+			res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
+			return res;
+		}
+		
+		Plan plan= planRepository.findById(model.getPlanId()).orElse(null);
+		if(plan == null) {
+			res.setOperationResponse(OperationResponse.getFailedResponse("No such plan"));
+			return res;
+		}
+	
+		
+		List<PlanDisplayModel> planDisplayModels = new ArrayList<>();
+		planDisplayModels.add(display(plan));
+		res.setPlanDisplayModel(planDisplayModels);
+		res.setOperationResponse(OperationResponse.getSuccessResponse());
+		return res;
+	}
 
-        }
+	@Override
+	public PlanDisplayResponseModel getAllPlan(AuthModel model) throws Exception {
+		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
+		User user = userRepository.findByEmail(model.getUserEmail()).orElse(null);
+		if(user == null) {
+			res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
+		}
+		
+		List<PlanDisplayModel> planDisplayModels = new ArrayList<>();
+		for(String planId : user.getPlanIds()) {
+			Plan plan = planRepository.findById(planId).orElse(null);
+			if(plan == null) {
+				continue;
+			}
+			planDisplayModels.add(display(plan));
+		}
+		res.setPlanDisplayModel(planDisplayModels);
+		
+		return res;
+	}
 
-        //planId
 
-        // user
+	// package function
+	//private 
+	private PlanDisplayModel display(Plan plan) {
+		PlanDisplayModel model = new PlanDisplayModel();
+		
+		
+		model.setStartDate(plan.getStartDate());
+		model.setEndDate(plan.getEndDate());
+		model.setStartLatitude(plan.getStartLatitude());
+		model.setStartLongitude(plan.getStartLongitude());
+		
+		List<DayOfPlanSaveModel> dayOfPlanSaveModels = new ArrayList<>();
+		for(String dayodPlanId : plan.getDayOfPlanIds()) {
+			DayOfPlan dayOfPlan  = dayOfPlanRepository.findByDayId(dayodPlanId).orElse(null);
+			DayOfPlanSaveModel dayOfPlanSaveModel = new DayOfPlanSaveModel();
+			dayOfPlanSaveModel.setIndex(dayOfPlan.getIndex());
+			
+			//....
+			if(dayOfPlan == null) {
+				continue;
+			}
+			List<PlaceOfPlanSaveModel> placeOfPlanSaveModels = new ArrayList<>();
+			for(String placeOfPlanId : dayOfPlan.getPlaceOfPlanIds()) {
+				PlaceOfPlan placeOfPlan = placeOfPlanRepository.findByPlaceOfPlanId(placeOfPlanId).orElse(null);
+				PlaceOfPlanSaveModel placeOfPlanSaveModel = new PlaceOfPlanSaveModel(); 
+				placeOfPlanSaveModel.setPlaceId(placeOfPlan.getPlaceId());
+				placeOfPlanSaveModel.setStartDate(placeOfPlan.getStartTime());
+				placeOfPlanSaveModel.setEndDate(placeOfPlan.getEndTime());
+				placeOfPlanSaveModels.add(placeOfPlanSaveModel);
+				//placeOfPlanSaveModel.add(e);
+			}
+			
+			dayOfPlanSaveModels.add(dayOfPlanSaveModel);
+		}
+		
+		model.setDayOfPlanSaveModels(dayOfPlanSaveModels);
+		
+		return model;
+	}
 
-        return null;
-    }
-
-    @Override
-    public PlanDisplayResponseModel getAllPlan(AuthModel model) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-
+	
 }

@@ -1,68 +1,78 @@
 package com.laioffer.travelplanner.services.implementation;
 
-
 import com.laioffer.travelplanner.entities.User;
+import com.laioffer.travelplanner.model.common.AuthModel;
+import com.laioffer.travelplanner.model.common.LoginRequestModel;
+import com.laioffer.travelplanner.model.common.LoginResponse;
 import com.laioffer.travelplanner.model.common.OperationResponse;
-import com.laioffer.travelplanner.model.user.UserInfoModel;
+import com.laioffer.travelplanner.model.user.RegisterRequestModel;
 import com.laioffer.travelplanner.repositories.UserRepository;
 import com.laioffer.travelplanner.services.UserService;
-import org.elasticsearch.index.query.MatchQueryBuilder;
+import com.laioffer.travelplanner.utils.Dateutil;
+import com.laioffer.travelplanner.utils.Encryption;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImp implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+	@Override
+	public OperationResponse registerUser(RegisterRequestModel model) throws Exception {
+		User user = userRepository.findByEmail(model.getEmail()).orElse(null);
+		OperationResponse res = new OperationResponse();
+//		if (user != null) {
+//			return OperationResponse.getFailedResponse("Email Already been taken.");
+//		}
+//		user = new User();
+		user.setEmail(model.getEmail());
+		user.setUserName(model.getUserName());
+		user.setPassword(Encryption.saltPassword(model.getPassword()));
+		user.setCreateTime(new Date());
+		user.setUpdateTime(new Date());
+		userRepository.save(user);
+		return OperationResponse.getSuccessResponse();
+	}
 
-    @Override
-    public UserInfoModel saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        //user.setPassword(user.getPassword()); //?
+	@Override
+	public LoginResponse login(LoginRequestModel model) throws Exception {
+		User user = userRepository.findByEmail(model.getEmail()).orElse(null);
+		LoginResponse res = new LoginResponse();
+		if (user == null) {
+			res.setOperationResponse(OperationResponse.getFailedResponse("No such User"));
+			return res;
+		}
+		if (!Encryption.saltPassword(model.getPassword()).equals(user.getPassword())) {
+			res.setOperationResponse(OperationResponse.getFailedResponse("Password not match"));
+			return res;
+		}
+		String newToken = UUID.randomUUID().toString();
+		user.setToken(newToken);
+		user.setExpireDate(Dateutil.getTwoWeeksLater());
+		userRepository.save(user);
+		res.setId(user.getEmail());
+		res.setToken(newToken);
+		res.setOperationResponse(OperationResponse.getSuccessResponse());
+		return res;
+	}
 
-        Date currTime = new Date();
-        user.setCreateTime(currTime);
-        user.setUpdateTime(currTime);
-        UserInfoModel  model = new UserInfoModel();
-    	model.setEmail(user.getEmail());
-    	model.setName(user.getUserName());
-    	model.setOperationResponse(OperationResponse.getSuccessResponse());
-    	userRepository.save(user);
-        return model;
-    }
-
-    @Override
-    public UserInfoModel findByEmail(String email) {
-    	User user = userRepository.findByEmail(email).orElse(null);
-    	OperationResponse res = new OperationResponse();
-    	UserInfoModel  model = new UserInfoModel();
-    	if(user == null) {
-    		res.getFailedResponse("No such User");
-    		model.setOperationResponse(res);
-    		return model;
-    	}
-    	model.setOperationResponse(res.getSuccessResponse());
-    	model.setEmail(user.getEmail());
-    	model.setName(user.getUserName());
-        return model;
-    }
-    
-    
-    private UserInfoModel convert(User user) {
-    	UserInfoModel model = new UserInfoModel();
-    	
-    	model.setEmail(user.getEmail());
-    	model.setName(user.getPassword());
-    	return model;
-    }
+	@Override
+	public OperationResponse auth(AuthModel model) throws Exception {
+		User user = userRepository.findByEmail(model.getUserEmail()).orElse(null);
+		OperationResponse res = new OperationResponse();
+		if (user == null) {
+			
+		}
+		if (!user.getToken().equals(model.getToken()) || user.getExpireDate() == null || user.getExpireDate().getTime() < (new Date()).getTime()){
+			return OperationResponse.getFailedResponse("Token no longer userful. Please log in again.");
+		}
+		return OperationResponse.getSuccessResponse();
+	}
 }
