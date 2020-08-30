@@ -22,7 +22,7 @@ private Date startDate;
 	
 	private String planId;
 	
-	private List<DayOfPlanSaveModel> dayOfPlanResponseModels;
+	private List<DayOfPlanSaveModel> dayOfPlanSaveModels;
 	
 	
 	public AuthModel getAuthModel() {
@@ -81,13 +81,14 @@ private Date startDate;
 		this.startLongitude = startLongitude;
 	}
 
-	public List<DayOfPlanSaveModel> getDayOfPlanResponseModels() {
-		return dayOfPlanResponseModels;
+	public List<DayOfPlanSaveModel> getDayOfPlanSaveModels() {
+		return dayOfPlanSaveModels;
 	}
 
-	public void setDayOfPlanResponseModels(List<DayOfPlanSaveModel> dayOfPlanResponseModels) {
-		this.dayOfPlanResponseModels = dayOfPlanResponseModels;
+	public void setDayOfPlanSaveModels(List<DayOfPlanSaveModel> dayOfPlanSaveModels) {
+		this.dayOfPlanSaveModels = dayOfPlanSaveModels;
 	}
+
 	
 	
 }

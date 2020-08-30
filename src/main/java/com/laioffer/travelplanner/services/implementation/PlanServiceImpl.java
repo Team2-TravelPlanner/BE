@@ -136,6 +136,30 @@ public class PlanServiceImpl implements PlanService{
 		model.setStartLatitude(plan.getStartLatitude());
 		model.setStartLongitude(plan.getStartLongitude());
 		
+		List<DayOfPlanSaveModel> dayOfPlanSaveModels = new ArrayList<>();
+		for(String dayodPlanId : plan.getDayOfPlanIds()) {
+			DayOfPlan dayOfPlan  = dayOfPlanRepository.findByDayId(dayodPlanId).orElse(null);
+			DayOfPlanSaveModel dayOfPlanSaveModel = new DayOfPlanSaveModel();
+			
+			//....
+			if(dayOfPlan == null) {
+				continue;
+			}
+			List<PlaceOfPlanSaveModel> placeOfPlanSaveModel = new ArrayList<>();
+			for(String placeOfPlanId : dayOfPlan.getPlaceOfPlanIds()) {
+				PlaceOfPlan placeOfPlan = placeOfPlanRepository.findByPlaceOfPlanId(placeOfPlanId).orElse(null);
+			
+				//....
+				
+				//
+				//placeOfPlanSaveModel.add(e);
+			}
+			
+			dayOfPlanSaveModels.add(dayOfPlanSaveModel);
+		}
+		
+		model.setDayOfPlanSaveModels(dayOfPlanSaveModels);
+		
 		return model;
 	}
 	
