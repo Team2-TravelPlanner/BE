@@ -84,13 +84,16 @@ public class SearchServiceImpl implements SearchService {
 			boolQueryBuilder.must(QueryBuilders.matchQuery("categoryIds", category));
 		}
 
-		BoolQueryBuilder rangeQuery = boolQuery();
-		rangeQuery.must(rangeQuery("lat").gte(model.getLowerRightLat()).lte(model.getUpperLeftLat()));
-		rangeQuery.must(rangeQuery("lon").lte(model.getLowerRightLon()).lte(model.getUpperLeftLon()));
+		/**
+		 * Used for the rangeQuery in the future
+		 */
+//		BoolQueryBuilder rangeQuery = boolQuery();
+//		rangeQuery.must(rangeQuery("lat").gte(model.getLowerRightLat()).lte(model.getUpperLeftLat()));
+//		rangeQuery.must(rangeQuery("lon").lte(model.getLowerRightLon()).lte(model.getUpperLeftLon()));
 
 //		GeoBoundingBoxQueryBuilder geoBoundingBoxQueryBuilder = QueryBuilders.geoBoundingBoxQuery("location");
 //		geoBoundingBoxQueryBuilder.setCorners(model.getUpperLeftLat(), model.getUpperLeftLon(), model.getLowerRightLat(), model.getLowerRightLon());
-		boolQueryBuilder.must(rangeQuery);
+//		boolQueryBuilder.must(rangeQuery);
 
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 		searchSourceBuilder.query(boolQueryBuilder);
@@ -158,6 +161,13 @@ public class SearchServiceImpl implements SearchService {
 				placeInfoModel.setId(place.getContent().getPlaceId());
 				placeInfoModel.setName(place.getContent().getPlaceName());
 				placeInfoModel.setAddress(place.getContent().getAddress());
+				placeInfoModel.setLat(place.getContent().getLat());
+				placeInfoModel.setLon(place.getContent().getLon());
+				placeInfoModel.setAddress(place.getContent().getAddress());
+				placeInfoModel.setImageLink(place.getContent().getImageLink());
+				placeInfoModel.setPopularity(place.getContent().getPopularity());
+				placeInfoModel.setWebsite(place.getContent().getWebsite());
+
 				placeInfoModelList.add(placeInfoModel);
 			});
 

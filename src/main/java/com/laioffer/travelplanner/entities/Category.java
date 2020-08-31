@@ -11,6 +11,7 @@ public class Category {
 	private String categoryId;
 
 	private String categoryName;
+
 	private List<String> placeIds;
 
 	public String getCategoryId() {
