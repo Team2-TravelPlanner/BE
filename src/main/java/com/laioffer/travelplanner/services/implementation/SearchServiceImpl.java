@@ -77,7 +77,7 @@ public class SearchServiceImpl implements SearchService {
 		BoolQueryBuilder boolQueryBuilder = boolQuery();
 		// search by keyword
 		if (!StringUtils.isEmpty(keyword)) {
-			boolQueryBuilder.must(QueryBuilders.matchQuery("placeName", keyword));
+			boolQueryBuilder.must(QueryBuilders.wildcardQuery("placeName", "*" + keyword + "*"));
 		}
 		// search by category
 		if (!StringUtils.isEmpty(category)) {
@@ -99,7 +99,7 @@ public class SearchServiceImpl implements SearchService {
 		searchSourceBuilder.query(boolQueryBuilder);
 
 		searchSourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
-		searchSourceBuilder.sort(new FieldSortBuilder("placeId").order(SortOrder.ASC));
+//		searchSourceBuilder.sort(new FieldSortBuilder("placeId").order(SortOrder.ASC));
 
 		SearchRequest searchRequest = new SearchRequest("travel");
 		searchRequest.types(String.valueOf(Place.class));
