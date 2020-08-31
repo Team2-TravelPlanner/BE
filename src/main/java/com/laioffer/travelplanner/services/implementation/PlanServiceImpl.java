@@ -63,63 +63,68 @@ public class PlanServiceImpl implements PlanService {
     @Autowired
     private PlaceSearchService placeSearchService;
 
-    @Autowired
-    private PlaceRepository placeRepository;
+	@Autowired
+	private PlaceRepository placeRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
+	
+	@Override
+	public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception {
+		User user = userRepository.findByEmail(model.getAuthModel().getUserEmail()).orElse(null);
+		if(user == null) {
+			return OperationResponse.getFailedResponse("No such user.");
+			
+		}
+		Plan plan = new Plan();
+		plan.setStartLatitude(model.getStartLatitude());
+		plan.setStartLongitude(model.getStartLongitude());
+		plan.setStartDate(model.getStartDate());
+		plan.setEndDate(model.getEndDate());
+		plan.setUserId(user.getEmail());
+		plan.setTypeOfPlan(model.getTypeOfPlan());
+		
+		List<String> dayOfPlanIds = new ArrayList<>();
+		
+		for(DayOfPlanSaveModel dModel : model.getDayOfPlanSaveModels()) {
+			DayOfPlan dayOfPlan = new DayOfPlan();
+			dayOfPlan.setIndex(dModel.getIndex());
+			dayOfPlan.setPlanId(plan.getPlanId());
+			
+			List<String> placeOfPlanIds = new ArrayList<>();
+			for(PlaceOfPlanSaveModel pModel : dModel.getPlaceOfPlanSaveModels()) {
+				PlaceOfPlan placeOfPlan = new PlaceOfPlan();
+				placeOfPlan.setPlaceId(pModel.getPlaceId());
+				placeOfPlan.setDayOfPlanId(dayOfPlan.getDayId());
+				placeOfPlan.setStartTime(pModel.getStartDate());
+				placeOfPlan.setEndTime(pModel.getEndDate());
+				
+				placeOfPlanIds.add(placeOfPlan.getDayOfPlanId());
+				
+				placeOfPlanRepository.save(placeOfPlan);
+			}
+			dayOfPlan.setPlaceOfPlanIds(placeOfPlanIds);
+			
+			dayOfPlanIds.add(dayOfPlan.getDayId());
+			dayOfPlanRepository.save(dayOfPlan);
+		}
+		plan.setDayOfPlanIds(dayOfPlanIds);
+		
+		planRepository.save(plan);
+		List<String> planIds = user.getPlanIds();
+		if(planIds == null || planIds.isEmpty()) {
+			planIds = new ArrayList<>();
+		}
+		planIds.add(plan.getPlanId());
+		user.setPlanIds(planIds);
+		
+		userRepository.save(user);
+		return OperationResponse.getSuccessResponse();
+	}
 
-    @Autowired
-    private CategoryRepository categoryRepository;
 
-    @Override
-    public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception {
-        User user = userRepository.findByEmail(model.getAuthModel().getUserEmail()).orElse(null);
-        if (user == null) {
-            return OperationResponse.getFailedResponse("No such user.");
 
-        }
-        Plan plan = new Plan();
-        plan.setStartLatitude(model.getStartLatitude());
-        plan.setStartLongitude(model.getStartLongitude());
-        plan.setStartDate(model.getStartDate());
-        plan.setEndDate(model.getEndDate());
-        plan.setUserId(user.getEmail());
-        plan.setTypeOfPlan(model.getTypeOfPlan());
 
-        List<String> dayOfPlanIds = new ArrayList<>();
-
-        for (DayOfPlanSaveModel dModel : model.getDayOfPlanSaveModels()) {
-            DayOfPlan dayOfPlan = new DayOfPlan();
-            dayOfPlan.setIndex(dModel.getIndex());
-            dayOfPlan.setPlanId(plan.getPlanId());
-
-            List<String> placeOfPlanIds = new ArrayList<>();
-            for (PlaceOfPlanSaveModel pModel : dModel.getPlaceOfPlanSaveModels()) {
-                PlaceOfPlan placeOfPlan = new PlaceOfPlan();
-                placeOfPlan.setPlaceId(pModel.getPlaceId());
-                placeOfPlan.setDayOfPlanId(dayOfPlan.getDayId());
-                placeOfPlan.setStartTime(pModel.getStartDate());
-                placeOfPlan.setEndTime(pModel.getEndDate());
-                placeOfPlanIds.add(placeOfPlan.getDayOfPlanId());
-
-                placeOfPlanRepository.save(placeOfPlan);
-            }
-            dayOfPlan.setPlaceOfPlanIds(placeOfPlanIds);
-
-            dayOfPlanIds.add(dayOfPlan.getDayId());
-            dayOfPlanRepository.save(dayOfPlan);
-        }
-        plan.setDayOfPlanIds(dayOfPlanIds);
-
-        planRepository.save(plan);
-        List<String> planIds = user.getPlanIds();
-        if (planIds == null || planIds.isEmpty()) {
-            planIds = new ArrayList<>();
-        }
-        planIds.add(plan.getPlanId());
-        user.setPlanIds(planIds);
-
-        userRepository.save(user);
-        return OperationResponse.getSuccessResponse();
-    }
 
 
     @Override
@@ -228,7 +233,7 @@ public class PlanServiceImpl implements PlanService {
         ACO aco = new ACO(placeList);
         aco.iterator();
 
-        RecommendedPlan recommendedPlan = new RecommendedPlan();
+        PlanDisplayModel recommendedPlan = new RecommendedPlan();
         Origin origin = new Origin();
         origin.setLat(model.getSettings().getLat());
         origin.setLon(model.getSettings().getLon());
@@ -236,7 +241,7 @@ public class PlanServiceImpl implements PlanService {
         recommendedPlan.setEndDate(model.getSettings().getEndDate());
         recommendedPlan.setPlaceDetails(aco.getPlaceDetailModels());
         recommendedPlan.setOrigin(origin);
-        return recommendedPlan;
+        return PlanDisplayModel;
     }
 
 
@@ -296,31 +301,34 @@ public class PlanServiceImpl implements PlanService {
 		model.setStartLatitude(plan.getStartLatitude());
 		model.setStartLongitude(plan.getStartLongitude());
 		
-		List<DayOfPlanSaveModel> dayOfPlanSaveModels = new ArrayList<>();
+		List<DayOfPlanDisplayModel> dayOfPlanDisplayModels = new ArrayList<>();
 		for(String dayodPlanId : plan.getDayOfPlanIds()) {
 			DayOfPlan dayOfPlan  = dayOfPlanRepository.findByDayId(dayodPlanId).orElse(null);
-			DayOfPlanSaveModel dayOfPlanSaveModel = new DayOfPlanSaveModel();
-			dayOfPlanSaveModel.setIndex(dayOfPlan.getIndex());
+			DayOfPlanDisplayModel dayOfPlanDisplayModel = new DayOfPlanDisplayModel();
+			dayOfPlanDisplayModel.setIndex(dayOfPlan.getIndex());
 			
 			//....
 			if(dayOfPlan == null) {
 				continue;
 			}
-			List<PlaceOfPlanSaveModel> placeOfPlanSaveModels = new ArrayList<>();
+			List<PlaceOfPlanDetailModel> placeOfPlanDetailModels = new ArrayList<>();
 			for(String placeOfPlanId : dayOfPlan.getPlaceOfPlanIds()) {
 				PlaceOfPlan placeOfPlan = placeOfPlanRepository.findByPlaceOfPlanId(placeOfPlanId).orElse(null);
-				PlaceOfPlanSaveModel placeOfPlanSaveModel = new PlaceOfPlanSaveModel(); 
-				placeOfPlanSaveModel.setPlaceId(placeOfPlan.getPlaceId());
-				placeOfPlanSaveModel.setStartDate(placeOfPlan.getStartTime());
-				placeOfPlanSaveModel.setEndDate(placeOfPlan.getEndTime());
-				placeOfPlanSaveModels.add(placeOfPlanSaveModel);
-				//placeOfPlanSaveModel.add(e);
+				PlaceOfPlanDetailModel placeOfPlanDetailModel = new PlaceOfPlanDetailModel(); 
+				
+				Place place = placeRepository.findByPlaceId(placeOfPlan.getPlaceId()).orElse(null);
+				placeOfPlanDetailModel.setAddress(place.getAddress());
+				placeOfPlanDetailModel.setImageLink(place.getImageLink());
+				placeOfPlanDetailModel.setPlaceId(place.getPlaceId());
+				placeOfPlanDetailModel.setPlaceName(place.getPlaceName());
+				placeOfPlanDetailModel.setWeblink(place.getWebsite());
+				placeOfPlanDetailModels.add(placeOfPlanDetailModel);
 			}
 			
-			dayOfPlanSaveModels.add(dayOfPlanSaveModel);
+			dayOfPlanDisplayModels.add(dayOfPlanDisplayModel);
 		}
 		
-		model.setDayOfPlanSaveModels(dayOfPlanSaveModels);
+		model.setDayOfPlanDisplayModels(dayOfPlanDisplayModels);
 		
 		return model;
 	}

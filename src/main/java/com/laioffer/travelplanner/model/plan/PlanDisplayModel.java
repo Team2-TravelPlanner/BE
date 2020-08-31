@@ -20,7 +20,12 @@ public class PlanDisplayModel {
 	
 	private String planId;
 	
-	private List<DayOfPlanSaveModel> dayOfPlanSaveModels;
+	private List<DayOfPlanDisplayModel> dayOfPlanDisplayModels;
+	
+	
+	public AuthModel getAuthModel() {
+		return authModel;
+	}
 
 
 	public String getPlanId() {
@@ -71,14 +76,15 @@ public class PlanDisplayModel {
 		this.startLongitude = startLongitude;
 	}
 
-	public List<DayOfPlanSaveModel> getDayOfPlanSaveModels() {
-		return dayOfPlanSaveModels;
+	public List<DayOfPlanDisplayModel> getDayOfPlanDisplayModels() {
+		return dayOfPlanDisplayModels;
 	}
 
-	public void setDayOfPlanSaveModels(List<DayOfPlanSaveModel> dayOfPlanSaveModels) {
-		this.dayOfPlanSaveModels = dayOfPlanSaveModels;
+	public void setDayOfPlanDisplayModels(List<DayOfPlanDisplayModel> dayOfPlanDisplayModels) {
+		this.dayOfPlanDisplayModels = dayOfPlanDisplayModels;
 	}
-
+	
+	
 	
 	
 }

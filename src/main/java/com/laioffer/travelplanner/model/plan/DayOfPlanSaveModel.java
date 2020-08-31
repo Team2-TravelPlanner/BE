@@ -23,6 +23,6 @@ public class DayOfPlanSaveModel {
 	public void setPlaceOfPlanSaveModels(List<PlaceOfPlanSaveModel> placeOfPlanSaveModels) {
 		this.placeOfPlanSaveModels = placeOfPlanSaveModels;
 	}
-	
+
 	
 }
