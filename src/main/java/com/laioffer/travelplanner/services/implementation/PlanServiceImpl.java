@@ -233,7 +233,7 @@ public class PlanServiceImpl implements PlanService {
         ACO aco = new ACO(placeList);
         aco.iterator();
 
-        PlanDisplayModel recommendedPlan = new RecommendedPlan();
+        PlanDisplayModel planDisplayModel = new PlanDisplayModel();
         Origin origin = new Origin();
         origin.setLat(model.getSettings().getLat());
         origin.setLon(model.getSettings().getLon());
@@ -241,7 +241,7 @@ public class PlanServiceImpl implements PlanService {
         recommendedPlan.setEndDate(model.getSettings().getEndDate());
         recommendedPlan.setPlaceDetails(aco.getPlaceDetailModels());
         recommendedPlan.setOrigin(origin);
-        return PlanDisplayModel;
+        return planDisplayModel;
     }
 
 
