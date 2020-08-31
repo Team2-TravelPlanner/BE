@@ -18,20 +18,11 @@ private Date startDate;
 	
 	private TypeOfPlan typeOfPlan;
 	
-	private AuthModel authModel;
 	
 	private String planId;
 	
 	private List<DayOfPlanDisplayModel> dayOfPlanDisplayModels;
 	
-	
-	public AuthModel getAuthModel() {
-		return authModel;
-	}
-
-	public void setAuthModel(AuthModel authModel) {
-		this.authModel = authModel;
-	}
 
 	public String getPlanId() {
 		return planId;

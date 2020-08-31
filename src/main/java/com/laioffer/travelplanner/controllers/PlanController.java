@@ -6,6 +6,8 @@ import com.google.maps.errors.ApiException;
 import com.laioffer.travelplanner.model.common.CustomizedPlanRequestModel;
 import com.laioffer.travelplanner.model.common.SettingsRequestModel;
 import com.laioffer.travelplanner.model.plan.CustomizedPlanModel;
+import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +66,7 @@ public class PlanController {
 	}
 
 	@PostMapping("/customized")
-	public ResponseEntity<CustomizedPlanModel> generateCustomizedPlan(@RequestBody CustomizedPlanRequestModel customizedPlan) throws InterruptedException, ApiException, IOException {
+	public ResponseEntity<PlanDisplayModel> generateCustomizedPlan(@RequestBody CustomizedPlanRequestModel customizedPlan) throws InterruptedException, ApiException, IOException {
 //        JSONArray places = jsonObject.getJSONArray("place");
 //        List<Place> placeList = JSONObject.parseArray(places.toJSONString(), Place.class);
 //        ACO aco = new ACO(placeList);
@@ -90,7 +92,7 @@ public class PlanController {
 //        String response = JSON.toJSONString(customizedPlan, SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
 		SettingsRequestModel settings = customizedPlan.getSettings();
 
-		CustomizedPlanModel res = planService.generateCustomizedPlan(customizedPlan.getPlaceIds(), customizedPlan.getCategories(), customizedPlan.getSettings());
+		PlanDisplayModel res = planService.generateCustomizedPlan(customizedPlan.getPlaceIds(), customizedPlan.getCategories(), customizedPlan.getSettings());
 		
 		//String response = JSON.toJSONString(res, SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
 
