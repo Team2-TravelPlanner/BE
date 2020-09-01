@@ -21,7 +21,7 @@ public class Place {
 	private float popularity;
 	private String website;
 	private List<String> businesshourIds;
-	private List<String> categoryIds;
+	private List<String> categories;
 
 	public String getPlaceId() {
 		return placeId;
@@ -127,12 +127,12 @@ public class Place {
 		this.businesshourIds = businesshourIds;
 	}
 
-	public List<String> getCategoryIds() {
-		return categoryIds;
+	public List<String> getCategories() {
+		return categories;
 	}
 
-	public void setCategoryIds(List<String> categoryIds) {
-		this.categoryIds = categoryIds;
+	public void setCategories(List<String> categories) {
+		this.categories = categories;
 	}
 
 	@Override

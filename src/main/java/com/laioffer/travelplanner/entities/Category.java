@@ -38,4 +38,12 @@ public class Category {
 		this.placeIds = placeIds;
 	}
 
+	@Override
+	public String toString() {
+		return "Category{" +
+				"categoryId='" + categoryId + '\'' +
+				", categoryName='" + categoryName + '\'' +
+				", placeIds=" + placeIds +
+				'}';
+	}
 }
