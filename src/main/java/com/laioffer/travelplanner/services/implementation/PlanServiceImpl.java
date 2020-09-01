@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.maps.errors.ApiException;
+import com.google.maps.model.PlaceDetails;
 import com.laioffer.travelplanner.antcolonyalgorithm.ACO;
 import com.laioffer.travelplanner.entities.*;
 import com.laioffer.travelplanner.mapsearch.GoogleSearch;
@@ -114,18 +115,11 @@ public class PlanServiceImpl implements PlanService{
 
 
 	@Override
-	public CustomizedPlanModel generateCustomizedPlan(List<String> names, List<String> categories, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException {
+	public CustomizedPlanModel generateCustomizedPlan(List<String> ids, List<String> categories, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException {
 		List<Place> placeList = new ArrayList<>();
-		for (String name : names) {
-//            Place place;
-//            placeList.add(placeRepository.findByPlaceName(name).orElse
-//                    (place = placeSearchService.searchPlaceIfNotExist(googleSearch.getInfo(name))));
-//            placeRepository.save(place);
-			Place place = placeRepository.findByPlaceName(name).orElse(null);
-			if (place == null) {
-				place = placeSearchService.searchPlaceIfNotExist(googleSearch.getInfo(name));
-				placeRepository.save(place);
-			}
+		for (String id : ids) {
+			Place place = placeRepository.findById(id).orElse(null);
+			System.out.println(place.toString());
 			placeList.add(place);
 		}
 		Place origin = new Place();
@@ -218,7 +212,7 @@ public class PlanServiceImpl implements PlanService{
 				PlaceOfPlan placeOfPlan = placeOfPlanRepository.findByPlaceOfPlanId(placeOfPlanId).orElse(null);
 				PlaceOfPlanDetailModel placeOfPlanDetailModel = new PlaceOfPlanDetailModel(); 
 				
-				Place place = placeRepository.findByPlaceId(placeOfPlan.getPlaceId()).orElse(null);
+				Place place = placeRepository.findById(placeOfPlan.getPlaceId()).orElse(null);
 				placeOfPlanDetailModel.setAddress(place.getAddress());
 				placeOfPlanDetailModel.setImageLink(place.getImageLink());
 				placeOfPlanDetailModel.setPlaceId(place.getPlaceId());

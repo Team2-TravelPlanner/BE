@@ -64,37 +64,17 @@ public class PlanController {
 	}
 
 	@PostMapping("/customized")
-	public ResponseEntity<CustomizedPlanModel> generateCustomizedPlan(@RequestBody CustomizedPlanRequestModel customizedPlan) throws InterruptedException, ApiException, IOException {
-//        JSONArray places = jsonObject.getJSONArray("place");
-//        List<Place> placeList = JSONObject.parseArray(places.toJSONString(), Place.class);
-//        ACO aco = new ACO(placeList);
-//        aco.iterator();
-//        System.out.println(aco.getOrder());
-//
-//        Integer startDate = jsonObject.getJSONObject("settings").getInteger("startDate");
-//        Integer endDate = jsonObject.getJSONObject("settings").getInteger("endDate");
-//
-//        Integer duration = (endDate - startDate) / (60 * 60 * 24);
-//        System.out.println(duration);
-//
-//        JSONArray res = JSONArray.parseArray(JSON.toJSONString(aco.getOrder(), SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter));
-//
-//
-//        CustomizedPlan customizedPlan = new CustomizedPlan();
-//        Origin origin = new Origin();
-//        customizedPlan.setStartDate(startDate);
-//        customizedPlan.setEndDate(endDate);
-//        customizedPlan.setPlaceDetails(aco.getPlaceDetails());
-//        customizedPlan.setOrigin(origin);
-//
-//        String response = JSON.toJSONString(customizedPlan, SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
+	public ResponseEntity<?> generateCustomizedPlan(@RequestBody CustomizedPlanRequestModel customizedPlan) {
 		SettingsRequestModel settings = customizedPlan.getSettings();
-
-		CustomizedPlanModel res = planService.generateCustomizedPlan(customizedPlan.getPlaceIds(), customizedPlan.getCategories(), customizedPlan.getSettings());
-		
-		//String response = JSON.toJSONString(res, SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.IgnoreErrorGetter);
-
-		return new ResponseEntity<>(res,HttpStatus.OK);
+		CustomizedPlanModel res = null;
+		try {
+			res = planService.generateCustomizedPlan(customizedPlan.getPlaceIds(), customizedPlan.getCategories(), customizedPlan.getSettings());
+			return new ResponseEntity<>(res, HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.info(e.getMessage());
+			return new ResponseEntity<>(OperationResponse.getFailedResponse(e.getMessage()),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 

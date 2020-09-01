@@ -107,14 +107,6 @@ public class ACO {
             updatePheromone();
         }
         for (int i = 0; i < bestTour.length(); i = i + 2) {
-//            for(int j = 0; j < places.size(); j++) {
-//                if (Character.getNumericValue(bestTour.charAt(i)) == Integer.valueOf(places.get(j).getPlaceId())) {
-//                    order.add(places.get(j));
-//                    PlaceDetail p = new PlaceDetail();
-//                    p.setPlace(places.get(j));
-//                    placeDetails.add(p);
-//                }
-//            }
             PlaceDetailModel p = new PlaceDetailModel();
             p.setPlace(map.get(Character.getNumericValue(bestTour.charAt(i))));
             placeDetailModels.add(p);
@@ -132,28 +124,4 @@ public class ACO {
     public List<PlaceDetailModel> getPlaceDetailModels() {
         return placeDetailModels;
     }
-
-//    public static void main(String[] args) {
-//        List<Place> places = new ArrayList<>();
-//        Place place1 = new Place("1", "Empire State Building", "20 W 34th St, New York, NY 10001", -73.985428, 40.748817);
-//        Place place2 = new Place("2", "Times Square", "20 W 34th St, New York, NY 10001", -73.985130, 40.758896);
-//        Place place3 = new Place("3", "Memorial & Museum", "20 W 34th St, New York, NY 10001", -74.013611, 40.711694);
-//        Place place4 = new Place("4","Charging Bull", "20 W 34th St, New York, NY 10001", -74.0134, 40.7056);
-//        Place place5 = new Place("5", "United Nations Headquarters", "20 W 34th St, New York, NY 10001", -73.9679163, 40.7495461);
-//        Place place6 = new Place("6", "Museum of the City of New York", "20 W 34th St, New York, NY 10001", -73.962311, 40.778965);
-//        Place place7 = new Place("7", "Statue of Liberty National Monument", "20 W 34th St, New York, NY 10001", -74.044502, 40.689247);
-//        Place place8 = new Place("8", "Brooklyn Bridge", "20 W 34th St, New York, NY 10001", -73.997002, 40.706001);
-//        Place place9 = new Place("9", "General Grant National Memorial", "20 W 34th St, New York, NY 10001", -73.9578, 40.8081);
-//        places.add(place1);
-//        places.add(place2);
-//        places.add(place3);
-//        places.add(place4);
-//        places.add(place5);
-//        places.add(place6);
-//        places.add(place7);
-//        places.add(place8);
-//        places.add(place9);
-//
-//        ACO aco = new ACO(places);
-//        aco.iterator();
 }
