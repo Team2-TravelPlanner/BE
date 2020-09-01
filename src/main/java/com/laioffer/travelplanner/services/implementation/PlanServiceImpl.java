@@ -1,6 +1,7 @@
 package com.laioffer.travelplanner.services.implementation;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,13 +24,8 @@ import com.laioffer.travelplanner.entities.DayOfPlan;
 import com.laioffer.travelplanner.entities.PlaceOfPlan;
 import com.laioffer.travelplanner.entities.Plan;
 import com.laioffer.travelplanner.entities.User;
+import com.laioffer.travelplanner.enumerate.TypeOfPlan;
 import com.laioffer.travelplanner.model.common.AuthModel;
-import com.laioffer.travelplanner.model.plan.DayOfPlanSaveModel;
-import com.laioffer.travelplanner.model.plan.PlaceOfPlanSaveModel;
-import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
-import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
-import com.laioffer.travelplanner.model.plan.PlanGetModel;
-import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
 import com.laioffer.travelplanner.repositories.DayOfPlanRepository;
 import com.laioffer.travelplanner.repositories.PlaceOfPlanRepository;
 import com.laioffer.travelplanner.repositories.PlanRepository;
@@ -115,11 +111,11 @@ public class PlanServiceImpl implements PlanService{
 
 
 	@Override
-	public CustomizedPlanModel generateCustomizedPlan(List<String> ids, List<String> categories, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException {
+	public PlanDisplayModel generateCustomizedPlan(List<String> ids, List<String> categories, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException {
 		List<Place> placeList = new ArrayList<>();
 		for (String id : ids) {
 			Place place = placeRepository.findById(id).orElse(null);
-			System.out.println(place.toString());
+			//System.out.println(place.toString());
 			placeList.add(place);
 		}
 		Place origin = new Place();
@@ -130,15 +126,42 @@ public class PlanServiceImpl implements PlanService{
 		ACO aco = new ACO(placeList);
 		aco.iterator();
 
-		CustomizedPlanModel customizedPlanModel = new CustomizedPlanModel();
-		OriginPlanModel originPlanModel = new OriginPlanModel();
-		originPlanModel.setLat(settings.getLat());
-		originPlanModel.setLon(settings.getLon());
-		customizedPlanModel.setStartDate(settings.getStartDate());
-		customizedPlanModel.setEndDate(settings.getEndDate());
-		customizedPlanModel.setPlaceDetailModels(aco.getPlaceDetailModels());
-		customizedPlanModel.setOriginPlanModel(originPlanModel);
-		return customizedPlanModel;
+		PlanDisplayModel planDisplayModel = new PlanDisplayModel();
+		planDisplayModel.setStartDate(settings.getStartDate());
+		planDisplayModel.setEndDate(settings.getEndDate());
+		planDisplayModel.setStartLatitude(settings.getLat());
+		planDisplayModel.setStartLongitude(settings.getLon());
+		planDisplayModel.setTypeOfPlan(TypeOfPlan.valueOf(settings.getTravelStyle()));
+		
+		Integer placeOfDays = getDaysByTypeOfPlan(TypeOfPlan.valueOf(settings.getTravelStyle()));
+		
+		List<PlaceDetailModel> placeDetailModels = aco.getPlaceDetailModels();
+		
+		List<DayOfPlanDisplayModel> dayOfPlanDisplayModels = new ArrayList<>();
+		int days = (placeDetailModels.size() + placeOfDays -1) / placeOfDays;
+		for(int index = 1; index <= days; index++) {
+			DayOfPlanDisplayModel dayOfPlanDisplayModel = new DayOfPlanDisplayModel();
+			dayOfPlanDisplayModel.setIndex(index);
+			dayOfPlanDisplayModel.setPlaceOfPlanDetailModels(new ArrayList<PlaceOfPlanDetailModel>());
+			dayOfPlanDisplayModels.add(dayOfPlanDisplayModel);
+		}
+		
+		for( int i = 1; i < placeDetailModels.size(); i++ ) {
+			Place place = placeDetailModels.get(i).getPlace();
+			
+			PlaceOfPlanDetailModel placeOfPlanDetailModel = new PlaceOfPlanDetailModel();
+			placeOfPlanDetailModel.setAddress(place.getAddress());
+			placeOfPlanDetailModel.setImageLink(place.getImageLink());
+			placeOfPlanDetailModel.setPlaceId(place.getPlaceId());
+			placeOfPlanDetailModel.setPlaceName(place.getPlaceName());
+			placeOfPlanDetailModel.setWeblink(place.getWebsite());
+			placeOfPlanDetailModel.setLat(place.getLat());
+			placeOfPlanDetailModel.setLon(place.getLon());
+			int index = ( i + 1) / placeOfDays;
+			dayOfPlanDisplayModels.get(index).getPlaceOfPlanDetailModels().add(placeOfPlanDetailModel);
+		}
+		planDisplayModel.setDayOfPlanDisplayModels(dayOfPlanDisplayModels);
+		return planDisplayModel;
 	}
 
 	@Override
@@ -218,6 +241,8 @@ public class PlanServiceImpl implements PlanService{
 				placeOfPlanDetailModel.setPlaceId(place.getPlaceId());
 				placeOfPlanDetailModel.setPlaceName(place.getPlaceName());
 				placeOfPlanDetailModel.setWeblink(place.getWebsite());
+				placeOfPlanDetailModel.setLat(place.getLat());
+				placeOfPlanDetailModel.setLon(place.getLon());
 				placeOfPlanDetailModels.add(placeOfPlanDetailModel);
 			}
 			
@@ -229,4 +254,25 @@ public class PlanServiceImpl implements PlanService{
 		return model;
 	}
 	
+	
+	private Integer getDaysByTypeOfPlan(TypeOfPlan typeOfPlan) {
+		Integer ans = 0;
+		
+		switch(typeOfPlan) {
+			case Loose:
+				ans =  4;
+				break;
+				
+			case Moderate:
+				ans = 6;
+				break;
+			case Compact:
+				ans = 8;
+				break;
+			default:
+				ans = 8;
+				break;
+		}
+		return ans;
+	}
 }

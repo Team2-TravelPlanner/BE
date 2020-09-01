@@ -6,6 +6,8 @@ import com.google.maps.errors.ApiException;
 import com.laioffer.travelplanner.model.common.CustomizedPlanRequestModel;
 import com.laioffer.travelplanner.model.common.SettingsRequestModel;
 import com.laioffer.travelplanner.model.plan.CustomizedPlanModel;
+import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,15 +66,15 @@ public class PlanController {
 	}
 
 	@PostMapping("/customized")
-	public ResponseEntity<?> generateCustomizedPlan(@RequestBody CustomizedPlanRequestModel customizedPlan) {
+	public ResponseEntity<PlanDisplayModel> generateCustomizedPlan(@RequestBody CustomizedPlanRequestModel customizedPlan) {
 		SettingsRequestModel settings = customizedPlan.getSettings();
-		CustomizedPlanModel res = null;
+		PlanDisplayModel res = null;
 		try {
 			res = planService.generateCustomizedPlan(customizedPlan.getPlaceIds(), customizedPlan.getCategories(), customizedPlan.getSettings());
 			return new ResponseEntity<>(res, HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.info(e.getMessage());
-			return new ResponseEntity<>(OperationResponse.getFailedResponse(e.getMessage()),
+			return new ResponseEntity<>(res,
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

@@ -23,22 +23,22 @@ public class MapApi {
 		PlaceDetails details = request.await();
 
 
-		System.out.println(details.openingHours);
+		System.out.println(details.toString());
 
 
-		OpeningHours openingHours = details.openingHours;
-		OpeningHours.Period[] periods = openingHours.periods;
-		for (OpeningHours.Period period : periods) {
-			System.out.println(period.open.day.getName());
-
-			String open = period.open.time.toString();
-			String close = period.close.time.toString();
-			String openDay = period.open.day.getName();
-
-			System.out.println(open);
-			System.out.println(close);
-			System.out.println(openDay);
-		}
+//		OpeningHours openingHours = details.openingHours;
+//		OpeningHours.Period[] periods = openingHours.periods;
+//		for (OpeningHours.Period period : periods) {
+//			System.out.println(period.open.day.getName());
+//
+//			String open = period.open.time.toString();
+//			String close = period.close.time.toString();
+//			String openDay = period.open.day.getName();
+//
+//			System.out.println(open);
+//			System.out.println(close);
+//			System.out.println(openDay);
+//		}
 
 
 //		for(Photo ph : details.photos) {

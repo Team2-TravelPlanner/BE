@@ -11,6 +11,10 @@ public class PlaceOfPlanDetailModel {
 	private String address;
 	
 	private String weblink;
+	
+	private Double lon;
+	
+	private Double lat;
 
 	public String getPlaceId() {
 		return placeId;
@@ -51,5 +55,22 @@ public class PlaceOfPlanDetailModel {
 	public void setWeblink(String weblink) {
 		this.weblink = weblink;
 	}
+
+	public Double getLon() {
+		return lon;
+	}
+
+	public void setLon(Double lon) {
+		this.lon = lon;
+	}
+
+	public Double getLat() {
+		return lat;
+	}
+
+	public void setLat(Double lat) {
+		this.lat = lat;
+	}
+	
 	
 }

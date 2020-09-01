@@ -14,9 +14,9 @@ public class PlanSaveRequestModel {
 	
 	private Date endDate;
 	
-	private Float startLatitude;
+	private Double startLatitude;
 	
-	private Float startLongitude;
+	private Double startLongitude;
 	
 	private TypeOfPlan typeOfPlan;
 	
@@ -47,19 +47,20 @@ public class PlanSaveRequestModel {
 		this.endDate = endDate;
 	}
 
-	public Float getStartLatitude() {
+
+	public Double getStartLatitude() {
 		return startLatitude;
 	}
 
-	public void setStartLatitude(Float startLatitude) {
+	public void setStartLatitude(Double startLatitude) {
 		this.startLatitude = startLatitude;
 	}
 
-	public Float getStartLongitude() {
+	public Double getStartLongitude() {
 		return startLongitude;
 	}
 
-	public void setStartLongitude(Float startLongitude) {
+	public void setStartLongitude(Double startLongitude) {
 		this.startLongitude = startLongitude;
 	}
 
