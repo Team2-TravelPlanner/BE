@@ -46,9 +46,34 @@ public class FetchServiceImp implements FetchService {
             //request.fields(FieldMask.)
             try {
                 PlaceDetails details = request.await();
-                System.out.println(details.website);
+                com.laioffer.travelplanner.entities.Place place = placeRepository.findById(details.placeId).orElse(null);
+                if (place ==null) {
+                    place = new com.laioffer.travelplanner.entities.Place();
+                    place.setPlaceId(details.placeId);
+                    place.setPlaceName(details.name);
+                    place.setAverageTime(7200000);
+                    place.setPopularity(details.rating);
+                    place.setAddress(details.adrAddress);
+                    place.setLat(details.geometry.location.lat);
+                    place.setLon(details.geometry.location.lng);
+                    if (details.website != null) {
+                        place.setWebsite(details.website.toString());
+                    }
+                    if (details.photos != null) {
+                        String ref = details.photos[0].photoReference;
+                        String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1200&photoreference="
+                                + ref
+                                + "key=";
+                        place.setImageLink(url);
+                    }
+                    List<String> categoryIdList = new ArrayList<>();
+                    place.setCategories(categoryIdList);
+
+                }
+
                 for (int i = 0; i < details.types.length; i++) {
                     if (EnumUtils.ifInclude(details.types[i].name())) {
+                        place.getCategories().add(details.types[i].name());
                         Category category = categoryRepository.findByCategoryName(details.types[i].name()).orElse(null);
                         if (category == null) {
                             category = new Category();
@@ -68,6 +93,7 @@ public class FetchServiceImp implements FetchService {
                         categoryRepository.save(category);
                     }
                 }
+                placeRepository.save(place);
             } catch (Exception e) {
                 e.printStackTrace();
             }

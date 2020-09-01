@@ -40,20 +40,11 @@ public class GoogleSearch {
         //request.fields(FieldMask.)
         try {
             PlaceDetails details = request.await();
-            System.out.println(details.website);
-            for (int i = 0; i < details.types.length; i++) {
+            for (int i = 0; i < details.photos.length; i++) {
+                System.out.println(details.photos[i].htmlAttributions[0]);
+                System.out.println(details.photos[i].photoReference);
 
-                Category category = new Category();
-                category.setCategoryName(details.types[i].name());
-                if (category.getPlaceIds() != null) {
-                    category.getPlaceIds().add(details.placeId);
-                }
-                else {
-
-                }
-                System.out.println(category.toString());
             }
-            System.out.println(details.types);
 //            System.out.println(details.rating);
 //            System.out.println(details.name);
 //            System.out.println(details.placeId);
