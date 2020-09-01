@@ -21,8 +21,8 @@ public class Plan {
 	private Date updateTime; // do we need these fields in the class?
 
 	//...
-	private Float startLatitude;
-	private Float startLongitude;
+	private Double startLatitude;
+	private Double startLongitude;
 	
 	private Date startDate;
 	private Date endDate;
@@ -70,22 +70,6 @@ public class Plan {
 		this.dayOfPlanIds = dayOfPlanIds;
 	}
 
-	public Float getStartLatitude() {
-		return startLatitude;
-	}
-
-	public void setStartLatitude(Float startLatitude) {
-		this.startLatitude = startLatitude;
-	}
-
-	public Float getStartLongitude() {
-		return startLongitude;
-	}
-
-	public void setStartLongitude(Float startLongitude) {
-		this.startLongitude = startLongitude;
-	}
-
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -108,6 +92,22 @@ public class Plan {
 
 	public void setTypeOfPlan(TypeOfPlan typeOfPlan) {
 		this.typeOfPlan = typeOfPlan;
+	}
+
+	public Double getStartLatitude() {
+		return startLatitude;
+	}
+
+	public void setStartLatitude(Double startLatitude) {
+		this.startLatitude = startLatitude;
+	}
+
+	public Double getStartLongitude() {
+		return startLongitude;
+	}
+
+	public void setStartLongitude(Double startLongitude) {
+		this.startLongitude = startLongitude;
 	}
 
 }

@@ -8,30 +8,19 @@ import com.laioffer.travelplanner.model.common.AuthModel;
 
 public class PlanDisplayModel {
 
-private Date startDate;
+	private Date startDate;
 	
 	private Date endDate;
 	
-	private Float startLatitude;
+	private Double startLatitude;
 	
-	private Float startLongitude;
+	private Double startLongitude;
 	
 	private TypeOfPlan typeOfPlan;
-	
-	private AuthModel authModel;
 	
 	private String planId;
 	
 	private List<DayOfPlanDisplayModel> dayOfPlanDisplayModels;
-	
-	
-	public AuthModel getAuthModel() {
-		return authModel;
-	}
-
-	public void setAuthModel(AuthModel authModel) {
-		this.authModel = authModel;
-	}
 
 	public String getPlanId() {
 		return planId;
@@ -65,22 +54,6 @@ private Date startDate;
 		this.endDate = endDate;
 	}
 
-	public Float getStartLatitude() {
-		return startLatitude;
-	}
-
-	public void setStartLatitude(Float startLatitude) {
-		this.startLatitude = startLatitude;
-	}
-
-	public Float getStartLongitude() {
-		return startLongitude;
-	}
-
-	public void setStartLongitude(Float startLongitude) {
-		this.startLongitude = startLongitude;
-	}
-
 	public List<DayOfPlanDisplayModel> getDayOfPlanDisplayModels() {
 		return dayOfPlanDisplayModels;
 	}
@@ -88,8 +61,21 @@ private Date startDate;
 	public void setDayOfPlanDisplayModels(List<DayOfPlanDisplayModel> dayOfPlanDisplayModels) {
 		this.dayOfPlanDisplayModels = dayOfPlanDisplayModels;
 	}
-	
-	
-	
+
+	public Double getStartLatitude() {
+		return startLatitude;
+	}
+
+	public void setStartLatitude(Double startLatitude) {
+		this.startLatitude = startLatitude;
+	}
+
+	public Double getStartLongitude() {
+		return startLongitude;
+	}
+
+	public void setStartLongitude(Double startLongitude) {
+		this.startLongitude = startLongitude;
+	}
 	
 }
