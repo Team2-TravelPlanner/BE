@@ -22,10 +22,10 @@ public class PlanDisplayModel {
 	
 	private List<DayOfPlanDisplayModel> dayOfPlanDisplayModels;
 	
-	
-	public AuthModel getAuthModel() {
-		return authModel;
-	}
+//
+//	//public AuthModel getAuthModel() {
+//		return authModel;
+//	}
 
 
 	public String getPlanId() {

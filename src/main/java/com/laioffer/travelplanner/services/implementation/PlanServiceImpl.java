@@ -164,6 +164,7 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public PlanDisplayModel generateRecommendedPlan(RequestRecommendedPlan model) throws Exception {
+
         Double startLatitude = model.getSettings().getLat();
         Double startLongitude = model.getSettings().getLon();
         int NumberOfPlace = 0;
@@ -233,15 +234,16 @@ public class PlanServiceImpl implements PlanService {
         ACO aco = new ACO(placeList);
         aco.iterator();
 
-        PlanDisplayModel planDisplayModel = new PlanDisplayModel();
+        PlanDisplayModel recommendedPlanModel = new PlanDisplayModel();
         Origin origin = new Origin();
         origin.setLat(model.getSettings().getLat());
         origin.setLon(model.getSettings().getLon());
-        recommendedPlan.setStartDate(model.getSettings().getStartDate());
-        recommendedPlan.setEndDate(model.getSettings().getEndDate());
-        recommendedPlan.setPlaceDetails(aco.getPlaceDetailModels());
-        recommendedPlan.setOrigin(origin);
-        return planDisplayModel;
+		recommendedPlanModel.setStartDate(model.getSettings().getStartDate());
+		recommendedPlanModel.setEndDate(model.getSettings().getEndDate());
+		recommendedPlanModel.setDayOfPlanDisplayModels(aco.getPlaceDetailModels());
+		//recommendedPlanModel.setOrigin(origin);
+
+        return recommendedPlanModel;
     }
 
 
