@@ -4,6 +4,8 @@ import com.google.maps.errors.ApiException;
 import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.model.common.SettingsRequestModel;
 import com.laioffer.travelplanner.model.plan.CustomizedPlanModel;
+import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
+
 import java.util.List;
 
 import com.laioffer.travelplanner.model.common.AuthModel;
@@ -22,7 +24,7 @@ public interface PlanService {
 
 	public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception;
 
-	public CustomizedPlanModel generateCustomizedPlan(List<String> names, List<String> categories, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException;
+	public PlanDisplayModel generateCustomizedPlan(List<String> names, List<String> categories, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException;
 	
 	public PlanDisplayResponseModel getPlan(PlanGetModel model) throws Exception;
 

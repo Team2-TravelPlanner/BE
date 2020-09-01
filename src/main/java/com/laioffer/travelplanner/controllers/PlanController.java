@@ -17,6 +17,8 @@ import com.google.maps.errors.ApiException;
 import com.laioffer.travelplanner.model.common.CustomizedPlanRequestModel;
 import com.laioffer.travelplanner.model.common.SettingsRequestModel;
 import com.laioffer.travelplanner.model.plan.CustomizedPlanModel;
+import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,22 +89,19 @@ public class PlanController {
 	}
 
 	@PostMapping("/customized")
-	public ResponseEntity<CustomizedPlanModel> generateCustomizedPlan(
-			@RequestBody CustomizedPlanRequestModel customizedPlan)
-			throws InterruptedException, ApiException, IOException {
+	public ResponseEntity<PlanDisplayModel> generateCustomizedPlan(@RequestBody CustomizedPlanRequestModel customizedPlan) {
 		SettingsRequestModel settings = customizedPlan.getSettings();
-
-		CustomizedPlanModel res = planService.generateCustomizedPlan(customizedPlan.getPlaces(),
-				customizedPlan.getCategories(), customizedPlan.getSettings());
-
-		// String response = JSON.toJSONString(res,
-		// SerializerFeature.WriteNullStringAsEmpty,
-		// SerializerFeature.WriteNullNumberAsZero,
-		// SerializerFeature.IgnoreErrorGetter);
-
-		return new ResponseEntity<>(res, HttpStatus.OK);
+		PlanDisplayModel res = null;
+		try {
+			res = planService.generateCustomizedPlan(customizedPlan.getPlaceIds(), customizedPlan.getCategories(), customizedPlan.getSettings());
+			return new ResponseEntity<>(res, HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.info(e.getMessage());
+			return new ResponseEntity<>(res,
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-
+	
 	@RequestMapping(value = "getPlan", method = RequestMethod.POST)
 	public ResponseEntity<PlanDisplayResponseModel> getPlan(@RequestBody PlanGetModel planGetModel) throws Exception {
 		PlanDisplayResponseModel ans = new PlanDisplayResponseModel();

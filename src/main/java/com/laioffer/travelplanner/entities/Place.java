@@ -16,9 +16,9 @@ public class Place {
 	private double lon;
 
 	private String imageLink;
-	private Float averageTime;
+	private float averageTime;
 	private String intro;
-	private Float popularity;
+	private float popularity;
 	private String website;
 	private List<String> businesshourIds;
 	private List<String> categoryIds;

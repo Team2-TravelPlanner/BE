@@ -8,6 +8,16 @@ public class PlaceInfoModel {
 
 	private String address;
 
+	private double lat;
+
+	private double lon;
+
+	private String imageLink;
+
+	private Float popularity;
+
+	private String website;
+
 	public String getId() {
 		return id;
 	}
@@ -32,7 +42,47 @@ public class PlaceInfoModel {
 		this.address = address;
 	}
 
-	//private Double 
+	public double getLat() {
+		return lat;
+	}
+
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLon() {
+		return lon;
+	}
+
+	public void setLon(double lon) {
+		this.lon = lon;
+	}
+
+	public String getImageLink() {
+		return imageLink;
+	}
+
+	public void setImageLink(String imageLink) {
+		this.imageLink = imageLink;
+	}
+
+	public Float getPopularity() {
+		return popularity;
+	}
+
+	public void setPopularity(Float popularity) {
+		this.popularity = popularity;
+	}
+
+	public String getWebsite() {
+		return website;
+	}
+
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+
+	//private Double
 
 
 

@@ -78,27 +78,30 @@ public class SearchServiceImpl implements SearchService {
 		// search by keyword
 		//info 1
 		if (!StringUtils.isEmpty(keyword)) {
-			boolQueryBuilder.must(QueryBuilders.matchQuery("placeName", keyword));
+			boolQueryBuilder.must(QueryBuilders.wildcardQuery("placeName", "*" + keyword + "*"));
 		}
 		// search by category
 		if (!StringUtils.isEmpty(category)) {
 			boolQueryBuilder.must(QueryBuilders.matchQuery("categoryIds", category));
 		}
 
-		BoolQueryBuilder rangeQuery = boolQuery();
-		rangeQuery.must(rangeQuery("lat").gte(model.getLowerRightLat()).lte(model.getUpperLeftLat()));
-		rangeQuery.must(rangeQuery("lon").lte(model.getLowerRightLon()).lte(model.getUpperLeftLon()));
+		/**
+		 * Used for the rangeQuery in the future
+		 */
+//		BoolQueryBuilder rangeQuery = boolQuery();
+//		rangeQuery.must(rangeQuery("lat").gte(model.getLowerRightLat()).lte(model.getUpperLeftLat()));
+//		rangeQuery.must(rangeQuery("lon").lte(model.getLowerRightLon()).lte(model.getUpperLeftLon()));
 
 //		GeoBoundingBoxQueryBuilder geoBoundingBoxQueryBuilder = QueryBuilders.geoBoundingBoxQuery("location");
 //		geoBoundingBoxQueryBuilder.setCorners(model.getUpperLeftLat(), model.getUpperLeftLon(), model.getLowerRightLat(), model.getLowerRightLon());
-		boolQueryBuilder.must(rangeQuery);
+//		boolQueryBuilder.must(rangeQuery);
 
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 		searchSourceBuilder.query(boolQueryBuilder);
 
 		//info 2
 		searchSourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
-		searchSourceBuilder.sort(new FieldSortBuilder("placeId").order(SortOrder.ASC));
+//		searchSourceBuilder.sort(new FieldSortBuilder("placeId").order(SortOrder.ASC));
 
 		SearchRequest searchRequest = new SearchRequest("travel");
 		searchRequest.types(String.valueOf(Place.class));
@@ -160,6 +163,13 @@ public class SearchServiceImpl implements SearchService {
 				placeInfoModel.setId(place.getContent().getPlaceId());
 				placeInfoModel.setName(place.getContent().getPlaceName());
 				placeInfoModel.setAddress(place.getContent().getAddress());
+				placeInfoModel.setLat(place.getContent().getLat());
+				placeInfoModel.setLon(place.getContent().getLon());
+				placeInfoModel.setAddress(place.getContent().getAddress());
+				placeInfoModel.setImageLink(place.getContent().getImageLink());
+				placeInfoModel.setPopularity(place.getContent().getPopularity());
+				placeInfoModel.setWebsite(place.getContent().getWebsite());
+
 				placeInfoModelList.add(placeInfoModel);
 			});
 

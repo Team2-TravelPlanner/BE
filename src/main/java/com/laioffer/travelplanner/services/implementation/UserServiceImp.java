@@ -28,10 +28,10 @@ public class UserServiceImp implements UserService {
 	public OperationResponse registerUser(RegisterRequestModel model) throws Exception {
 		User user = userRepository.findByEmail(model.getEmail()).orElse(null);
 		OperationResponse res = new OperationResponse();
-//		if (user != null) {
-//			return OperationResponse.getFailedResponse("Email Already been taken.");
-//		}
-//		user = new User();
+		if (user != null) {
+			return OperationResponse.getFailedResponse("Email Already been taken.");
+		}
+		user = new User();
 		user.setEmail(model.getEmail());
 		user.setUserName(model.getUserName());
 		user.setPassword(Encryption.saltPassword(model.getPassword()));

@@ -11,8 +11,12 @@ import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.maps.errors.ApiException;
+import com.google.maps.model.PlaceDetails;
 import com.laioffer.travelplanner.antcolonyalgorithm.ACO;
 import com.laioffer.travelplanner.entities.*;
 import com.laioffer.travelplanner.mapsearch.GoogleSearch;
@@ -123,129 +127,59 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 
+	@Override
+	public PlanDisplayModel generateCustomizedPlan(List<String> ids, List<String> categories, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException {
+		List<Place> placeList = new ArrayList<>();
+		for (String id : ids) {
+			Place place = placeRepository.findById(id).orElse(null);
+			//System.out.println(place.toString());
+			placeList.add(place);
+		}
+		Place origin = new Place();
+		origin.setPlaceName("startPoint");
+		origin.setLon(settings.getLon());
+		origin.setLat(settings.getLat());
+		placeList.add(origin);
+		ACO aco = new ACO(placeList);
+		aco.iterator();
 
-
-
-
-    @Override
-    public CustomizedPlanModel generateCustomizedPlan(List<String> names, List<String> categories, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException {
-        List<Place> placeList = new ArrayList<>();
-        for (String name : names) {
-//            Place place;
-//            placeList.add(placeRepository.findByPlaceName(name).orElse
-//                    (place = placeSearchService.searchPlaceIfNotExist(googleSearch.getInfo(name))));
-//            placeRepository.save(place);
-            Place place = placeRepository.findByPlaceName(name).orElse(null);
-            if (place == null) {
-                place = placeSearchService.searchPlaceIfNotExist(googleSearch.getInfo(name));
-                placeRepository.save(place);
-            }
-            placeList.add(place);
-        }
-        Place origin = new Place();
-        origin.setPlaceName("startPoint");
-        origin.setLon(settings.getLon());
-        origin.setLat(settings.getLat());
-        placeList.add(origin);
-        ACO aco = new ACO(placeList);
-        aco.iterator();
-
-        CustomizedPlanModel customizedPlanModel = new CustomizedPlanModel();
-        OriginPlanModel originPlanModel = new OriginPlanModel();
-        originPlanModel.setLat(settings.getLat());
-        originPlanModel.setLon(settings.getLon());
-        customizedPlanModel.setStartDate(settings.getStartDate());
-        customizedPlanModel.setEndDate(settings.getEndDate());
-        customizedPlanModel.setPlaceDetailModels(aco.getPlaceDetailModels());
-        customizedPlanModel.setOriginPlanModel(originPlanModel);
-        return customizedPlanModel;
-    }
-
-
-    @Override
-    public PlanDisplayModel generateRecommendedPlan(RequestRecommendedPlan model) throws Exception {
-
-        Double startLatitude = model.getSettings().getLat();
-        Double startLongitude = model.getSettings().getLon();
-        int NumberOfPlace = 0;
-        if (TypeOfPlan.valueOf(model.getSettings().getTravelStyle()).equals(TypeOfPlan.Loose)) {
-            NumberOfPlace = 2;
-        } else if (TypeOfPlan.valueOf(model.getSettings().getTravelStyle()).equals(TypeOfPlan.Moderate)) {
-            NumberOfPlace = 4;
-        } else {
-            NumberOfPlace = 6;
-        }
-
-        //拿符合category的place
-        List<Place> placeListFit = new ArrayList<>();
-        Set<String> placeIds = new HashSet<>();
-        for (String categoryStr : model.getCategories()) {
-            Category category = categoryRepository.findByCategoryName(categoryStr).orElse(null);
-
-            //....
-            for (String placeId : category.getPlaceIds()) {
-                //起始位置坐标
-                //get place by placeId ???
-                //Optional<Place> place = placeRepository.findByPlaceId(placeId);
-                Place place = placeRepository.findByPlaceId(placeId).orElse(null);
-
-                Double distance = DistanceUtil.getDistance(startLatitude, startLongitude, place.getLon(), place.getLat());
-                if (distance < 10.0  &&  placeIds.add(placeId)) {
-                    placeListFit.add(place);
-                }
-            }
-        }
-        //如果符合category的景点少于要浏览的景点总数
-
-        //get start and end date
-
-        Date startDate = model.getSettings().getStartDate();
-        Date endDate = model.getSettings().getEndDate();
-        long diff = Math.abs(endDate.getTime() - startDate.getTime());
-        long diffDays = diff / (24 * 60 * 60 * 1000);
-        NumberOfPlace *= diffDays + 1;
-
-        int index = 0;
-        if (placeListFit.size() < NumberOfPlace) {
-            List<Place> pool = (List<Place>) placeRepository.findAll();
-            while (placeListFit.size() < NumberOfPlace) {
-                Place place = pool.get(index);
-                Double distance = DistanceUtil.getDistance(startLatitude, startLongitude, place.getLon(), place.getLat());
-                //距离小于10mile & 去重
-                if (distance < 10.0 && placeIds.add(place.getPlaceId())) {
-                    placeListFit.add(pool.get(index));
-                    index++;
-                }
-            }
-        }
-//
-        //按popularity降序排列
-        Collections.sort(placeListFit, (p1, p2) -> p1.getPopularity() - p2.getPopularity() < 0 ? 1 : -1);
-
-        //...
-        //cut days
-        
-        List<Place> placeList = new ArrayList<>();
-        int count = 0;
-        while (count < NumberOfPlace) {
-            placeList.add(placeListFit.get(count));
-            count++;
-        }
-        ACO aco = new ACO(placeList);
-        aco.iterator();
-
-        PlanDisplayModel recommendedPlanModel = new PlanDisplayModel();
-        Origin origin = new Origin();
-        origin.setLat(model.getSettings().getLat());
-        origin.setLon(model.getSettings().getLon());
-		recommendedPlanModel.setStartDate(model.getSettings().getStartDate());
-		recommendedPlanModel.setEndDate(model.getSettings().getEndDate());
-		recommendedPlanModel.setDayOfPlanDisplayModels(aco.getPlaceDetailModels());
-		//recommendedPlanModel.setOrigin(origin);
-
-        return recommendedPlanModel;
-    }
-
+		PlanDisplayModel planDisplayModel = new PlanDisplayModel();
+		planDisplayModel.setStartDate(settings.getStartDate());
+		planDisplayModel.setEndDate(settings.getEndDate());
+		planDisplayModel.setStartLatitude(settings.getLat());
+		planDisplayModel.setStartLongitude(settings.getLon());
+		planDisplayModel.setTypeOfPlan(TypeOfPlan.valueOf(settings.getTravelStyle()));
+		
+		Integer placeOfDays = getDaysByTypeOfPlan(TypeOfPlan.valueOf(settings.getTravelStyle()));
+		
+		List<PlaceDetailModel> placeDetailModels = aco.getPlaceDetailModels();
+		
+		List<DayOfPlanDisplayModel> dayOfPlanDisplayModels = new ArrayList<>();
+		int days = (placeDetailModels.size() + placeOfDays -1) / placeOfDays;
+		for(int index = 1; index <= days; index++) {
+			DayOfPlanDisplayModel dayOfPlanDisplayModel = new DayOfPlanDisplayModel();
+			dayOfPlanDisplayModel.setIndex(index);
+			dayOfPlanDisplayModel.setPlaceOfPlanDetailModels(new ArrayList<PlaceOfPlanDetailModel>());
+			dayOfPlanDisplayModels.add(dayOfPlanDisplayModel);
+		}
+		
+		for( int i = 1; i < placeDetailModels.size(); i++ ) {
+			Place place = placeDetailModels.get(i).getPlace();
+			
+			PlaceOfPlanDetailModel placeOfPlanDetailModel = new PlaceOfPlanDetailModel();
+			placeOfPlanDetailModel.setAddress(place.getAddress());
+			placeOfPlanDetailModel.setImageLink(place.getImageLink());
+			placeOfPlanDetailModel.setPlaceId(place.getPlaceId());
+			placeOfPlanDetailModel.setPlaceName(place.getPlaceName());
+			placeOfPlanDetailModel.setWeblink(place.getWebsite());
+			placeOfPlanDetailModel.setLat(place.getLat());
+			placeOfPlanDetailModel.setLon(place.getLon());
+			int index = ( i + 1) / placeOfDays;
+			dayOfPlanDisplayModels.get(index).getPlaceOfPlanDetailModels().add(placeOfPlanDetailModel);
+		}
+		planDisplayModel.setDayOfPlanDisplayModels(dayOfPlanDisplayModels);
+		return planDisplayModel;
+	}
 
 	@Override
 	public PlanDisplayResponseModel getPlan(PlanGetModel model) throws Exception {
@@ -318,12 +252,14 @@ public class PlanServiceImpl implements PlanService {
 				PlaceOfPlan placeOfPlan = placeOfPlanRepository.findByPlaceOfPlanId(placeOfPlanId).orElse(null);
 				PlaceOfPlanDetailModel placeOfPlanDetailModel = new PlaceOfPlanDetailModel(); 
 				
-				Place place = placeRepository.findByPlaceId(placeOfPlan.getPlaceId()).orElse(null);
+				Place place = placeRepository.findById(placeOfPlan.getPlaceId()).orElse(null);
 				placeOfPlanDetailModel.setAddress(place.getAddress());
 				placeOfPlanDetailModel.setImageLink(place.getImageLink());
 				placeOfPlanDetailModel.setPlaceId(place.getPlaceId());
 				placeOfPlanDetailModel.setPlaceName(place.getPlaceName());
 				placeOfPlanDetailModel.setWeblink(place.getWebsite());
+				placeOfPlanDetailModel.setLat(place.getLat());
+				placeOfPlanDetailModel.setLon(place.getLon());
 				placeOfPlanDetailModels.add(placeOfPlanDetailModel);
 			}
 			
@@ -336,4 +272,25 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	
+	
+	private Integer getDaysByTypeOfPlan(TypeOfPlan typeOfPlan) {
+		Integer ans = 0;
+		
+		switch(typeOfPlan) {
+			case Loose:
+				ans =  4;
+				break;
+				
+			case Moderate:
+				ans = 6;
+				break;
+			case Compact:
+				ans = 8;
+				break;
+			default:
+				ans = 8;
+				break;
+		}
+		return ans;
+	}
 }

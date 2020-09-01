@@ -12,4 +12,9 @@ public class Dateutil {
 		Date endDate = new Date(date.getTime() + (MILLISECONDS.convert(14, TimeUnit.DAYS)));
 		return endDate;
 	}
+	
+	public static void main(String[] args) {
+		Date date = new Date();
+		System.out.println(date.getTime());
+	}
 }
