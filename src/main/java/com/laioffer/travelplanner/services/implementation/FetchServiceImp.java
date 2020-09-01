@@ -63,7 +63,7 @@ public class FetchServiceImp implements FetchService {
                         String ref = details.photos[0].photoReference;
                         String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1200&photoreference="
                                 + ref
-                                + "key=";
+                                + "&key=";
                         place.setImageLink(url);
                     }
                     List<String> categoryIdList = new ArrayList<>();
