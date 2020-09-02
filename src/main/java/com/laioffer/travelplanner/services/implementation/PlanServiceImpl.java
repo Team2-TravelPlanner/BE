@@ -125,7 +125,7 @@ public class PlanServiceImpl implements PlanService {
 
 
 	@Override
-	public PlanDisplayModel generateCustomizedPlan(List<String> ids, List<String> categories, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException {
+	public PlanDisplayModel generateCustomizedPlan(List<String> ids, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException {
 		List<Place> placeList = new ArrayList<>();
 		for (String id : ids) {
 			Place place = placeRepository.findById(id).orElse(null);

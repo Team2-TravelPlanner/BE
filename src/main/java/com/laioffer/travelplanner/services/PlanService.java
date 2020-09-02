@@ -24,7 +24,7 @@ public interface PlanService {
 
 	public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception;
 
-	public PlanDisplayModel generateCustomizedPlan(List<String> names, List<String> categories, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException;
+	public PlanDisplayModel generateCustomizedPlan(List<String> names, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException;
 	
 	public PlanDisplayResponseModel getPlan(PlanGetModel model) throws Exception;
 

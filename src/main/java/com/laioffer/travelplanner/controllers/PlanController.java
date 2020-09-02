@@ -93,7 +93,7 @@ public class PlanController {
 		SettingsRequestModel settings = customizedPlan.getSettings();
 		PlanDisplayModel res = null;
 		try {
-			res = planService.generateCustomizedPlan(customizedPlan.getPlaceIds(), customizedPlan.getCategories(), customizedPlan.getSettings());
+			res = planService.generateCustomizedPlan(customizedPlan.getPlaceIds(), customizedPlan.getSettings());
 			return new ResponseEntity<>(res, HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.info(e.getMessage());
