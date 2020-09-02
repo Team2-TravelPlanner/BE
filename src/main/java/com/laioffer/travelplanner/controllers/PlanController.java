@@ -36,6 +36,7 @@ import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
 import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
 import com.laioffer.travelplanner.model.plan.PlanGetModel;
 import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
+import com.laioffer.travelplanner.model.plan.PlanSaveResponseModel;
 import com.laioffer.travelplanner.model.requestModel.RequestRecommendedPlan;
 import com.laioffer.travelplanner.model.requestModel.RequestSettingsModel;
 import com.laioffer.travelplanner.planModel.RecommendedPlan;
@@ -70,11 +71,13 @@ public class PlanController {
 	 *
 	 */
 	@RequestMapping(value = "save", method = RequestMethod.POST)
-	public ResponseEntity<OperationResponse> savePlan(@RequestBody PlanSaveRequestModel planSaveRequestModel)
+	public ResponseEntity<PlanSaveResponseModel> savePlan(@RequestBody PlanSaveRequestModel planSaveRequestModel)
 			throws Exception {
-		OperationResponse res = new OperationResponse();
-		res = userService.auth(planSaveRequestModel.getAuthModel());
-		if (res.getResult().equals(Result.UNSUCCESSFUL)) {
+		PlanSaveResponseModel res = new PlanSaveResponseModel();
+		OperationResponse ans = null;
+		ans = userService.auth(planSaveRequestModel.getAuthModel());
+		if (ans.getResult().equals(Result.UNSUCCESSFUL)) {
+			res.setOperationResponse(ans);
 			return new ResponseEntity<>(res, HttpStatus.OK);
 		}
 
@@ -83,7 +86,8 @@ public class PlanController {
 			return new ResponseEntity<>(res, HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.info(e.getMessage());
-			return new ResponseEntity<>(OperationResponse.getFailedResponse(e.getMessage()),
+			res.setOperationResponse(OperationResponse.getFailedResponse(e.getMessage()));
+			return new ResponseEntity<>(res,
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

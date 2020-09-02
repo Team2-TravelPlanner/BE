@@ -71,10 +71,12 @@ public class PlanServiceImpl implements PlanService {
 	private CategoryRepository categoryRepository;
 	
 	@Override
-	public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception {
+	public PlanSaveResponseModel savePlan(PlanSaveRequestModel model) throws Exception {
+		PlanSaveResponseModel planSaveResponseModel = new PlanSaveResponseModel();
 		User user = userRepository.findByEmail(model.getAuthModel().getUserEmail()).orElse(null);
 		if(user == null) {
-			return OperationResponse.getFailedResponse("No such user.");
+			planSaveResponseModel.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
+			return planSaveResponseModel;
 			
 		}
 		Plan plan = new Plan();
@@ -120,7 +122,9 @@ public class PlanServiceImpl implements PlanService {
 		user.setPlanIds(planIds);
 		
 		userRepository.save(user);
-		return OperationResponse.getSuccessResponse();
+		planSaveResponseModel.setOperationResponse(OperationResponse.getSuccessResponse());;
+		planSaveResponseModel.setPlanId(plan.getPlanId());
+		return planSaveResponseModel;
 	}
 
 

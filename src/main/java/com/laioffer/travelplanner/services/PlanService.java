@@ -13,6 +13,7 @@ import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
 import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
 import com.laioffer.travelplanner.model.plan.PlanGetModel;
 import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
+import com.laioffer.travelplanner.model.plan.PlanSaveResponseModel;
 import com.laioffer.travelplanner.model.requestModel.RequestRecommendedPlan;
 import com.laioffer.travelplanner.planModel.RecommendedPlan;
 
@@ -22,7 +23,7 @@ public interface PlanService {
 
 	public PlanDisplayModel generateRecommendedPlan(RequestRecommendedPlan model)throws Exception;
 
-	public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception;
+	public PlanSaveResponseModel savePlan(PlanSaveRequestModel model) throws Exception;
 
 	public PlanDisplayModel generateCustomizedPlan(List<String> names, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException;
 	
