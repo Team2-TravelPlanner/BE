@@ -53,7 +53,7 @@ public class FetchServiceImp implements FetchService {
                     place.setPlaceName(details.name);
                     place.setAverageTime(7200000);
                     place.setPopularity(details.rating);
-                    place.setAddress(details.adrAddress);
+                    place.setAddress(places.get(0).getAddress());
                     place.setLat(details.geometry.location.lat);
                     place.setLon(details.geometry.location.lng);
                     if (details.website != null) {

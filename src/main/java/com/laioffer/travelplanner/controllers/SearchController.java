@@ -51,4 +51,20 @@ public class SearchController {
 			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+
+	@RequestMapping(value = "/getAllPlace",method = RequestMethod.POST)
+	public ResponseEntity<SearchResponseModel> getAllPlace(@RequestBody SearchRequestModel searchRequestModel) {
+		SearchResponseModel res = new SearchResponseModel();
+
+		try {
+			res = searchService.getAllPlaces(searchRequestModel);
+			return new ResponseEntity<>(res, HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.info(e.getMessage());
+			res.setOperationResponse(OperationResponse.getFailedResponse(e.getMessage()));
+			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }
