@@ -1,10 +1,18 @@
 package com.laioffer.travelplanner.services.implementation;
 
 import java.io.IOException;
-import java.sql.Date;
+import java.util.*;
+
+import com.laioffer.travelplanner.model.requestModel.RequestSettingsModel;
+import com.laioffer.travelplanner.planModel.Origin;
+import com.laioffer.travelplanner.utils.DistanceUtil;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.ScoreSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.PlaceDetails;
 import com.laioffer.travelplanner.antcolonyalgorithm.ACO;
@@ -13,12 +21,7 @@ import com.laioffer.travelplanner.mapsearch.GoogleSearch;
 import com.laioffer.travelplanner.model.common.SettingsRequestModel;
 import com.laioffer.travelplanner.model.plan.*;
 import com.laioffer.travelplanner.repositories.*;
-
 import com.laioffer.travelplanner.services.PlaceSearchService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-
 import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.entities.DayOfPlan;
 import com.laioffer.travelplanner.entities.PlaceOfPlan;
@@ -26,6 +29,14 @@ import com.laioffer.travelplanner.entities.Plan;
 import com.laioffer.travelplanner.entities.User;
 import com.laioffer.travelplanner.enumerate.TypeOfPlan;
 import com.laioffer.travelplanner.model.common.AuthModel;
+import com.laioffer.travelplanner.model.plan.DayOfPlanSaveModel;
+import com.laioffer.travelplanner.model.plan.PlaceOfPlanSaveModel;
+import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
+import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
+import com.laioffer.travelplanner.model.plan.PlanGetModel;
+import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
+import com.laioffer.travelplanner.model.requestModel.RequestRecommendedPlan;
+import com.laioffer.travelplanner.planModel.RecommendedPlan;
 import com.laioffer.travelplanner.repositories.DayOfPlanRepository;
 import com.laioffer.travelplanner.repositories.PlaceOfPlanRepository;
 import com.laioffer.travelplanner.repositories.PlanRepository;
@@ -33,28 +44,31 @@ import com.laioffer.travelplanner.repositories.UserRepository;
 import com.laioffer.travelplanner.services.PlanService;
 
 @Service
-public class PlanServiceImpl implements PlanService{
+public class PlanServiceImpl implements PlanService {
 
     @Autowired
     private UserRepository userRepository;
-    
+
     @Autowired
     private PlanRepository planRepository;
-    
+
     @Autowired
     private DayOfPlanRepository dayOfPlanRepository;
-    
+
     @Autowired
     private PlaceOfPlanRepository placeOfPlanRepository;
 
     @Autowired
-	private GoogleSearch googleSearch;
+    private GoogleSearch googleSearch;
 
-	@Autowired
-	private PlaceSearchService placeSearchService;
+    @Autowired
+    private PlaceSearchService placeSearchService;
 
 	@Autowired
 	private PlaceRepository placeRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 	
 	@Override
 	public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception {
@@ -208,6 +222,118 @@ public class PlanServiceImpl implements PlanService{
 		return res;
 	}
 
+	@Override
+    public PlanDisplayModel generateRecommendedPlan(RequestRecommendedPlan model) throws Exception {
+
+        Double startLatitude = model.getSettings().getLat();
+        Double startLongitude = model.getSettings().getLon();
+
+        //拿符合category的place
+        List<Place> placeListFit = new ArrayList<>();
+        Set<String> placeIds = new HashSet<>();
+        for (String categoryStr : model.getCategories()) {
+            Category category = categoryRepository.findByCategoryName(categoryStr).orElse(null);
+
+            //....
+            for (String placeId : category.getPlaceIds()) {
+                //起始位置坐标
+                //get place by placeId ???
+                //Optional<Place> place = placeRepository.findByPlaceId(placeId);
+                Place place = placeRepository.findByPlaceId(placeId).orElse(null);
+
+                Double distance = DistanceUtil.getDistance(startLatitude, startLongitude, place.getLon(), place.getLat());
+                if (distance < 10.0  &&  placeIds.add(placeId)) {
+                    placeListFit.add(place);
+                }
+            }
+        }
+        //如果符合category的景点少于要浏览的景点总数
+
+        //get start and end date
+
+        Date startDate = model.getSettings().getStartDate();
+        Date endDate = model.getSettings().getEndDate();
+        long diff = Math.abs(endDate.getTime() - startDate.getTime());
+        long milsecOfday = 86400000L;
+        int diffDays = (int) ((diff + milsecOfday - 1L) / (milsecOfday));
+        
+        
+        Integer placeOfDays = getDaysByTypeOfPlan(TypeOfPlan.valueOf(model.getSettings().getTravelStyle()));
+        
+        Integer numberOfPlace =  placeOfDays * diffDays;
+
+        int index = 0;
+        if (placeListFit.size() < numberOfPlace) {
+            List<Place> pool = (List<Place>) placeRepository.findAll();
+            while (placeListFit.size() < numberOfPlace) {
+                Place place = pool.get(index);
+                Double distance = DistanceUtil.getDistance(startLatitude, startLongitude, place.getLon(), place.getLat());
+                //距离小于10mile & 去重
+                if (distance < 10.0 && placeIds.add(place.getPlaceId())) {
+                    placeListFit.add(pool.get(index));          
+                }
+                index++;
+            }
+        }
+//
+        //按popularity降序排列
+        Collections.sort(placeListFit, (p1, p2) -> p1.getPopularity() - p2.getPopularity() < 0 ? 1 : -1);
+
+        //...
+        //cut days
+        
+        List<Place> placeList = new ArrayList<>();
+        int count = 0;
+        while (count < numberOfPlace) {
+            placeList.add(placeListFit.get(count));
+            count++;
+        }
+		Place origin = new Place();
+		origin.setPlaceName("startPoint");
+		origin.setLon(startLongitude);
+		origin.setLat(startLatitude);
+		placeList.add(origin);
+        ACO aco = new ACO(placeList);
+        aco.iterator();
+
+
+		PlanDisplayModel planDisplayModel = new PlanDisplayModel();
+		planDisplayModel.setStartDate(model.getSettings().getStartDate());
+		planDisplayModel.setEndDate(model.getSettings().getEndDate());
+		planDisplayModel.setStartLatitude(model.getSettings().getLat());
+		planDisplayModel.setStartLongitude(model.getSettings().getLon());
+		planDisplayModel.setTypeOfPlan(TypeOfPlan.valueOf(model.getSettings().getTravelStyle()));
+		
+		
+		List<PlaceDetailModel> placeDetailModels = aco.getPlaceDetailModels();
+		
+		List<DayOfPlanDisplayModel> dayOfPlanDisplayModels = new ArrayList<>();
+		int days = (placeDetailModels.size() + placeOfDays -1) / placeOfDays;
+		for(int i = 1; i <= days; i++) {
+			DayOfPlanDisplayModel dayOfPlanDisplayModel = new DayOfPlanDisplayModel();
+			dayOfPlanDisplayModel.setIndex(i);
+			dayOfPlanDisplayModel.setPlaceOfPlanDetailModels(new ArrayList<PlaceOfPlanDetailModel>());
+			dayOfPlanDisplayModels.add(dayOfPlanDisplayModel);
+		}
+		
+		for( int i = 1; i < placeDetailModels.size(); i++ ) {
+			Place place = placeDetailModels.get(i).getPlace();
+			
+			PlaceOfPlanDetailModel placeOfPlanDetailModel = new PlaceOfPlanDetailModel();
+			placeOfPlanDetailModel.setAddress(place.getAddress());
+			placeOfPlanDetailModel.setImageLink(place.getImageLink());
+			placeOfPlanDetailModel.setPlaceId(place.getPlaceId());
+			placeOfPlanDetailModel.setPlaceName(place.getPlaceName());
+			placeOfPlanDetailModel.setWeblink(place.getWebsite());
+			placeOfPlanDetailModel.setLat(place.getLat());
+			placeOfPlanDetailModel.setLon(place.getLon());
+			int j = ( i + 1) / placeOfDays;
+			dayOfPlanDisplayModels.get(j).getPlaceOfPlanDetailModels().add(placeOfPlanDetailModel);
+		}
+		planDisplayModel.setDayOfPlanDisplayModels(dayOfPlanDisplayModels);
+		return planDisplayModel;
+    }
+	
 
 	// package function
 	//private 
@@ -253,6 +379,7 @@ public class PlanServiceImpl implements PlanService{
 		
 		return model;
 	}
+
 	
 	
 	private Integer getDaysByTypeOfPlan(TypeOfPlan typeOfPlan) {
