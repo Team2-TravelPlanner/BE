@@ -264,10 +264,14 @@ public class PlanServiceImpl implements PlanService {
 
         int index = 0;
         if (placeListFit.size() < numberOfPlace) {
-            List<Place> pool = (List<Place>) placeRepository.findAll();
-            while (placeListFit.size() < numberOfPlace) {
+        	List<Place> pool = new ArrayList<>();
+        	for(Place place :placeRepository.findAll()) {
+        		pool.add(place);
+        	}
+            while (index < pool.size() && placeListFit.size() < numberOfPlace) {
                 Place place = pool.get(index);
-                Double distance = DistanceUtil.getDistance(startLatitude, startLongitude, place.getLon(), place.getLat());
+                System.out.println(DistanceUtil.getDistance(startLatitude, startLongitude, place.getLat(),place.getLon() ));
+                Double distance = DistanceUtil.getDistance(startLatitude, startLongitude, place.getLat(),place.getLon() );
                 //距离小于10mile & 去重
                 if (distance < 10.0 && placeIds.add(place.getPlaceId())) {
                     placeListFit.add(pool.get(index));          
@@ -275,27 +279,23 @@ public class PlanServiceImpl implements PlanService {
                 index++;
             }
         }
-//
         //按popularity降序排列
         Collections.sort(placeListFit, (p1, p2) -> p1.getPopularity() - p2.getPopularity() < 0 ? 1 : -1);
 
         //...
         //cut days
-        
-        List<Place> placeList = new ArrayList<>();
-        int count = 0;
-        while (count < numberOfPlace) {
-            placeList.add(placeListFit.get(count));
-            count++;
+        System.out.println("safdasfwqeqwewq. ");
+        for(Place place : placeListFit) {
+        	System.out.println(place.getPlaceName());
         }
 		Place origin = new Place();
 		origin.setPlaceName("startPoint");
 		origin.setLon(startLongitude);
 		origin.setLat(startLatitude);
-		placeList.add(origin);
-        ACO aco = new ACO(placeList);
+		placeListFit.add(origin);
+        ACO aco = new ACO(placeListFit);
         aco.iterator();
-
+        System.out.println("IOIOIOIOIO. ");
 
 		PlanDisplayModel planDisplayModel = new PlanDisplayModel();
 		planDisplayModel.setStartDate(model.getSettings().getStartDate());
@@ -306,6 +306,8 @@ public class PlanServiceImpl implements PlanService {
 		
 		
 		List<PlaceDetailModel> placeDetailModels = aco.getPlaceDetailModels();
+		
+		System.out.println("Come in. " + placeDetailModels.size());
 		
 		List<DayOfPlanDisplayModel> dayOfPlanDisplayModels = new ArrayList<>();
 		int days = (placeDetailModels.size() + placeOfDays -1) / placeOfDays;
