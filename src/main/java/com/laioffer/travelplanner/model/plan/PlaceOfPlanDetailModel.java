@@ -1,5 +1,7 @@
 package com.laioffer.travelplanner.model.plan;
 
+import java.util.List;
+
 public class PlaceOfPlanDetailModel {
 
 	private String placeId;
@@ -15,6 +17,8 @@ public class PlaceOfPlanDetailModel {
 	private Double lon;
 	
 	private Double lat;
+	
+	private List<String> categories;
 
 	public String getPlaceId() {
 		return placeId;
@@ -71,6 +75,13 @@ public class PlaceOfPlanDetailModel {
 	public void setLat(Double lat) {
 		this.lat = lat;
 	}
-	
+
+	public List<String> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<String> categories) {
+		this.categories = categories;
+	}
 	
 }

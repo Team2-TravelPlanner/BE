@@ -368,6 +368,7 @@ public class PlanServiceImpl implements PlanService {
 				placeOfPlanDetailModel.setWeblink(place.getWebsite());
 				placeOfPlanDetailModel.setLat(place.getLat());
 				placeOfPlanDetailModel.setLon(place.getLon());
+				placeOfPlanDetailModel.setCategories(place.getCategories());
 				placeOfPlanDetailModels.add(placeOfPlanDetailModel);
 			}
 			
