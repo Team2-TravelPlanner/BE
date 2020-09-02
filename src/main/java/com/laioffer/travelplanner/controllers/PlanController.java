@@ -1,5 +1,16 @@
 package com.laioffer.travelplanner.controllers;
 
+import se.walkercrou.places.Place;
+import com.laioffer.travelplanner.mapsearch.GoogleSearch;
+import com.laioffer.travelplanner.services.PlanService;
+
+import java.util.List;
+
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.ScoreSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.maps.errors.ApiException;
@@ -14,9 +25,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.laioffer.travelplanner.model.common.AuthModel;
 import com.laioffer.travelplanner.model.common.OperationResponse;
+import com.laioffer.travelplanner.model.plan.PlanDisplayModel;
+import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
+import com.laioffer.travelplanner.model.plan.PlanGetModel;
+import com.laioffer.travelplanner.model.plan.PlanSaveRequestModel;
+import com.laioffer.travelplanner.model.requestModel.RequestRecommendedPlan;
+import com.laioffer.travelplanner.model.requestModel.RequestSettingsModel;
+import com.laioffer.travelplanner.planModel.RecommendedPlan;
 import com.laioffer.travelplanner.model.common.Result;
 import com.laioffer.travelplanner.model.plan.PlanDisplayResponseModel;
 import com.laioffer.travelplanner.model.plan.PlanGetModel;
@@ -36,15 +58,16 @@ public class PlanController {
 	private PlanService planService;
 
 	@Autowired
+	private GoogleSearch googleSearch;
 	private UserService userService;
 
 	/**
 	 * Descriptive: save user basic plan to database
-	 * 
+	 *
 	 * @author Rocky
 	 * @throws Exception
 	 * @since 2020-08-25
-	 * 
+	 *
 	 */
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	public ResponseEntity<OperationResponse> savePlan(@RequestBody PlanSaveRequestModel planSaveRequestModel)
@@ -78,8 +101,6 @@ public class PlanController {
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
-
 	
 	@RequestMapping(value = "getPlan", method = RequestMethod.POST)
 	public ResponseEntity<PlanDisplayResponseModel> getPlan(@RequestBody PlanGetModel planGetModel) throws Exception {
@@ -123,6 +144,53 @@ public class PlanController {
 		}
 	}
 
+	@PostMapping("/recommended")
+	public ResponseEntity<PlanDisplayModel> generateRecommendedPlan(
+			@RequestBody RequestRecommendedPlan recommendedPlan) {
+
+		PlanDisplayModel res = new PlanDisplayModel();
+		try {
+			res = planService.generateRecommendedPlan(recommendedPlan);
+		} catch (Exception e) {
+			LOGGER.info(e.getMessage());
+			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return new ResponseEntity<>(res, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/searchPlace")
+	public ResponseEntity<?> getPlaceInfo(@RequestParam(name = "placeName") String placeName) {
+		List<Place> places = googleSearch.getInfo(placeName);
+
+		com.laioffer.travelplanner.entities.Place place = new com.laioffer.travelplanner.entities.Place();
+//        place.setPlaceName(places.get(0).getName());
+//        place.setAddress(places.get(0).getAddress());
+//        place.setLat(places.get(0).getLatitude());
+//        place.setLon(places.get(0).getLongitude());
+//        place.setPopularity((float) places.get(0).getRating());
+//        place.setImageLink(places.get(0).getIconUrl());
+//        place.setWebsite(places.get(0).getWebsite());
+
+		return new ResponseEntity<>(place.toString(), HttpStatus.OK);
+	}
+
+//	@GetMapping("/searchPlace")
+//	public ResponseEntity<?> getPlaceInfo(@RequestParam(name = "placeName") String placeName) {
+//		List<Place> places = googleSearch.getInfo(placeName);
+//
+//		com.laioffer.travelplanner.entities.Place place = new com.laioffer.travelplanner.entities.Place();
+////        place.setPlaceName(places.get(0).getName());
+////        place.setAddress(places.get(0).getAddress());
+////        place.setLat(places.get(0).getLatitude());
+////        place.setLon(places.get(0).getLongitude());
+////        place.setPopularity((float) places.get(0).getRating());
+////        place.setImageLink(places.get(0).getIconUrl());
+////        place.setWebsite(places.get(0).getWebsite());
+//
+//		return new ResponseEntity<>(place.toString(), HttpStatus.OK);
+//	}
 	@RequestMapping(value = "hello", method = RequestMethod.GET)
 	public ResponseEntity<String> hello() {
 		return new ResponseEntity<>("hello", HttpStatus.OK);

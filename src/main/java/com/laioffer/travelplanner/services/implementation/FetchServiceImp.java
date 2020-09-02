@@ -53,13 +53,13 @@ public class FetchServiceImp implements FetchService {
                     place.setPlaceName(details.name);
                     place.setAverageTime(7200000);
                     place.setPopularity(details.rating);
-                    place.setAddress(places.get(0).getAddress());
+                    place.setAddress(details.adrAddress);
                     place.setLat(details.geometry.location.lat);
                     place.setLon(details.geometry.location.lng);
                     if (details.website != null) {
                         place.setWebsite(details.website.toString());
                     }
-                    if (details.photos != null) {
+                    if (details.photos != null && details.photos.length > 0) {
                         String ref = details.photos[0].photoReference;
                         String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1200&photoreference="
                                 + ref
@@ -68,9 +68,8 @@ public class FetchServiceImp implements FetchService {
                     }
                     List<String> categoryIdList = new ArrayList<>();
                     place.setCategories(categoryIdList);
-
+                    
                     for (int i = 0; i < details.types.length; i++) {
-                        System.out.println(details.types[i].name());
                         if (EnumUtils.ifInclude(details.types[i].name())) {
                             place.getCategories().add(details.types[i].name());
                             Category category = categoryRepository.findByCategoryName(details.types[i].name()).orElse(null);
@@ -95,6 +94,7 @@ public class FetchServiceImp implements FetchService {
                     placeRepository.save(place);
 
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
