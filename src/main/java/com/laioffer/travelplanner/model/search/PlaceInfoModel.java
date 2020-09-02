@@ -1,5 +1,7 @@
 package com.laioffer.travelplanner.model.search;
 
+import java.util.List;
+
 public class PlaceInfoModel {
 
 	private String id;
@@ -17,6 +19,8 @@ public class PlaceInfoModel {
 	private Float popularity;
 
 	private String website;
+
+	private List<String> categories;
 
 	public String getId() {
 		return id;
@@ -80,6 +84,14 @@ public class PlaceInfoModel {
 
 	public void setWebsite(String website) {
 		this.website = website;
+	}
+
+	public List<String> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<String> categories) {
+		this.categories = categories;
 	}
 
 	//private Double

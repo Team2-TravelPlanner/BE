@@ -71,10 +71,12 @@ public class PlanServiceImpl implements PlanService {
 	private CategoryRepository categoryRepository;
 	
 	@Override
-	public OperationResponse savePlan(PlanSaveRequestModel model) throws Exception {
+	public PlanSaveResponseModel savePlan(PlanSaveRequestModel model) throws Exception {
+		PlanSaveResponseModel planSaveResponseModel = new PlanSaveResponseModel();
 		User user = userRepository.findByEmail(model.getAuthModel().getUserEmail()).orElse(null);
 		if(user == null) {
-			return OperationResponse.getFailedResponse("No such user.");
+			planSaveResponseModel.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
+			return planSaveResponseModel;
 			
 		}
 		Plan plan = new Plan();
@@ -120,12 +122,14 @@ public class PlanServiceImpl implements PlanService {
 		user.setPlanIds(planIds);
 		
 		userRepository.save(user);
-		return OperationResponse.getSuccessResponse();
+		planSaveResponseModel.setOperationResponse(OperationResponse.getSuccessResponse());;
+		planSaveResponseModel.setPlanId(plan.getPlanId());
+		return planSaveResponseModel;
 	}
 
 
 	@Override
-	public PlanDisplayModel generateCustomizedPlan(List<String> ids, List<String> categories, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException {
+	public PlanDisplayModel generateCustomizedPlan(List<String> ids, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException {
 		List<Place> placeList = new ArrayList<>();
 		for (String id : ids) {
 			Place place = placeRepository.findById(id).orElse(null);
@@ -264,10 +268,13 @@ public class PlanServiceImpl implements PlanService {
 
         int index = 0;
         if (placeListFit.size() < numberOfPlace) {
-            List<Place> pool = (List<Place>) placeRepository.findAll();
-            while (placeListFit.size() < numberOfPlace) {
+        	List<Place> pool = new ArrayList<>();
+        	for(Place place :placeRepository.findAll()) {
+        		pool.add(place);
+        	}
+            while (index < pool.size() && placeListFit.size() < numberOfPlace) {
                 Place place = pool.get(index);
-                Double distance = DistanceUtil.getDistance(startLatitude, startLongitude, place.getLon(), place.getLat());
+                Double distance = DistanceUtil.getDistance(startLatitude, startLongitude, place.getLat(),place.getLon() );
                 //距离小于10mile & 去重
                 if (distance < 10.0 && placeIds.add(place.getPlaceId())) {
                     placeListFit.add(pool.get(index));          
@@ -275,27 +282,19 @@ public class PlanServiceImpl implements PlanService {
                 index++;
             }
         }
-//
         //按popularity降序排列
         Collections.sort(placeListFit, (p1, p2) -> p1.getPopularity() - p2.getPopularity() < 0 ? 1 : -1);
 
         //...
         //cut days
-        
-        List<Place> placeList = new ArrayList<>();
-        int count = 0;
-        while (count < numberOfPlace) {
-            placeList.add(placeListFit.get(count));
-            count++;
-        }
+
 		Place origin = new Place();
 		origin.setPlaceName("startPoint");
 		origin.setLon(startLongitude);
 		origin.setLat(startLatitude);
-		placeList.add(origin);
-        ACO aco = new ACO(placeList);
+		placeListFit.add(origin);
+        ACO aco = new ACO(placeListFit);
         aco.iterator();
-
 
 		PlanDisplayModel planDisplayModel = new PlanDisplayModel();
 		planDisplayModel.setStartDate(model.getSettings().getStartDate());
@@ -369,6 +368,7 @@ public class PlanServiceImpl implements PlanService {
 				placeOfPlanDetailModel.setWeblink(place.getWebsite());
 				placeOfPlanDetailModel.setLat(place.getLat());
 				placeOfPlanDetailModel.setLon(place.getLon());
+				placeOfPlanDetailModel.setCategories(place.getCategories());
 				placeOfPlanDetailModels.add(placeOfPlanDetailModel);
 			}
 			
