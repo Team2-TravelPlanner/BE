@@ -270,7 +270,6 @@ public class PlanServiceImpl implements PlanService {
         	}
             while (index < pool.size() && placeListFit.size() < numberOfPlace) {
                 Place place = pool.get(index);
-                System.out.println(DistanceUtil.getDistance(startLatitude, startLongitude, place.getLat(),place.getLon() ));
                 Double distance = DistanceUtil.getDistance(startLatitude, startLongitude, place.getLat(),place.getLon() );
                 //距离小于10mile & 去重
                 if (distance < 10.0 && placeIds.add(place.getPlaceId())) {
@@ -284,10 +283,7 @@ public class PlanServiceImpl implements PlanService {
 
         //...
         //cut days
-        System.out.println("safdasfwqeqwewq. ");
-        for(Place place : placeListFit) {
-        	System.out.println(place.getPlaceName());
-        }
+
 		Place origin = new Place();
 		origin.setPlaceName("startPoint");
 		origin.setLon(startLongitude);
@@ -295,7 +291,6 @@ public class PlanServiceImpl implements PlanService {
 		placeListFit.add(origin);
         ACO aco = new ACO(placeListFit);
         aco.iterator();
-        System.out.println("IOIOIOIOIO. ");
 
 		PlanDisplayModel planDisplayModel = new PlanDisplayModel();
 		planDisplayModel.setStartDate(model.getSettings().getStartDate());
@@ -306,8 +301,6 @@ public class PlanServiceImpl implements PlanService {
 		
 		
 		List<PlaceDetailModel> placeDetailModels = aco.getPlaceDetailModels();
-		
-		System.out.println("Come in. " + placeDetailModels.size());
 		
 		List<DayOfPlanDisplayModel> dayOfPlanDisplayModels = new ArrayList<>();
 		int days = (placeDetailModels.size() + placeOfDays -1) / placeOfDays;
