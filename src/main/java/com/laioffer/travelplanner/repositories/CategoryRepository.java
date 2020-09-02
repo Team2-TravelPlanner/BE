@@ -10,5 +10,5 @@ import com.laioffer.travelplanner.entities.User;
 import java.util.Optional;
 
 public interface CategoryRepository extends ElasticsearchRepository<Category, String>{
-	 Optional<Category> findByCategoryName(String categoryName);
+	Optional<Category> findByCategoryName(String categoryName);
 }

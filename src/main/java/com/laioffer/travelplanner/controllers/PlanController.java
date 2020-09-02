@@ -150,15 +150,15 @@ public class PlanController {
 
 	@PostMapping("/recommended")
 	public ResponseEntity<PlanDisplayModel> generateRecommendedPlan(
-			@RequestBody RequestRecommendedPlan recommendedPlan) {
+			@RequestBody RequestRecommendedPlan recommendedPlan) throws Exception {
 
 		PlanDisplayModel res = new PlanDisplayModel();
-		try {
+//		try {
 			res = planService.generateRecommendedPlan(recommendedPlan);
-		} catch (Exception e) {
-			LOGGER.info(e.getMessage());
-			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+//		} catch (Exception e) {
+//			LOGGER.info(e.getMessage());
+//			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
 
 		return new ResponseEntity<>(res, HttpStatus.OK);
 

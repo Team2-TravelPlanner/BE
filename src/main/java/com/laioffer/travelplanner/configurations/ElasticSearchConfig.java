@@ -19,21 +19,21 @@ import org.springframework.stereotype.Component;
 @Component
 @EnableElasticsearchRepositories(basePackages = "com.laioffer.travelplanner.repositories")
 public class ElasticSearchConfig {
-//    @Value("${elasticCloud.username}")
-//    private static String username;
-//
-//    @Value("${elasticCloud.password}")
-//    private static String password;
-//
-//    @Value("${elasticCloud.id}")
-//    private static String cloudId;
+    @Value("${elasticCloud.username}")
+    private String username;
+
+    @Value("${elasticCloud.password}")
+    private String password;
+
+    @Value("${elasticCloud.id}")
+    private String cloudId;
 
 
     @Bean
     public RestHighLevelClient client() {
 //        ClientConfiguration clientConfiguration
 //                = ClientConfiguration.builder()
-//                .connectedTo("https://d6cf1b4217804bcabcf434eb25691c3d.us-east-1.aws.found.io:9243")
+//                .connectedTo("localhost:9200")
 //                .build();
 //
 //        final RestHighLevelClient rest = RestClients.create(clientConfiguration).rest();

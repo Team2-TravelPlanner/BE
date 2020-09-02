@@ -21,6 +21,12 @@ public class TestController {
     }
 
 
+//    @PostMapping("/insertData")
+//    public ResponseEntity<OperationResponse> insertCategories(@RequestBody FetchRequestModel model) {
+//        OperationResponse res = fetchService.FetchCategories(model.getPlaceName());
+//        return new ResponseEntity<>(res,HttpStatus.OK);
+//    }
+
     @PostMapping("/insertData")
     public ResponseEntity<OperationResponse> insertCategories(@RequestBody FetchRequestModel model) {
         OperationResponse res = fetchService.FetchCategories(model.getPlaceName());

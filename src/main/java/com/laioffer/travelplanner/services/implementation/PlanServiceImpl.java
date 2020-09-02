@@ -317,6 +317,7 @@ public class PlanServiceImpl implements PlanService {
 		
 		for( int i = 1; i < placeDetailModels.size(); i++ ) {
 			Place place = placeDetailModels.get(i).getPlace();
+			System.out.println(place);
 			
 			PlaceOfPlanDetailModel placeOfPlanDetailModel = new PlaceOfPlanDetailModel();
 			placeOfPlanDetailModel.setAddress(place.getAddress());
