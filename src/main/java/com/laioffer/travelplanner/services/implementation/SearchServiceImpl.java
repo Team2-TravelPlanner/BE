@@ -162,10 +162,12 @@ public class SearchServiceImpl implements SearchService {
 				PlaceInfoModel placeInfoModel = new PlaceInfoModel();
 				placeInfoModel.setId(place.getContent().getPlaceId());
 				placeInfoModel.setName(place.getContent().getPlaceName());
-				placeInfoModel.setAddress(place.getContent().getAddress());
+//				placeInfoModel.setAddress(place.getContent().getAddress());
 				placeInfoModel.setLat(place.getContent().getLat());
 				placeInfoModel.setLon(place.getContent().getLon());
-//				placeInfoModel.setAddress(place.getContent().getAddress());
+				String address = place.getContent().getAddress();
+				address = address.replaceAll("<(.*?)>", "");
+				placeInfoModel.setAddress(address);
 				placeInfoModel.setImageLink(place.getContent().getImageLink());
 				placeInfoModel.setPopularity(place.getContent().getPopularity());
 				placeInfoModel.setWebsite(place.getContent().getWebsite());
