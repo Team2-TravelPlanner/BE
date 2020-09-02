@@ -1,6 +1,7 @@
 package com.laioffer.travelplanner.controllers;
 
 import com.laioffer.travelplanner.model.common.CustomizedPlanRequestModel;
+import com.laioffer.travelplanner.model.common.FetchRequestModel;
 import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.services.FetchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,8 @@ public class TestController {
 
 
     @PostMapping("/insertData")
-    public ResponseEntity<OperationResponse> insertCategories(@RequestBody CustomizedPlanRequestModel customizedPlan) {
-        List<String> places = customizedPlan.getPlaces();
-        OperationResponse res = fetchService.FetchCategories(places);
+    public ResponseEntity<OperationResponse> insertCategories(@RequestBody FetchRequestModel model) {
+        OperationResponse res = fetchService.FetchCategories(model.getPlaceName());
         return new ResponseEntity<>(res,HttpStatus.OK);
     }
 }
