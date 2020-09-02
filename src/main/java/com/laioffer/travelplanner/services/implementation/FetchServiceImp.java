@@ -7,6 +7,7 @@ import com.google.maps.PlacesApi;
 import com.google.maps.model.PlaceDetails;
 import com.laioffer.travelplanner.entities.Category;
 import com.laioffer.travelplanner.enumerate.CategoryEnum;
+import com.laioffer.travelplanner.model.common.OperationResponse;
 import com.laioffer.travelplanner.repositories.CategoryRepository;
 import com.laioffer.travelplanner.repositories.PlaceRepository;
 import com.laioffer.travelplanner.services.FetchService;
@@ -35,7 +36,7 @@ public class FetchServiceImp implements FetchService {
 
 
     @Override
-    public void FetchCategories(List<String> placeNames) {
+    public OperationResponse FetchCategories(List<String> placeNames) {
         for (String name : placeNames) {
             List<Place> places = gClient().getPlacesByQuery(name, GooglePlaces.MAXIMUM_RESULTS);
             GeoApiContext context = new GeoApiContext.Builder()
@@ -93,6 +94,8 @@ public class FetchServiceImp implements FetchService {
                     }
                     placeRepository.save(place);
 
+                }else {
+                	return OperationResponse.getFailedResponse("DataBase Already has this place. please find another.");
                 }
 
             } catch (Exception e) {
@@ -100,5 +103,6 @@ public class FetchServiceImp implements FetchService {
             }
 
         }
+        return OperationResponse.getSuccessResponse();
     }
 }

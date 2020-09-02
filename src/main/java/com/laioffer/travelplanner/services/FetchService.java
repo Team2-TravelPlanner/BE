@@ -3,6 +3,8 @@ package com.laioffer.travelplanner.services;
 
 import java.util.List;
 
+import com.laioffer.travelplanner.model.common.OperationResponse;
+
 public interface FetchService {
-    public void FetchCategories(List<String> places);
+    public OperationResponse FetchCategories(List<String> places);
 }
