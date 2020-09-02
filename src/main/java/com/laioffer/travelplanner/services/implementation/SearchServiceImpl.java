@@ -81,7 +81,7 @@ public class SearchServiceImpl implements SearchService {
 		}
 		// search by category
 		if (!StringUtils.isEmpty(category)) {
-			boolQueryBuilder.must(QueryBuilders.matchQuery("categoryIds", category));
+			boolQueryBuilder.must(QueryBuilders.matchQuery("categoryName", category));
 		}
 
 		/**
@@ -186,6 +186,53 @@ public class SearchServiceImpl implements SearchService {
 		searchResponseModel.setPlaceInfoModels(placeInfoModelList);
 		searchResponseModel.setMaxPageNumber(maxPageNumber);
 		searchResponseModel.setOperationResponse(OperationResponse.getSuccessResponse());
+		return searchResponseModel;
+	}
+
+	@Override
+	public SearchResponseModel getAllPlaces(SearchRequestModel model) throws Exception {
+		SearchResponseModel searchResponseModel = new SearchResponseModel();
+		String name = "";
+		List<Place> places = placeRepository.findAllByPlaceNameStartsWith(name);
+		List<PlaceInfoModel> placeInfoModelList = new ArrayList<>();
+
+		for (Place place : places) {
+			System.out.println(place.toString());
+			PlaceInfoModel placeInfoModel = new PlaceInfoModel();
+			placeInfoModel.setId(place.getPlaceId());
+			placeInfoModel.setName(place.getPlaceName());
+			placeInfoModel.setAddress(place.getAddress());
+			placeInfoModel.setLat(place.getLat());
+			placeInfoModel.setLon(place.getLon());
+			placeInfoModel.setAddress(place.getAddress());
+			placeInfoModel.setImageLink(place.getImageLink());
+			placeInfoModel.setPopularity(place.getPopularity());
+			placeInfoModel.setWebsite(place.getWebsite());
+			placeInfoModelList.add(placeInfoModel);
+		}
+
+		Integer displayItemLimit = model.getDisplayItemLimit();
+		if (displayItemLimit == null || displayItemLimit == 0) {
+			displayItemLimit = DEFAULT_DISPLAY_LIMIT;
+		}
+
+		Integer currentPageNumber = model.getCurrentPageNumber();
+		if (currentPageNumber == null) {
+			currentPageNumber = 0;
+		}
+
+		int maxPageNumber = 0;
+
+		if (placeInfoModelList.size() % displayItemLimit == 0) {
+			maxPageNumber = (int) (placeInfoModelList.size() / displayItemLimit);
+		} else {
+			maxPageNumber = (int) (placeInfoModelList.size() / displayItemLimit) + 1;
+		}
+		searchResponseModel.setCurrentPageNumber(currentPageNumber);
+		searchResponseModel.setPlaceInfoModels(placeInfoModelList);
+		searchResponseModel.setMaxPageNumber(maxPageNumber);
+		searchResponseModel.setOperationResponse(OperationResponse.getSuccessResponse());
+
 		return searchResponseModel;
 	}
 }

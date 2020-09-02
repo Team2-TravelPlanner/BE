@@ -12,5 +12,8 @@ public enum CategoryEnum {
     MUSEUM,
     PARK,
     TOURIST_ATTRACTION,
-    UNIVERSITY
+    UNIVERSITY,
+    POINT_OF_INTEREST,
+    FINANCE,
+    STADIUM
 }
