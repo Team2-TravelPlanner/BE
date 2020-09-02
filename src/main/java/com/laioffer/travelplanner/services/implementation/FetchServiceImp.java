@@ -59,7 +59,7 @@ public class FetchServiceImp implements FetchService {
                     if (details.website != null) {
                         place.setWebsite(details.website.toString());
                     }
-                    if (details.photos != null) {
+                    if (details.photos != null && details.photos.length > 0) {
                         String ref = details.photos[0].photoReference;
                         String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1200&photoreference="
                                 + ref
@@ -68,32 +68,33 @@ public class FetchServiceImp implements FetchService {
                     }
                     List<String> categoryIdList = new ArrayList<>();
                     place.setCategories(categoryIdList);
+                    
+                    for (int i = 0; i < details.types.length; i++) {
+                        if (EnumUtils.ifInclude(details.types[i].name())) {
+                            place.getCategories().add(details.types[i].name());
+                            Category category = categoryRepository.findByCategoryName(details.types[i].name()).orElse(null);
+                            if (category == null) {
+                                category = new Category();
+                                category.setCategoryName(details.types[i].name());
+                            }
 
-                }
 
-                for (int i = 0; i < details.types.length; i++) {
-                    if (EnumUtils.ifInclude(details.types[i].name())) {
-                        place.getCategories().add(details.types[i].name());
-                        Category category = categoryRepository.findByCategoryName(details.types[i].name()).orElse(null);
-                        if (category == null) {
-                            category = new Category();
-                            category.setCategoryName(details.types[i].name());
+                            if (category.getPlaceIds() != null) {
+                                category.getPlaceIds().add(details.placeId);
+                            }
+                            else {
+                                List<String> idList = new ArrayList<>();
+                                idList.add(details.placeId);
+                                category.setPlaceIds(idList);
+                            }
+
+                            categoryRepository.save(category);
                         }
-
-
-                        if (category.getPlaceIds() != null) {
-                            category.getPlaceIds().add(details.placeId);
-                        }
-                        else {
-                            List<String> idList = new ArrayList<>();
-                            idList.add(details.placeId);
-                            category.setPlaceIds(idList);
-                        }
-
-                        categoryRepository.save(category);
                     }
+                    placeRepository.save(place);
+
                 }
-                placeRepository.save(place);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
