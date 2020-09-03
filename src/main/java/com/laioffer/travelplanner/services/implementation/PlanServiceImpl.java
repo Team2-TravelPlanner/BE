@@ -130,6 +130,7 @@ public class PlanServiceImpl implements PlanService {
 
 	@Override
 	public PlanDisplayModel generateCustomizedPlan(List<String> ids, SettingsRequestModel settings) throws InterruptedException, ApiException, IOException {
+		//System.out.print("come in");
 		List<Place> placeList = new ArrayList<>();
 		for (String id : ids) {
 			Place place = placeRepository.findById(id).orElse(null);
@@ -143,7 +144,7 @@ public class PlanServiceImpl implements PlanService {
 		placeList.add(origin);
 		ACO aco = new ACO(placeList);
 		aco.iterator();
-
+		
 		PlanDisplayModel planDisplayModel = new PlanDisplayModel();
 		planDisplayModel.setStartDate(settings.getStartDate());
 		planDisplayModel.setEndDate(settings.getEndDate());
@@ -163,6 +164,7 @@ public class PlanServiceImpl implements PlanService {
 			dayOfPlanDisplayModel.setPlaceOfPlanDetailModels(new ArrayList<PlaceOfPlanDetailModel>());
 			dayOfPlanDisplayModels.add(dayOfPlanDisplayModel);
 		}
+		//System.out.println("bbbbb: " + days);
 		
 		for( int i = 1; i < placeDetailModels.size(); i++ ) {
 			Place place = placeDetailModels.get(i).getPlace();
@@ -175,10 +177,12 @@ public class PlanServiceImpl implements PlanService {
 			placeOfPlanDetailModel.setWeblink(place.getWebsite());
 			placeOfPlanDetailModel.setLat(place.getLat());
 			placeOfPlanDetailModel.setLon(place.getLon());
-			int index = ( i + 1) / placeOfDays;
-			dayOfPlanDisplayModels.get(index).getPlaceOfPlanDetailModels().add(placeOfPlanDetailModel);
+			int j = ( i- 1) / placeOfDays;
+			//System.out.println("iiiiii : " + j);
+			dayOfPlanDisplayModels.get(j).getPlaceOfPlanDetailModels().add(placeOfPlanDetailModel);
 		}
 		planDisplayModel.setDayOfPlanDisplayModels(dayOfPlanDisplayModels);
+		//System.out.print("finish");
 		return planDisplayModel;
 	}
 
@@ -332,7 +336,7 @@ public class PlanServiceImpl implements PlanService {
 			placeOfPlanDetailModel.setWeblink(place.getWebsite());
 			placeOfPlanDetailModel.setLat(place.getLat());
 			placeOfPlanDetailModel.setLon(place.getLon());
-			int j = ( i + 1) / placeOfDays;
+			int j = ( i - 1) / placeOfDays;
 			dayOfPlanDisplayModels.get(j).getPlaceOfPlanDetailModels().add(placeOfPlanDetailModel);
 		}
 		planDisplayModel.setDayOfPlanDisplayModels(dayOfPlanDisplayModels);

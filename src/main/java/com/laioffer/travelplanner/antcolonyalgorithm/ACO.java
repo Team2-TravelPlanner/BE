@@ -106,7 +106,7 @@ public class ACO {
             endTime = System.currentTimeMillis();
             updatePheromone();
         }
-        System.out.println("current best solution：" + bestTour);
+        //System.out.println("current best solution：" + bestTour);
         String[] arr = bestTour.split(";");
         for (String str : arr){
             PlaceDetailModel p = new PlaceDetailModel();
