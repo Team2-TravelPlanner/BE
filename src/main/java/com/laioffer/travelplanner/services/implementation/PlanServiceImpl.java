@@ -287,6 +287,10 @@ public class PlanServiceImpl implements PlanService {
 
         //...
         //cut days
+        
+//        for(Place place : placeListFit) {
+//        	System.out.println(place == null ? null : place.toString());
+//        }
 
 		Place origin = new Place();
 		origin.setPlaceName("startPoint");
@@ -314,10 +318,11 @@ public class PlanServiceImpl implements PlanService {
 			dayOfPlanDisplayModel.setPlaceOfPlanDetailModels(new ArrayList<PlaceOfPlanDetailModel>());
 			dayOfPlanDisplayModels.add(dayOfPlanDisplayModel);
 		}
+		//System.out.println(placeDetailModels.size());
 		
 		for( int i = 1; i < placeDetailModels.size(); i++ ) {
 			Place place = placeDetailModels.get(i).getPlace();
-			System.out.println(place);
+			//System.out.println(place == null ? null : place.toString());
 			
 			PlaceOfPlanDetailModel placeOfPlanDetailModel = new PlaceOfPlanDetailModel();
 			placeOfPlanDetailModel.setAddress(place.getAddress());

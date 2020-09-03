@@ -79,8 +79,8 @@ public class ACO {
                 bestAnt = i;
             }
         }
-        System.out.println("current best solution：" + bestTour);
-        System.out.println("Shortest Path：" + bestLength);
+        //System.out.println("current best solution：" + bestTour);
+        //System.out.println("Shortest Path：" + bestLength);
     }
     //按更新方程修改轨迹长度
 
@@ -99,16 +99,18 @@ public class ACO {
         Init_paras();
         startTime = System.currentTimeMillis();
         for (int i = 0; i < p; i++) {//一次迭代即更新了一次解空间
-            System.out.println("The" + i + "times iteration：");
+           // System.out.println("The" + i + "times iteration：");
             Init_Ants();
             MovetoNextCity();
             findBestRoad();
             endTime = System.currentTimeMillis();
             updatePheromone();
         }
-        for (int i = 0; i < bestTour.length(); i = i + 2) {
+        System.out.println("current best solution：" + bestTour);
+        String[] arr = bestTour.split(";");
+        for (String str : arr){
             PlaceDetailModel p = new PlaceDetailModel();
-            p.setPlace(map.get(Character.getNumericValue(bestTour.charAt(i))));
+            p.setPlace(map.get(Integer.valueOf(str)));
             placeDetailModels.add(p);
         }
     }
