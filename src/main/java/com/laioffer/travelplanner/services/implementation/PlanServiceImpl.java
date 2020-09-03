@@ -245,7 +245,7 @@ public class PlanServiceImpl implements PlanService {
                 //Optional<Place> place = placeRepository.findByPlaceId(placeId);
                 Place place = placeRepository.findByPlaceId(placeId).orElse(null);
 
-                Double distance = DistanceUtil.getDistance(startLatitude, startLongitude, place.getLon(), place.getLat());
+                Double distance = DistanceUtil.getDistance(startLatitude, startLongitude,place.getLat(),place.getLon());
                 if (distance < 10.0  &&  placeIds.add(placeId)) {
                     placeListFit.add(place);
                 }
