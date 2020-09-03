@@ -214,6 +214,7 @@ public class SearchServiceImpl implements SearchService {
 			placeInfoModel.setImageLink(place.getImageLink());
 			placeInfoModel.setPopularity(place.getPopularity());
 			placeInfoModel.setWebsite(place.getWebsite());
+			placeInfoModel.setCategories(place.getCategories());
 			placeInfoModelList.add(placeInfoModel);
 		}
 

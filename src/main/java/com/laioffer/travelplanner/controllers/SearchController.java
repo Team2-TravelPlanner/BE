@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -43,7 +44,14 @@ public class SearchController {
 //		}
 
 		try {
-			res = searchService.searchPlaces(searchRequestModel);
+			String keyword = searchRequestModel.getKeyword();
+			String category = searchRequestModel.getCategory();
+
+			if (StringUtils.isEmpty(keyword) && StringUtils.isEmpty(category)) {
+				res = searchService.getAllPlaces(searchRequestModel);
+			} else {
+				res = searchService.searchPlaces(searchRequestModel);
+			}
 			return new ResponseEntity<>(res, HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.info(e.getMessage());
