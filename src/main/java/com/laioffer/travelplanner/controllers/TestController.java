@@ -32,4 +32,10 @@ public class TestController {
         OperationResponse res = fetchService.FetchCategories(model.getPlaceName());
         return new ResponseEntity<>(res,HttpStatus.OK);
     }
+
+    @DeleteMapping("/deleteData")
+    public ResponseEntity<OperationResponse> deletePlace(@RequestBody FetchRequestModel model) {
+        OperationResponse res = fetchService.deletePlace(model.getPlaceName());
+        return new ResponseEntity<>(res,HttpStatus.OK);
+    }
 }

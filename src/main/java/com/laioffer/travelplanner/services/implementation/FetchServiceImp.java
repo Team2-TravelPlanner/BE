@@ -97,4 +97,13 @@ public class FetchServiceImp implements FetchService {
 
 		return OperationResponse.getSuccessResponse();
 	}
+
+	@Override
+	public OperationResponse deletePlace(String placeName) {
+		com.laioffer.travelplanner.entities.Place place = placeRepository.findByPlaceName(placeName).orElse(null);
+		if (place != null) {
+			placeRepository.deleteById(place.getPlaceId());
+		}
+		return OperationResponse.getSuccessResponse();
+	}
 }

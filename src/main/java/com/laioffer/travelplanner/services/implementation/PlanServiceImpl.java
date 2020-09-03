@@ -249,10 +249,12 @@ public class PlanServiceImpl implements PlanService {
                 //Optional<Place> place = placeRepository.findByPlaceId(placeId);
                 Place place = placeRepository.findByPlaceId(placeId).orElse(null);
 
-                Double distance = DistanceUtil.getDistance(startLatitude, startLongitude,place.getLat(),place.getLon());
-                if (distance < 10.0  &&  placeIds.add(placeId)) {
-                    placeListFit.add(place);
-                }
+                if (place != null) {
+					Double distance = DistanceUtil.getDistance(startLatitude, startLongitude, place.getLat(), place.getLon());
+					if (distance < 10.0 && placeIds.add(placeId)) {
+						placeListFit.add(place);
+					}
+				}
             }
         }
         //如果符合category的景点少于要浏览的景点总数
