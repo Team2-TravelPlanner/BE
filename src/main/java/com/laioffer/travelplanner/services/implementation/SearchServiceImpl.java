@@ -82,7 +82,7 @@ public class SearchServiceImpl implements SearchService {
 		}
 		// search by category
 		if (!StringUtils.isEmpty(category)) {
-			System.out.println(category);
+			//System.out.println(category);
 			boolQueryBuilder.must(QueryBuilders.matchQuery("categories", category));
 		}
 
