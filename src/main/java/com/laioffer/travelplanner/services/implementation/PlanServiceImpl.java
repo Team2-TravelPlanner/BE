@@ -265,9 +265,9 @@ public class PlanServiceImpl implements PlanService {
         Date endDate = model.getSettings().getEndDate();
         long diff = Math.abs(endDate.getTime() - startDate.getTime());
         long milsecOfday = 86400000L;
-        int diffDays = (int) ((diff + milsecOfday - 1L) / (milsecOfday));
+        int diffDays = (int) ((diff + milsecOfday ) / (milsecOfday));
         
-        
+        //System.out.println(diffDays);
         Integer placeOfDays = getDaysByTypeOfPlan(TypeOfPlan.valueOf(model.getSettings().getTravelStyle()));
         
         Integer numberOfPlace =  placeOfDays * diffDays;
@@ -325,7 +325,7 @@ public class PlanServiceImpl implements PlanService {
 		List<PlaceDetailModel> placeDetailModels = aco.getPlaceDetailModels();
 		
 		List<DayOfPlanDisplayModel> dayOfPlanDisplayModels = new ArrayList<>();
-		int days = (placeDetailModels.size() + placeOfDays -1) / placeOfDays;
+		int days = diffDays;
 		for(int i = 1; i <= days; i++) {
 			DayOfPlanDisplayModel dayOfPlanDisplayModel = new DayOfPlanDisplayModel();
 			dayOfPlanDisplayModel.setIndex(i);
