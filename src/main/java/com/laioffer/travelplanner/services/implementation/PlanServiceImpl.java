@@ -298,6 +298,14 @@ public class PlanServiceImpl implements PlanService {
 //        	System.out.println(place == null ? null : place.toString());
 //        }
 
+		if (placeListFit.size() > numberOfPlace) {
+			List<Place> newPlaceListFit = new ArrayList<>();
+			for (int i = 0; i < numberOfPlace; i++) {
+				newPlaceListFit.add(placeListFit.get(i));
+			}
+			placeListFit = newPlaceListFit;
+		}
+
 		Place origin = new Place();
 		origin.setPlaceName("startPoint");
 		origin.setLon(startLongitude);
