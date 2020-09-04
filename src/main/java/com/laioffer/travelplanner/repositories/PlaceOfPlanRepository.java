@@ -7,5 +7,5 @@ import java.util.Optional;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 public interface PlaceOfPlanRepository extends ElasticsearchRepository<PlaceOfPlan, String>{
-	Optional<PlaceOfPlan> findByPlaceOfPlanId(String placeOfPlanId);
+	Optional<PlaceOfPlan> findById(String placeOfPlanId);
 }
