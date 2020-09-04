@@ -370,7 +370,7 @@ public class PlanServiceImpl implements PlanService {
 		model.setEndDate(plan.getEndDate());
 		model.setStartLatitude(plan.getStartLatitude());
 		model.setStartLongitude(plan.getStartLongitude());
-		
+		model.setPlanId(plan.getPlanId());
 		List<DayOfPlanDisplayModel> dayOfPlanDisplayModels = new ArrayList<>();
 		//System.out.println(plan.getDayOfPlanIds().size());
 		for(String dayodPlanId : plan.getDayOfPlanIds()) {
