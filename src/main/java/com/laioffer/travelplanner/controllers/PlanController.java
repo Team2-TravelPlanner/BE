@@ -60,6 +60,7 @@ public class PlanController {
 
 	@Autowired
 	private GoogleSearch googleSearch;
+	@Autowired
 	private UserService userService;
 
 	/**
