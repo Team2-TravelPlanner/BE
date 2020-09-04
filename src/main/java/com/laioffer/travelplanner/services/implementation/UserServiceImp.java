@@ -68,7 +68,7 @@ public class UserServiceImp implements UserService {
 		User user = userRepository.findByEmail(model.getUserEmail()).orElse(null);
 		OperationResponse res = new OperationResponse();
 		if (user == null) {
-			
+			return OperationResponse.getFailedResponse("No such user.");
 		}
 		if (!user.getToken().equals(model.getToken()) || user.getExpireDate() == null || user.getExpireDate().getTime() < (new Date()).getTime()){
 			return OperationResponse.getFailedResponse("Token no longer userful. Please log in again.");
