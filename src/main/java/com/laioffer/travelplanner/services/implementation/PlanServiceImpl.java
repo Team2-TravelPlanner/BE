@@ -101,15 +101,16 @@ public class PlanServiceImpl implements PlanService {
 				placeOfPlan.setDayOfPlanId(dayOfPlan.getDayId());
 				placeOfPlan.setStartTime(pModel.getStartDate());
 				placeOfPlan.setEndTime(pModel.getEndDate());
-				
-				placeOfPlanIds.add(placeOfPlan.getDayOfPlanId());
-				
 				placeOfPlanRepository.save(placeOfPlan);
+				//System.out.println("PlaceOf Plan: " + placeOfPlan.getPlaceOfPlanId());
+				placeOfPlanIds.add(placeOfPlan.getPlaceOfPlanId());
+				
+
 			}
 			dayOfPlan.setPlaceOfPlanIds(placeOfPlanIds);
-			
+			dayOfPlanRepository.save(dayOfPlan);	
 			dayOfPlanIds.add(dayOfPlan.getDayId());
-			dayOfPlanRepository.save(dayOfPlan);
+
 		}
 		plan.setDayOfPlanIds(dayOfPlanIds);
 		
@@ -217,7 +218,7 @@ public class PlanServiceImpl implements PlanService {
 		if(user == null) {
 			res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
 		}
-//		System.out.println(user.getEmail());
+		//System.out.println(user.getEmail());
 		
 		List<PlanDisplayModel> planDisplayModels = new ArrayList<>();
 		if(user.getPlanIds() != null) {
@@ -226,6 +227,7 @@ public class PlanServiceImpl implements PlanService {
 				if(plan == null) {
 					continue;
 				}
+				//System.out.println("Loop ");
 				planDisplayModels.add(display(plan));
 			}
 		}
@@ -362,7 +364,7 @@ public class PlanServiceImpl implements PlanService {
 	//private 
 	private PlanDisplayModel display(Plan plan) {
 		PlanDisplayModel model = new PlanDisplayModel();
-		
+		//System.out.println(plan.getDayOfPlanIds() == null ? null : plan.getDayOfPlanIds() .size());
 		
 		model.setStartDate(plan.getStartDate());
 		model.setEndDate(plan.getEndDate());
@@ -370,21 +372,26 @@ public class PlanServiceImpl implements PlanService {
 		model.setStartLongitude(plan.getStartLongitude());
 		
 		List<DayOfPlanDisplayModel> dayOfPlanDisplayModels = new ArrayList<>();
+		//System.out.println(plan.getDayOfPlanIds().size());
 		for(String dayodPlanId : plan.getDayOfPlanIds()) {
-			DayOfPlan dayOfPlan  = dayOfPlanRepository.findByDayId(dayodPlanId).orElse(null);
-			DayOfPlanDisplayModel dayOfPlanDisplayModel = new DayOfPlanDisplayModel();
-			dayOfPlanDisplayModel.setIndex(dayOfPlan.getIndex());
 			
-			//....
+			DayOfPlan dayOfPlan  = dayOfPlanRepository.findById(dayodPlanId).orElse(null);
 			if(dayOfPlan == null) {
 				continue;
 			}
+			DayOfPlanDisplayModel dayOfPlanDisplayModel = new DayOfPlanDisplayModel();
+			dayOfPlanDisplayModel.setIndex(dayOfPlan.getIndex());
+			//System.out.println("do " + dayOfPlan.getIndex());
+			//....
+
 			List<PlaceOfPlanDetailModel> placeOfPlanDetailModels = new ArrayList<>();
+			//System.out.println("do " + dayOfPlan.getPlaceOfPlanIds().size());
 			for(String placeOfPlanId : dayOfPlan.getPlaceOfPlanIds()) {
-				PlaceOfPlan placeOfPlan = placeOfPlanRepository.findByPlaceOfPlanId(placeOfPlanId).orElse(null);
+				PlaceOfPlan placeOfPlan = placeOfPlanRepository.findById(placeOfPlanId).orElse(null);
 				PlaceOfPlanDetailModel placeOfPlanDetailModel = new PlaceOfPlanDetailModel(); 
-				
+				//System.out.println("Place Id :"+placeOfPlan.getPlaceId());
 				Place place = placeRepository.findById(placeOfPlan.getPlaceId()).orElse(null);
+				//System.out.println(place == null ? null : place.getPlaceName());
 				placeOfPlanDetailModel.setAddress(place.getAddress());
 				placeOfPlanDetailModel.setImageLink(place.getImageLink());
 				placeOfPlanDetailModel.setPlaceId(place.getPlaceId());
@@ -395,12 +402,12 @@ public class PlanServiceImpl implements PlanService {
 				placeOfPlanDetailModel.setCategories(place.getCategories());
 				placeOfPlanDetailModels.add(placeOfPlanDetailModel);
 			}
-			
+			dayOfPlanDisplayModel.setPlaceOfPlanDetailModels(placeOfPlanDetailModels);
 			dayOfPlanDisplayModels.add(dayOfPlanDisplayModel);
 		}
 		
 		model.setDayOfPlanDisplayModels(dayOfPlanDisplayModels);
-		
+		//System.out.println("ssss");
 		return model;
 	}
 
