@@ -211,22 +211,26 @@ public class PlanServiceImpl implements PlanService {
 
 	@Override
 	public PlanDisplayResponseModel getAllPlan(AuthModel model) throws Exception {
+		//System.out.println("come in");
 		PlanDisplayResponseModel res = new PlanDisplayResponseModel();
 		User user = userRepository.findByEmail(model.getUserEmail()).orElse(null);
 		if(user == null) {
 			res.setOperationResponse(OperationResponse.getFailedResponse("No such user."));
 		}
+//		System.out.println(user.getEmail());
 		
 		List<PlanDisplayModel> planDisplayModels = new ArrayList<>();
-		for(String planId : user.getPlanIds()) {
-			Plan plan = planRepository.findById(planId).orElse(null);
-			if(plan == null) {
-				continue;
+		if(user.getPlanIds() != null) {
+			for(String planId : user.getPlanIds()) {
+				Plan plan = planRepository.findById(planId).orElse(null);
+				if(plan == null) {
+					continue;
+				}
+				planDisplayModels.add(display(plan));
 			}
-			planDisplayModels.add(display(plan));
 		}
 		res.setPlanDisplayModel(planDisplayModels);
-		
+		res.setOperationResponse(OperationResponse.getSuccessResponse());
 		return res;
 	}
 
